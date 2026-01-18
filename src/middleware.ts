@@ -31,7 +31,47 @@ export async function middleware(request: NextRequest) {
 
   // 세션 갱신을 위해 getUser 호출
   // 이는 Supabase Auth 토큰을 갱신하는 데 필요합니다
-  await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Admin routes protection
+  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
+  const isAdminApiRoute = request.nextUrl.pathname.startsWith('/api/admin');
+  const isAdminLoginOrUnauthorized =
+    request.nextUrl.pathname === '/admin/login' ||
+    request.nextUrl.pathname === '/admin/unauthorized';
+
+  if ((isAdminRoute || isAdminApiRoute) && !isAdminLoginOrUnauthorized) {
+    if (!user) {
+      // Not authenticated - redirect to login for page routes
+      if (isAdminRoute) {
+        const loginUrl = new URL('/admin/login', request.url);
+        loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
+        return NextResponse.redirect(loginUrl);
+      }
+      // Return 401 for API routes
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // Check if user has admin role
+    const role = user.app_metadata?.role;
+    const superAdminEmails = process.env.SUPER_ADMIN_EMAILS?.split(',') || [];
+    const isSuperAdmin = superAdminEmails.includes(user.email || '');
+    const isAdmin = isSuperAdmin || role === 'super_admin' || role === 'merchant_admin';
+
+    if (!isAdmin) {
+      if (isAdminRoute) {
+        // Redirect to unauthorized page
+        return NextResponse.redirect(new URL('/admin/unauthorized', request.url));
+      }
+      return NextResponse.json(
+        { error: 'Forbidden. Admin access required.' },
+        { status: 403 }
+      );
+    }
+  }
 
   return supabaseResponse;
 }

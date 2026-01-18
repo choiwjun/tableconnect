@@ -386,169 +386,169 @@
 ## Phase 3: Core Features - Gift Sending (선물 보내기)
 
 ### TASK-3.1: 메뉴 목록 조회 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** GET `/api/merchants/[id]/menus` - 메뉴 목록
 - **Test:** `shouldReturnMenusForMerchant`
 - **Acceptance Criteria:**
-  - [ ] merchant_id로 메뉴 조회
-  - [ ] 활성 메뉴만 필터링
-  - [ ] 가격 정보 포함
+  - [x] merchant_id로 메뉴 조회
+  - [x] 활성 메뉴만 필터링
+  - [x] 가격 정보 포함
 
 ### TASK-3.2: 메뉴 카드 컴포넌트
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** 메뉴 아이템 카드 UI
 - **Test:** `shouldDisplayMenuNameAndPrice`
 - **Acceptance Criteria:**
-  - [ ] `MenuCard.tsx` 컴포넌트
-  - [ ] 메뉴 이름, 설명, 가격 표시
-  - [ ] 이미지 (선택적)
-  - [ ] 선택 상태 표시
+  - [x] `MenuCard.tsx` 컴포넌트
+  - [x] 메뉴 이름, 설명, 가격 표시
+  - [x] 이미지 (선택적)
+  - [x] 선택 상태 표시
 
 ### TASK-3.3: 선물 메뉴 선택 UI
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** 선물할 메뉴 선택 페이지
 - **Test:** `shouldUpdateSelectedMenuOnClick`
 - **Acceptance Criteria:**
-  - [ ] 메뉴 목록 그리드 표시
-  - [ ] 단일 선택 로직
-  - [ ] 선택된 메뉴 하이라이트
-  - [ ] 다음 단계 버튼
+  - [x] 메뉴 목록 그리드 표시
+  - [x] 단일 선택 로직
+  - [x] 선택된 메뉴 하이라이트
+  - [x] 다음 단계 버튼
 
 ### TASK-3.4: Stripe 결제 인텐트 생성 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** POST `/api/payments/intent` - 결제 인텐트 생성
 - **Test:** `shouldCreatePaymentIntentWithCorrectAmount`
 - **Acceptance Criteria:**
-  - [ ] Stripe SDK 사용
-  - [ ] 메뉴 가격 기반 금액 설정
-  - [ ] client_secret 반환
-  - [ ] 메타데이터에 gift 정보 포함
+  - [x] Stripe SDK 사용
+  - [x] 메뉴 가격 기반 금액 설정
+  - [x] client_secret 반환
+  - [x] 메타데이터에 gift 정보 포함
 
 ### TASK-3.5: Stripe Elements 결제 폼
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** 카드 결제 UI
 - **Test:** `shouldShowPaymentFormWithStripeElements`
 - **Acceptance Criteria:**
-  - [ ] `@stripe/react-stripe-js` 사용
-  - [ ] 카드 입력 필드
-  - [ ] 결제 버튼
-  - [ ] 로딩/에러 상태
+  - [x] `@stripe/react-stripe-js` 사용
+  - [x] 카드 입력 필드
+  - [x] 결제 버튼
+  - [x] 로딩/에러 상태
 
 ### TASK-3.6: 선물 생성 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** POST `/api/gifts` - 선물 기록 생성
 - **Test:** `shouldCreateGiftAfterPaymentSuccess`
 - **Acceptance Criteria:**
-  - [ ] payment_intent_id 검증
-  - [ ] gifts 테이블에 저장
-  - [ ] 수신자에게 알림 (Realtime)
-  - [ ] 선물 정보 반환
+  - [x] payment_intent_id 검증
+  - [x] gifts 테이블에 저장
+  - [x] 수신자에게 알림 (Realtime)
+  - [x] 선물 정보 반환
 
 ### TASK-3.7: Stripe Webhook 처리
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** POST `/api/webhooks/stripe` - 결제 완료 처리
 - **Test:** `shouldUpdateGiftStatusOnPaymentSuccess`
 - **Acceptance Criteria:**
-  - [ ] Webhook 서명 검증
-  - [ ] payment_intent.succeeded 이벤트 처리
-  - [ ] 선물 상태 업데이트
-  - [ ] 정산 데이터 기록
+  - [x] Webhook 서명 검증
+  - [x] payment_intent.succeeded 이벤트 처리
+  - [x] 선물 상태 업데이트
+  - [x] 정산 데이터 기록
 
 ### TASK-3.8: 선물 수신 알림 UI
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** 선물 수신 시 알림 표시
 - **Test:** `shouldShowGiftNotificationOnReceive`
 - **Acceptance Criteria:**
-  - [ ] `GiftNotification.tsx` 컴포넌트
-  - [ ] 축하 애니메이션
-  - [ ] 선물 정보 표시
-  - [ ] 감사 메시지 전송 옵션
+  - [x] `GiftNotification.tsx` 컴포넌트
+  - [x] 축하 애니메이션
+  - [x] 선물 정보 표시
+  - [x] 감사 메시지 전송 옵션
 
 ### TASK-3.9: 선물 히스토리 조회 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** GET `/api/gifts?session_id=` - 선물 내역
 - **Test:** `shouldReturnGiftHistoryForSession`
 - **Acceptance Criteria:**
-  - [ ] 보낸/받은 선물 모두 조회
-  - [ ] 시간순 정렬
-  - [ ] 메뉴 정보 조인
+  - [x] 보낸/받은 선물 모두 조회
+  - [x] 시간순 정렬
+  - [x] 메뉴 정보 조인
 
 ### TASK-3.10: 선물 Realtime 알림 설정
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** 실시간 선물 수신 알림
 - **Test:** `shouldReceiveGiftNotificationInRealtime`
 - **Acceptance Criteria:**
-  - [ ] Supabase Realtime gifts 테이블 구독
-  - [ ] 새 선물 INSERT 이벤트 감지
-  - [ ] GiftNotification 컴포넌트 표시
-  - [ ] 축하 애니메이션 + 사운드 (선택적)
+  - [x] Supabase Realtime gifts 테이블 구독
+  - [x] 새 선물 INSERT 이벤트 감지
+  - [x] GiftNotification 컴포넌트 표시
+  - [x] 축하 애니메이션 + 사운드 (선택적)
 
 ### TASK-3.11: 선물 상태 관리 (Zustand)
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** 선물 관련 전역 상태 관리
 - **Test:** `shouldUpdateGiftStoreOnReceive`
 - **Acceptance Criteria:**
-  - [ ] `giftStore.ts` 생성
-  - [ ] 받은 선물 목록 상태
-  - [ ] 선물 알림 대기열 관리
-  - [ ] 선물 히스토리 캐싱
+  - [x] `giftStore.ts` 생성
+  - [x] 받은 선물 목록 상태
+  - [x] 선물 알림 대기열 관리
+  - [x] 선물 히스토리 캐싱
 
 ---
 
 ## Phase 4: Safety & Moderation (안전 및 모더레이션)
 
 ### TASK-4.1: 사용자 차단 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** POST `/api/blocks` - 사용자 차단
 - **Test:** `shouldBlockUserAndPreventMessages`
 - **Acceptance Criteria:**
-  - [ ] blocks 테이블에 저장
-  - [ ] 차단된 사용자로부터 메시지 필터링
-  - [ ] 차단 해제 기능
+  - [x] blocks 테이블에 저장
+  - [x] 차단된 사용자로부터 메시지 필터링
+  - [x] 차단 해제 기능
 
 ### TASK-4.2: 신고 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** POST `/api/reports` - 부적절한 콘텐츠 신고
 - **Test:** `shouldCreateReportWithDetails`
 - **Acceptance Criteria:**
-  - [ ] 신고 유형 선택
-  - [ ] 신고 내용 저장
-  - [ ] reports 테이블에 기록
-  - [ ] 관리자 알림
+  - [x] 신고 유형 선택
+  - [x] 신고 내용 저장
+  - [x] reports 테이블에 기록
+  - [ ] 관리자 알림 (Phase 5에서 구현)
 
 ### TASK-4.3: 차단/신고 UI 컴포넌트
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** 차단 및 신고 버튼/모달
 - **Test:** `shouldOpenReportModalOnClick`
 - **Acceptance Criteria:**
-  - [ ] `BlockButton.tsx` 컴포넌트
-  - [ ] `ReportModal.tsx` 컴포넌트
-  - [ ] 신고 유형 선택 UI
-  - [ ] 확인/취소 동작
+  - [x] `BlockButton.tsx` 컴포넌트
+  - [x] `ReportModal.tsx` 컴포넌트
+  - [x] 신고 유형 선택 UI
+  - [x] 확인/취소 동작
 
 ### TASK-4.4: 차단 목록 관리 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** GET/DELETE `/api/blocks` - 차단 목록 조회 및 해제
 - **Test:** `shouldListAndUnblockUsers`
 - **Acceptance Criteria:**
-  - [ ] 현재 세션의 차단 목록 조회
-  - [ ] 차단 해제 기능
-  - [ ] 차단된 사용자 정보 (닉네임, 테이블 번호)
+  - [x] 현재 세션의 차단 목록 조회
+  - [x] 차단 해제 기능
+  - [x] 차단된 사용자 정보 (닉네임, 테이블 번호)
 
 ### TASK-4.5: 콘텐츠 필터링 고급 설정
 - **Status:** `TODO`
@@ -565,68 +565,71 @@
 ## Phase 5: Admin Features (관리자 기능)
 
 ### TASK-5.1: 관리자 인증 미들웨어
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** 관리자 API 접근 제어
 - **Test:** `shouldRejectUnauthorizedAdminAccess`
 - **Acceptance Criteria:**
-  - [ ] Supabase Auth 기반 인증
-  - [ ] 관리자 역할 검증
-  - [ ] 미들웨어 적용
+  - [x] Supabase Auth 기반 인증
+  - [x] 관리자 역할 검증 (super_admin, merchant_admin)
+  - [x] 미들웨어 적용 (/admin, /api/admin 라우트)
+  - [x] 로그인/권한없음 페이지 생성
 
 ### TASK-5.2: 정산 대시보드 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** GET `/api/admin/settlements` - 정산 데이터
 - **Test:** `shouldReturnSettlementSummary`
 - **Acceptance Criteria:**
-  - [ ] 기간별 매출 집계
-  - [ ] 수수료 계산
-  - [ ] merchant별 정산 금액
+  - [x] 기간별 매출 집계
+  - [x] 수수료 계산 (10%)
+  - [x] merchant별 정산 금액
+  - [x] 정산 요약 통계 API
 
 ### TASK-5.3: 신고 관리 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** GET/PATCH `/api/admin/reports` - 신고 관리
 - **Test:** `shouldUpdateReportStatus`
 - **Acceptance Criteria:**
-  - [ ] 신고 목록 조회
-  - [ ] 상태 업데이트 (검토중/처리완료)
-  - [ ] 조치 내역 기록
+  - [x] 신고 목록 조회 (페이지네이션)
+  - [x] 상태 업데이트 (pending/reviewing/resolved/dismissed)
+  - [x] 조치 내역 기록 (admin_note)
+  - [x] 신고 통계 API
 
 ### TASK-5.4: 관리자 대시보드 페이지
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** 관리자 대시보드 UI
 - **Test:** `shouldRenderAdminDashboard`
 - **Acceptance Criteria:**
-  - [ ] `src/app/admin/page.tsx` 생성
-  - [ ] 정산 요약 위젯
-  - [ ] 신고 목록 위젯
-  - [ ] 통계 그래프 (선택적)
-  - [ ] 관리자 전용 레이아웃
+  - [x] `src/app/admin/page.tsx` 생성
+  - [x] 정산 요약 위젯
+  - [x] 신고 목록 위젯
+  - [x] 통계 그래프 (매출 추이)
+  - [x] 관리자 전용 레이아웃 (사이드바)
 
 ### TASK-5.5: 가맹점 관리 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** CRUD `/api/admin/merchants` - 가맹점 관리
 - **Test:** `shouldCRUDMerchant`
 - **Acceptance Criteria:**
-  - [ ] 가맹점 목록 조회 (페이지네이션)
-  - [ ] 가맹점 상세 조회
-  - [ ] 가맹점 생성/수정
-  - [ ] 가맹점 비활성화
+  - [x] 가맹점 목록 조회 (페이지네이션)
+  - [x] 가맹점 상세 조회 (통계 포함)
+  - [x] 가맹점 생성/수정
+  - [x] 가맹점 비활성화 (소프트 삭제)
 
 ### TASK-5.6: 메뉴 관리 API
-- **Status:** `TODO`
+- **Status:** `DONE`
 - **Type:** BEHAVIORAL
 - **Description:** CRUD `/api/admin/merchants/[id]/menus` - 메뉴 관리
 - **Test:** `shouldCRUDMenu`
 - **Acceptance Criteria:**
-  - [ ] 메뉴 목록 조회
-  - [ ] 메뉴 생성/수정/삭제
-  - [ ] 메뉴 이미지 업로드 (Supabase Storage)
-  - [ ] 메뉴 정렬 순서 변경
+  - [x] 메뉴 목록 조회 (카테고리 필터)
+  - [x] 메뉴 생성/수정/삭제
+  - [ ] 메뉴 이미지 업로드 (Supabase Storage) - 추후 구현
+  - [x] 메뉴 정렬 순서 변경
 
 ---
 
