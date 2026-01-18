@@ -10,9 +10,31 @@ import {
   MAX_TABLE_NUMBER,
 } from './constants';
 
-// Forbidden words (basic list - can be extended)
+// Forbidden words for nickname validation (Japanese + English)
 const FORBIDDEN_WORDS: string[] = [
-  // Add forbidden words as needed
+  // Japanese inappropriate words
+  'バカ', 'ばか', '馬鹿',
+  'アホ', 'あほ', '阿呆',
+  'クソ', 'くそ', '糞',
+  '死ね', 'しね',
+  '殺す', 'ころす',
+  'キモい', 'きもい',
+  'ブス', 'ぶす',
+  'デブ', 'でぶ',
+  'ハゲ', 'はげ', '禿',
+  'うざい', 'ウザい',
+  '変態', 'へんたい', 'ヘンタイ',
+  'エロ', 'えろ',
+  // English inappropriate words
+  'fuck', 'shit', 'bitch', 'asshole', 'bastard',
+  'dick', 'pussy', 'cunt', 'whore', 'slut',
+  'nigger', 'faggot', 'retard',
+  // Admin/Staff impersonation prevention
+  'admin', 'administrator', '管理者', '管理人',
+  'staff', 'スタッフ', '店員', '店長',
+  'owner', 'オーナー', '運営',
+  'system', 'システム',
+  'official', '公式',
 ];
 
 /**

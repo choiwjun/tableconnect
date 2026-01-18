@@ -104,5 +104,37 @@
     "totalReports": "総報告数",
     "noData": "データがありません",
     "monthOverMonth": "前月比"
+  },
+  "errors": {
+    "fetchMessagesFailed": "メッセージの取得に失敗しました",
+    "sendMessageFailed": "メッセージの送信に失敗しました",
+    "sessionExpired": "セッションが期限切れです",
+    "networkError": "ネットワークエラーが発生しました",
+    "unknownError": "不明なエラーが発生しました",
+    "nicknameInUse": "このニックネームは既に使用されています",
+    "invalidNickname": "無効なニックネームです",
+    "forbiddenWord": "使用できない文字が含まれています"
+  },
+  "landing": {
+    "title": "Table Connect",
+    "subtitle": "居酒屋のテーブル同士で匿名コミュニケーション",
+    "scanQR": "QRコードをスキャン",
+    "scanQRDescription": "テーブルのQRコードから参加",
+    "features": "主な機能",
+    "anonymousChat": "匿名チャット",
+    "anonymousChatDescription": "ニックネームで気軽に他のテーブルとチャット",
+    "giftSending": "ギフト送信",
+    "giftSendingDescription": "ドリンクやフードをギフトとして送れます",
+    "safety": "安心・安全",
+    "safetyDescription": "ブロック・報告機能で安心して利用可能",
+    "realtime": "リアルタイム",
+    "realtimeDescription": "メッセージは即座に相手に届きます",
+    "howToUse": "使い方",
+    "step1Title": "QRコードをスキャン",
+    "step1Description": "テーブルに置かれたQRコードをスマートフォンでスキャン",
+    "step2Title": "ニックネームを入力",
+    "step2Description": "好きなニックネームを入力して参加",
+    "step3Title": "チャット開始",
+    "step3Description": "他のテーブルの人とチャットやギフト送信を楽しもう"
   }
 }

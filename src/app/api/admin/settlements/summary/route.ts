@@ -62,20 +62,30 @@ export async function GET(request: NextRequest) {
       .reduce((sum, s) => sum + (s.net_amount || 0), 0);
 
     // Get current month gifts count and amount
-    const { data: currentMonthGifts } = await supabase
+    let currentMonthGiftsQuery = supabase
       .from('gifts')
-      .select('id, amount, sender_session_id')
+      .select('id, amount, sender_session_id, menu:menus!inner(merchant_id)')
       .eq('status', 'completed')
       .gte('created_at', currentMonthStart)
       .lte('created_at', currentMonthEnd);
 
+    if (targetMerchantId) {
+      currentMonthGiftsQuery = currentMonthGiftsQuery.eq('menus.merchant_id', targetMerchantId);
+    }
+    const { data: currentMonthGifts } = await currentMonthGiftsQuery;
+
     // Get last month gifts for comparison
-    const { data: lastMonthGifts } = await supabase
+    let lastMonthGiftsQuery = supabase
       .from('gifts')
-      .select('id, amount')
+      .select('id, amount, menu:menus!inner(merchant_id)')
       .eq('status', 'completed')
       .gte('created_at', lastMonthStart)
       .lte('created_at', lastMonthEnd);
+
+    if (targetMerchantId) {
+      lastMonthGiftsQuery = lastMonthGiftsQuery.eq('menus.merchant_id', targetMerchantId);
+    }
+    const { data: lastMonthGifts } = await lastMonthGiftsQuery;
 
     const currentMonthTotal = (currentMonthGifts || []).reduce((sum, g) => sum + g.amount, 0);
     const lastMonthTotal = (lastMonthGifts || []).reduce((sum, g) => sum + g.amount, 0);
@@ -94,12 +104,17 @@ export async function GET(request: NextRequest) {
 
     // Get recent transactions for charts (last 7 days)
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
-    const { data: recentGifts } = await supabase
+    let recentGiftsQuery = supabase
       .from('gifts')
-      .select('created_at, amount')
+      .select('created_at, amount, menu:menus!inner(merchant_id)')
       .eq('status', 'completed')
       .gte('created_at', sevenDaysAgo)
       .order('created_at', { ascending: true });
+
+    if (targetMerchantId) {
+      recentGiftsQuery = recentGiftsQuery.eq('menus.merchant_id', targetMerchantId);
+    }
+    const { data: recentGifts } = await recentGiftsQuery;
 
     // Group by day
     const dailyData: Record<string, number> = {};

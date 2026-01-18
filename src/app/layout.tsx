@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Righteous, DM_Sans, Fredoka } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import "./globals.css";
 
 const righteous = Righteous({
@@ -68,6 +69,7 @@ export default async function RootLayout({
         className={`${righteous.variable} ${dmSans.variable} ${fredoka.variable} font-body antialiased bg-void text-soft-white min-h-screen`}
       >
         <NextIntlClientProvider messages={messages}>
+          <ServiceWorkerRegistration />
           {children}
         </NextIntlClientProvider>
       </body>

@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { createPaymentIntent } from '@/lib/stripe/server';
 import { isValidUUID } from '@/lib/utils/validators';
-
-function getSupabaseAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase environment variables');
-  }
-
-  return createClient(supabaseUrl, supabaseServiceKey);
-}
 
 /**
  * POST /api/payments/intent
@@ -123,16 +112,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create payment intent
-    const { clientSecret, paymentIntentId } = await createPaymentIntent({
-      amount: menu.price,
-      menuId,
-      senderSessionId,
-      receiverSessionId,
-      merchantId: menu.merchant_id,
-    });
-
-    // Create pending gift record
+    // Create pending gift record FIRST (so we have gift_id for payment intent metadata)
     const { data: gift, error: giftError } = await supabase
       .from('gifts')
       .insert({
@@ -142,7 +122,6 @@ export async function POST(request: NextRequest) {
         amount: menu.price,
         message: message || null,
         status: 'pending',
-        stripe_payment_intent_id: paymentIntentId,
       })
       .select()
       .single();
@@ -153,6 +132,28 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to create gift' },
         { status: 500 }
       );
+    }
+
+    // Create payment intent with gift_id in metadata
+    const { clientSecret, paymentIntentId } = await createPaymentIntent({
+      amount: menu.price,
+      giftId: gift.id,
+      menuId,
+      senderSessionId,
+      receiverSessionId,
+      merchantId: menu.merchant_id,
+    });
+
+    // Update gift with payment intent ID
+    const { error: updateError } = await supabase
+      .from('gifts')
+      .update({ stripe_payment_intent_id: paymentIntentId })
+      .eq('id', gift.id);
+
+    if (updateError) {
+      console.error('Error updating gift with payment intent ID:', updateError);
+      // Gift was created, payment intent was created, but linking failed
+      // This is not critical - webhook can still process using gift_id from metadata
     }
 
     return NextResponse.json({

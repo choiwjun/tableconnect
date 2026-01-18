@@ -5,3 +5,4 @@ export type { UseToastReturn } from './useToast';
 export { useSession } from './useSession';
 export { useMessages } from './useMessages';
 export { useRealtime, useRealtimeMessages, useRealtimeGifts } from './useRealtime';
+export { useUnreadMessages } from './useUnreadMessages';

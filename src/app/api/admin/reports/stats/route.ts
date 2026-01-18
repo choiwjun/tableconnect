@@ -16,20 +16,53 @@ export async function GET() {
   const supabase = await createClient();
 
   try {
-    // Get all reports
-    const { data: reports, error } = await supabase
-      .from('reports')
-      .select('status, reason, created_at');
+    // For merchant_admin, filter reports to their merchant's sessions
+    let allReports: { status: string; reason: string; created_at: string }[] = [];
 
-    if (error) {
-      console.error('Error fetching report stats:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch report statistics' },
-        { status: 500 }
-      );
+    if (admin.role === 'merchant_admin' && admin.merchantId) {
+      // Get sessions for this merchant
+      const { data: merchantSessions } = await supabase
+        .from('sessions')
+        .select('id')
+        .eq('merchant_id', admin.merchantId);
+
+      const sessionIds = (merchantSessions || []).map(s => s.id);
+
+      if (sessionIds.length > 0) {
+        // Get reports where reporter or reported session belongs to this merchant
+        const { data: reports, error } = await supabase
+          .from('reports')
+          .select('status, reason, created_at, reporter_session_id, reported_session_id');
+
+        if (error) {
+          console.error('Error fetching report stats:', error);
+          return NextResponse.json(
+            { error: 'Failed to fetch report statistics' },
+            { status: 500 }
+          );
+        }
+
+        // Filter reports to only those involving merchant's sessions
+        allReports = (reports || []).filter(
+          r => sessionIds.includes(r.reporter_session_id) || sessionIds.includes(r.reported_session_id)
+        );
+      }
+    } else {
+      // Super admin sees all reports
+      const { data: reports, error } = await supabase
+        .from('reports')
+        .select('status, reason, created_at');
+
+      if (error) {
+        console.error('Error fetching report stats:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch report statistics' },
+          { status: 500 }
+        );
+      }
+
+      allReports = reports || [];
     }
-
-    const allReports = reports || [];
 
     // Calculate status breakdown
     const statusBreakdown = {

@@ -1,19 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { SESSION_TTL_MS } from '@/lib/utils/constants';
 import { isValidTableNumber, isValidUUID } from '@/lib/utils/validators';
-
-// Create Supabase admin client for server-side operations
-function getSupabaseAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Missing Supabase environment variables');
-  }
-
-  return createClient(supabaseUrl, supabaseServiceKey);
-}
 
 /**
  * POST /api/sessions

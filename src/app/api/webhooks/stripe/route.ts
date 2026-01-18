@@ -1,34 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
-
-// Lazy initialization of Stripe client
-let stripeInstance: Stripe | null = null;
-
-function getStripe() {
-  if (!stripeInstance) {
-    const secretKey = process.env.STRIPE_SECRET_KEY;
-    if (!secretKey) {
-      throw new Error('Missing STRIPE_SECRET_KEY');
-    }
-    stripeInstance = new Stripe(secretKey, {
-      apiVersion: '2025-12-15.clover',
-    });
-  }
-  return stripeInstance;
-}
-
-// Create Supabase admin client for webhook processing
-function getSupabaseAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !serviceKey) {
-    throw new Error('Missing Supabase environment variables');
-  }
-
-  return createClient(supabaseUrl, serviceKey);
-}
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { getStripeServer } from '@/lib/stripe/server';
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -51,7 +24,7 @@ export async function POST(request: NextRequest) {
   }
 
   let event: Stripe.Event;
-  const stripe = getStripe();
+  const stripe = getStripeServer();
 
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);

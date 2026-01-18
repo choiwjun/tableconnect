@@ -14,7 +14,6 @@ export function getStripeServer(): Stripe {
     }
 
     stripe = new Stripe(secretKey, {
-      apiVersion: '2025-12-15.clover',
       typescript: true,
     });
   }
@@ -27,12 +26,14 @@ export function getStripeServer(): Stripe {
  */
 export async function createPaymentIntent({
   amount,
+  giftId,
   menuId,
   senderSessionId,
   receiverSessionId,
   merchantId,
 }: {
   amount: number;
+  giftId: string;
   menuId: string;
   senderSessionId: string;
   receiverSessionId: string;
@@ -47,6 +48,7 @@ export async function createPaymentIntent({
       enabled: true,
     },
     metadata: {
+      gift_id: giftId,
       menu_id: menuId,
       sender_session_id: senderSessionId,
       receiver_session_id: receiverSessionId,

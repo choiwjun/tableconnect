@@ -12,7 +12,9 @@
       "Bash(git add:*)",
       "Bash(git push:*)",
       "Bash(npx playwright install chromium)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(cd:*)",
+      "Bash(npm show:*)"
     ]
   }
 }
