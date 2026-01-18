@@ -1,0 +1,170 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import { createPaymentIntent } from '@/lib/stripe/server';
+import { isValidUUID } from '@/lib/utils/validators';
+
+function getSupabaseAdmin() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
+
+/**
+ * POST /api/payments/intent
+ * Create a Stripe payment intent for a gift
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { menuId, senderSessionId, receiverSessionId, message } = body;
+
+    // Validate input
+    if (!menuId || !isValidUUID(menuId)) {
+      return NextResponse.json(
+        { error: 'Invalid menu ID' },
+        { status: 400 }
+      );
+    }
+
+    if (!senderSessionId || !isValidUUID(senderSessionId)) {
+      return NextResponse.json(
+        { error: 'Invalid sender session ID' },
+        { status: 400 }
+      );
+    }
+
+    if (!receiverSessionId || !isValidUUID(receiverSessionId)) {
+      return NextResponse.json(
+        { error: 'Invalid receiver session ID' },
+        { status: 400 }
+      );
+    }
+
+    if (senderSessionId === receiverSessionId) {
+      return NextResponse.json(
+        { error: 'Cannot send gift to yourself' },
+        { status: 400 }
+      );
+    }
+
+    const supabase = getSupabaseAdmin();
+
+    // Verify menu exists and is available
+    const { data: menu, error: menuError } = await supabase
+      .from('menus')
+      .select('id, price, merchant_id, is_available')
+      .eq('id', menuId)
+      .single();
+
+    if (menuError || !menu) {
+      return NextResponse.json(
+        { error: 'Menu not found' },
+        { status: 404 }
+      );
+    }
+
+    if (!menu.is_available) {
+      return NextResponse.json(
+        { error: 'Menu is not available' },
+        { status: 400 }
+      );
+    }
+
+    // Verify both sessions exist and are active
+    const { data: sessions, error: sessionsError } = await supabase
+      .from('sessions')
+      .select('id, merchant_id, is_active, expires_at')
+      .in('id', [senderSessionId, receiverSessionId]);
+
+    if (sessionsError || !sessions || sessions.length !== 2) {
+      return NextResponse.json(
+        { error: 'One or both sessions not found' },
+        { status: 404 }
+      );
+    }
+
+    const senderSession = sessions.find((s) => s.id === senderSessionId);
+    const receiverSession = sessions.find((s) => s.id === receiverSessionId);
+
+    if (!senderSession || !receiverSession) {
+      return NextResponse.json(
+        { error: 'Session not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check sessions are from same merchant as menu
+    if (
+      senderSession.merchant_id !== menu.merchant_id ||
+      receiverSession.merchant_id !== menu.merchant_id
+    ) {
+      return NextResponse.json(
+        { error: 'Sessions and menu must be from the same merchant' },
+        { status: 400 }
+      );
+    }
+
+    // Check both sessions are active and not expired
+    const now = new Date();
+    if (
+      !senderSession.is_active ||
+      new Date(senderSession.expires_at) < now ||
+      !receiverSession.is_active ||
+      new Date(receiverSession.expires_at) < now
+    ) {
+      return NextResponse.json(
+        { error: 'One or both sessions have expired' },
+        { status: 410 }
+      );
+    }
+
+    // Create payment intent
+    const { clientSecret, paymentIntentId } = await createPaymentIntent({
+      amount: menu.price,
+      menuId,
+      senderSessionId,
+      receiverSessionId,
+      merchantId: menu.merchant_id,
+    });
+
+    // Create pending gift record
+    const { data: gift, error: giftError } = await supabase
+      .from('gifts')
+      .insert({
+        sender_session_id: senderSessionId,
+        receiver_session_id: receiverSessionId,
+        menu_id: menuId,
+        amount: menu.price,
+        message: message || null,
+        status: 'pending',
+        stripe_payment_intent_id: paymentIntentId,
+      })
+      .select()
+      .single();
+
+    if (giftError) {
+      console.error('Error creating gift:', giftError);
+      return NextResponse.json(
+        { error: 'Failed to create gift' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      clientSecret,
+      paymentIntentId,
+      giftId: gift.id,
+    });
+  } catch (error) {
+    console.error('Payment intent creation error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}

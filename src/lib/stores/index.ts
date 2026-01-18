@@ -7,3 +7,4 @@ export {
   selectTotalUnread,
 } from './chatStore';
 export { useUIStore, toast } from './uiStore';
+export { useGiftStore } from './giftStore';
