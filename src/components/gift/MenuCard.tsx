@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { cn } from '@/lib/utils/cn';
 import { formatPrice } from '@/lib/utils/format';
 import type { Menu } from '@/types/database';
@@ -25,11 +26,13 @@ export function MenuCard({ menu, isSelected = false, onSelect }: MenuCardProps) 
       <div className="flex gap-4">
         {/* Menu Image */}
         {menu.image_url ? (
-          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-steel/50">
-            <img
+          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-steel/50 relative">
+            <Image
               src={menu.image_url}
               alt={menu.name}
-              className="w-full h-full object-cover"
+              fill
+              sizes="80px"
+              className="object-cover"
             />
           </div>
         ) : (

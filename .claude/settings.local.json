@@ -9,7 +9,9 @@
       "Bash(npm run test:run:*)",
       "Bash(npx tsc:*)",
       "Bash(npm run test:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(npx playwright install chromium)"
     ]
   }
 }

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Righteous, DM_Sans, Fredoka } from "next/font/google";
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import "./globals.css";
 
 const righteous = Righteous({
@@ -52,17 +54,22 @@ export const viewport: Viewport = {
   themeColor: "#ff0080",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="ja" className="dark">
+    <html lang={locale} className="dark">
       <body
         className={`${righteous.variable} ${dmSans.variable} ${fredoka.variable} font-body antialiased bg-void text-soft-white min-h-screen`}
       >
-        {children}
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

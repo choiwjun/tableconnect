@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { isValidUUID, isValidMessage } from '@/lib/utils/validators';
+import { moderateContent, getModerationErrorMessage } from '@/lib/moderation';
 
 function getSupabaseAdmin() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -125,6 +126,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'You cannot send messages to this user' },
         { status: 403 }
+      );
+    }
+
+    // Content moderation using OpenAI
+    const moderationResult = await moderateContent(trimmedContent);
+
+    if (!moderationResult.isAllowed) {
+      const errorMessage = getModerationErrorMessage(moderationResult.categories, 'ja');
+
+      // Log moderation action for review
+      console.log('Content moderation blocked message:', {
+        senderSessionId,
+        categories: moderationResult.categories,
+        flagged: moderationResult.flagged,
+      });
+
+      return NextResponse.json(
+        {
+          error: errorMessage,
+          moderationCategories: moderationResult.categories,
+        },
+        { status: 400 }
       );
     }
 

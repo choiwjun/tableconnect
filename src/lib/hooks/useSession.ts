@@ -1,16 +1,21 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useLocalStorage } from './useLocalStorage';
 import type { Session } from '@/types/database';
 import { SESSION_TTL_MS } from '@/lib/utils/constants';
+import { isSessionExpiringSoon, getSessionRemainingTime } from '@/lib/utils/session';
+
+const EXPIRING_SOON_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
 
 interface UseSessionReturn {
   session: Session | null;
   isLoading: boolean;
   error: string | null;
   isExpired: boolean;
+  isExpiringSoon: boolean;
+  remainingTimeMs: number;
   createSession: (merchantId: string, tableNumber: number) => Promise<Session | null>;
   joinSession: (nickname: string) => Promise<boolean>;
   endSession: () => Promise<void>;
@@ -39,6 +44,14 @@ export function useSession(): UseSessionReturn {
   }, [session]);
 
   const isExpired = checkExpiry();
+
+  // Check if session is expiring soon
+  const [remainingTimeMs, setRemainingTimeMs] = useState<number>(0);
+
+  const expiringSoon = useMemo(() => {
+    if (!session) return false;
+    return isSessionExpiringSoon(session, EXPIRING_SOON_THRESHOLD_MS);
+  }, [session]);
 
   // Fetch session by ID
   const fetchSession = useCallback(async (id: string) => {
@@ -185,24 +198,35 @@ export function useSession(): UseSessionReturn {
     }
   }, [sessionId, fetchSession]);
 
-  // Set up expiry check interval
+  // Set up expiry check interval and remaining time update
   useEffect(() => {
-    if (!session) return;
+    if (!session) {
+      setRemainingTimeMs(0);
+      return;
+    }
+
+    // Update remaining time immediately
+    setRemainingTimeMs(getSessionRemainingTime(session));
 
     const interval = setInterval(() => {
-      if (checkExpiry()) {
+      const remaining = getSessionRemainingTime(session);
+      setRemainingTimeMs(remaining);
+
+      if (remaining <= 0) {
         endSession();
       }
-    }, 60000); // Check every minute
+    }, 1000); // Check every second for accurate countdown
 
     return () => clearInterval(interval);
-  }, [session, checkExpiry, endSession]);
+  }, [session, endSession]);
 
   return {
     session,
     isLoading,
     error,
     isExpired,
+    isExpiringSoon: expiringSoon,
+    remainingTimeMs,
     createSession,
     joinSession,
     endSession,
