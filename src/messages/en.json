@@ -12,7 +12,8 @@
     "back": "Back",
     "next": "Next",
     "submit": "Submit",
-    "search": "Search"
+    "search": "Search",
+    "optional": "Optional"
   },
   "auth": {
     "login": "Login",
@@ -104,5 +105,49 @@
     "totalReports": "Total Reports",
     "noData": "No data available",
     "monthOverMonth": "MoM"
+  },
+  "dashboard": {
+    "home": "Home",
+    "menu": "Menu",
+    "messages": "Messages",
+    "myOrders": "My Orders",
+    "status": "Status",
+    "online": "Online",
+    "offline": "Offline",
+    "liveFeed": "Live Feed",
+    "activeTables": "Active Tables",
+    "noActiveTables": "No active tables",
+    "startFirst": "Be the first to start a conversation!",
+    "viewProfile": "View Profile",
+    "sendGift": "Send Gift",
+    "participating": "{count} participating",
+    "others": "+{count} others",
+    "privateTable": "Private Table",
+    "accessDenied": "Access Denied",
+    "livePopular": "Live Popular",
+    "registerTable": "Register Table",
+    "filter": "Filter",
+    "gridView": "Grid View",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "menuTitle": "Menu",
+    "allCategories": "All",
+    "soldOut": "Sold Out",
+    "priceNote": "※ Prices include tax. Menu items may change without notice."
+  },
+  "registration": {
+    "title": "Register Table",
+    "stepTable": "Step 1: Table Info",
+    "stepProfile": "Step 2: Profile",
+    "tableNumberLabel": "Table Number",
+    "tableNumberPlaceholder": "e.g., 5",
+    "tableNumberHint": "Enter a number between 1 and {max}",
+    "invalidTableNumber": "Please enter a number between 1 and {max}",
+    "tableTitleLabel": "Table Title",
+    "tableTitlePlaceholder": "e.g., Friday Night Drinks 🍻",
+    "nicknameLabel": "Nickname",
+    "nicknameHint": "This name will be displayed in the venue",
+    "join": "Join",
+    "privacyNote": "Your nickname will be visible to other guests. Please do not enter your real name or personal information."
   }
 }

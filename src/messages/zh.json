@@ -12,7 +12,8 @@
     "back": "返回",
     "next": "下一步",
     "submit": "提交",
-    "search": "搜索"
+    "search": "搜索",
+    "optional": "可选"
   },
   "auth": {
     "login": "登录",
@@ -104,5 +105,49 @@
     "totalReports": "举报总数",
     "noData": "暂无数据",
     "monthOverMonth": "环比"
+  },
+  "dashboard": {
+    "home": "首页",
+    "menu": "菜单",
+    "messages": "消息",
+    "myOrders": "我的订单",
+    "status": "状态",
+    "online": "在线",
+    "offline": "离线",
+    "liveFeed": "实时动态",
+    "activeTables": "正在聊天的桌位",
+    "noActiveTables": "暂无活跃桌位",
+    "startFirst": "成为第一个开始聊天的人！",
+    "viewProfile": "查看资料",
+    "sendGift": "送礼物",
+    "participating": "{count}人参与",
+    "others": "+{count}人",
+    "privateTable": "私密桌位",
+    "accessDenied": "无法访问",
+    "livePopular": "实时热门",
+    "registerTable": "注册桌位",
+    "filter": "筛选",
+    "gridView": "网格视图",
+    "connected": "已连接",
+    "disconnected": "已断开",
+    "menuTitle": "菜单",
+    "allCategories": "全部",
+    "soldOut": "已售罄",
+    "priceNote": "※ 价格含税。菜单可能会有变动，恕不另行通知。"
+  },
+  "registration": {
+    "title": "注册桌位",
+    "stepTable": "第1步：桌位信息",
+    "stepProfile": "第2步：个人资料",
+    "tableNumberLabel": "桌号",
+    "tableNumberPlaceholder": "例如：5",
+    "tableNumberHint": "请输入1~{max}之间的数字",
+    "invalidTableNumber": "请输入1~{max}之间的数字",
+    "tableTitleLabel": "桌位标题",
+    "tableTitlePlaceholder": "例如：周五聚餐 🍻",
+    "nicknameLabel": "昵称",
+    "nicknameHint": "在店内显示的名字",
+    "join": "加入",
+    "privacyNote": "昵称将显示给店内其他顾客。请勿输入真实姓名或个人信息。"
   }
 }

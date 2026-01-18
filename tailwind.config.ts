@@ -10,12 +10,17 @@ const config: Config = {
     extend: {
       // Tokyo Night Pulse 색상 팔레트
       colors: {
-        // Background
+        // Background (design.html 기반)
         void: "#0a0a0f",
         midnight: "#1a1a27",
         steel: "#2a2a3d",
+        "background-dark": "#080a0c",
+        "glass-bg": "rgba(18, 22, 28, 0.6)",
+        "glass-border": "rgba(255, 255, 255, 0.08)",
+        "card-bg": "#161b22",
 
-        // Accent (Neon)
+        // Accent (Neon) - Primary cyan from design.html
+        primary: "#00ffff",
         "neon-pink": "#ff0080",
         "neon-cyan": "#00ffff",
         "neon-purple": "#bf00ff",
@@ -23,6 +28,7 @@ const config: Config = {
         // Text
         silver: "#c0c0c0",
         muted: "#6b7280",
+        "soft-white": "#ffffff",
 
         // Status
         success: "#00ff88",
@@ -34,21 +40,37 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
 
-      // 커스텀 폰트
+      // 커스텀 폰트 (design.html 기반)
       fontFamily: {
-        display: ["Righteous", "cursive"],
-        body: ["DM Sans", "sans-serif"],
-        accent: ["Fredoka", "sans-serif"],
+        // Display font for headings/logos
+        display: ["Space Grotesk", "Righteous", "system-ui", "sans-serif"],
+        // Accent font for buttons/special text
+        accent: ["Fredoka", "system-ui", "sans-serif"],
+        // Base body font (English fallback)
+        body: ["DM Sans", "system-ui", "sans-serif"],
+        // Language-specific fonts
+        ja: ["Noto Sans JP", "DM Sans", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", "sans-serif"],
+        ko: ["Noto Sans KR", "DM Sans", "Apple SD Gothic Neo", "Malgun Gothic", "sans-serif"],
+        "zh-cn": ["Noto Sans SC", "DM Sans", "PingFang SC", "Microsoft YaHei", "sans-serif"],
+        "zh-tw": ["Noto Sans TC", "DM Sans", "PingFang TC", "Microsoft JhengHei", "sans-serif"],
+        en: ["DM Sans", "Space Grotesk", "Segoe UI", "Roboto", "sans-serif"],
       },
 
-      // 커스텀 그림자 (Neon Glow)
+      // 커스텀 그림자 (Neon Glow) - design.html 기반
       boxShadow: {
+        "neon": "0 0 10px rgba(0, 255, 255, 0.3), 0 0 20px rgba(0, 255, 255, 0.1)",
+        "neon-strong": "0 0 15px rgba(0, 255, 255, 0.5), 0 0 30px rgba(0, 255, 255, 0.2)",
         "neon-pink": "0 0 20px rgba(255, 0, 128, 0.3)",
         "neon-pink-lg": "0 0 30px rgba(255, 0, 128, 0.5)",
         "neon-cyan": "0 0 20px rgba(0, 255, 255, 0.3)",
         "neon-cyan-lg": "0 0 30px rgba(0, 255, 255, 0.5)",
         "neon-purple": "0 0 20px rgba(191, 0, 255, 0.3)",
         glass: "0 8px 32px rgba(0, 0, 0, 0.3)",
+      },
+
+      // 그라디언트 배경 (design.html 기반)
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
 
       // 애니메이션 키프레임

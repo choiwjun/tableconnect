@@ -1,23 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fredoka:wght@300..700&family=Righteous&display=swap');
+/*
+ * Fonts are loaded via next/font in layout.tsx for optimal performance.
+ * CSS variables available:
+ *   --font-righteous     (Display)
+ *   --font-space-grotesk (Display)
+ *   --font-dm-sans       (Body - English)
+ *   --font-fredoka       (Accent)
+ *   --font-noto-sans-jp  (Japanese)
+ *   --font-noto-sans-kr  (Korean)
+ *   --font-noto-sans-sc  (Simplified Chinese)
+ *   --font-noto-sans-tc  (Traditional Chinese)
+ */
+
+/* Material Symbols - loaded via <link> in layout.tsx for better reliability */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Tokyo Night Pulse 기본 테마 */
+/* Tokyo Night Pulse 기본 테마 - design.html 기반 */
 :root {
-  --background: #0a0a0f;
+  --background: #080a0c;
   --foreground: #ffffff;
 
   /* 색상 변수 */
   --color-void: #0a0a0f;
   --color-midnight: #1a1a27;
   --color-steel: #2a2a3d;
+  --color-background-dark: #080a0c;
   --color-neon-pink: #ff0080;
   --color-neon-cyan: #00ffff;
   --color-neon-purple: #bf00ff;
   --color-silver: #c0c0c0;
   --color-muted: #6b7280;
+  --color-primary: #00ffff;
 }
 
 /* 기본 body 스타일 */
@@ -26,6 +41,68 @@ body {
   background: var(--background);
   font-family: "DM Sans", sans-serif;
   min-height: 100vh;
+}
+
+/* Language-specific font stacks using CSS variables from next/font */
+/* Japanese */
+html[lang="ja"] body,
+.font-ja {
+  font-family: var(--font-noto-sans-jp), var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
+/* Korean */
+html[lang="ko"] body,
+.font-ko {
+  font-family: var(--font-noto-sans-kr), var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+/* Simplified Chinese */
+html[lang="zh-CN"] body,
+html[lang="zh-Hans"] body,
+html[lang="zh"] body,
+.font-zh-cn {
+  font-family: var(--font-noto-sans-sc), var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* Traditional Chinese */
+html[lang="zh-TW"] body,
+html[lang="zh-Hant"] body,
+.font-zh-tw {
+  font-family: var(--font-noto-sans-tc), var(--font-dm-sans), -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
+
+/* English and other Latin languages */
+html[lang="en"] body,
+.font-en {
+  font-family: var(--font-dm-sans), var(--font-space-grotesk), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Display font for headings */
+.font-display {
+  font-family: var(--font-space-grotesk), var(--font-righteous), system-ui, sans-serif;
+}
+
+/* Accent font for buttons/special elements */
+.font-accent {
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+}
+
+/* Material Symbols icon font */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
 
 /* 기본 레이어 */
@@ -69,6 +146,14 @@ body {
     background: rgba(26, 26, 39, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Glass Panel - design.html 기반 */
+  .glass-panel {
+    background: rgba(20, 25, 30, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 

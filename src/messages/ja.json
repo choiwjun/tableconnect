@@ -12,7 +12,8 @@
     "back": "戻る",
     "next": "次へ",
     "submit": "送信",
-    "search": "検索"
+    "search": "検索",
+    "optional": "任意"
   },
   "auth": {
     "login": "ログイン",
@@ -136,5 +137,49 @@
     "step2Description": "好きなニックネームを入力して参加",
     "step3Title": "チャット開始",
     "step3Description": "他のテーブルの人とチャットやギフト送信を楽しもう"
+  },
+  "dashboard": {
+    "home": "ホーム",
+    "menu": "メニュー",
+    "messages": "メッセージ",
+    "myOrders": "マイオーダー",
+    "status": "ステータス",
+    "online": "オンライン",
+    "offline": "オフライン",
+    "liveFeed": "ライブフィード",
+    "activeTables": "チャット中のテーブル",
+    "noActiveTables": "アクティブなテーブルがありません",
+    "startFirst": "最初のチャットを始めましょう！",
+    "viewProfile": "プロフィールを見る",
+    "sendGift": "ギフトを送る",
+    "participating": "{count}人参加中",
+    "others": "+{count}人",
+    "privateTable": "プライベートテーブル",
+    "accessDenied": "アクセス不可",
+    "livePopular": "リアルタイム人気",
+    "registerTable": "テーブル登録",
+    "filter": "フィルター",
+    "gridView": "グリッド表示",
+    "connected": "接続中",
+    "disconnected": "切断",
+    "menuTitle": "メニュー",
+    "allCategories": "すべて",
+    "soldOut": "売り切れ",
+    "priceNote": "※ 価格は税込です。メニューは予告なく変更される場合があります。"
+  },
+  "registration": {
+    "title": "テーブル登録",
+    "stepTable": "ステップ 1: テーブル情報",
+    "stepProfile": "ステップ 2: プロフィール",
+    "tableNumberLabel": "テーブル番号",
+    "tableNumberPlaceholder": "例: 5",
+    "tableNumberHint": "1〜{max}の番号を入力してください",
+    "invalidTableNumber": "1〜{max}の番号を入力してください",
+    "tableTitleLabel": "テーブルのタイトル",
+    "tableTitlePlaceholder": "例: 金曜日の飲み会 🍻",
+    "nicknameLabel": "ニックネーム",
+    "nicknameHint": "店内で表示される名前です",
+    "join": "参加する",
+    "privacyNote": "ニックネームは店内の他のお客様に表示されます。本名や個人情報は入力しないでください。"
   }
 }

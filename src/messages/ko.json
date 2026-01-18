@@ -12,7 +12,8 @@
     "back": "뒤로",
     "next": "다음",
     "submit": "제출",
-    "search": "검색"
+    "search": "검색",
+    "optional": "선택"
   },
   "auth": {
     "login": "로그인",
@@ -104,5 +105,49 @@
     "totalReports": "총 신고 수",
     "noData": "데이터가 없습니다",
     "monthOverMonth": "전월 대비"
+  },
+  "dashboard": {
+    "home": "홈",
+    "menu": "메뉴",
+    "messages": "메시지",
+    "myOrders": "내 주문",
+    "status": "상태",
+    "online": "온라인",
+    "offline": "오프라인",
+    "liveFeed": "라이브 피드",
+    "activeTables": "지금 대화 중인 테이블",
+    "noActiveTables": "활성 테이블이 없습니다",
+    "startFirst": "첫 번째로 대화를 시작해보세요!",
+    "viewProfile": "프로필 보기",
+    "sendGift": "선물 보내기",
+    "participating": "{count}명 참여 중",
+    "others": "+{count}명",
+    "privateTable": "비공개 테이블",
+    "accessDenied": "접근 불가",
+    "livePopular": "실시간 인기",
+    "registerTable": "내 테이블 등록",
+    "filter": "필터",
+    "gridView": "그리드 보기",
+    "connected": "연결됨",
+    "disconnected": "연결 끊김",
+    "menuTitle": "메뉴",
+    "allCategories": "전체",
+    "soldOut": "품절",
+    "priceNote": "※ 가격은 세금 포함입니다. 메뉴는 예고 없이 변경될 수 있습니다."
+  },
+  "registration": {
+    "title": "테이블 등록",
+    "stepTable": "1단계: 테이블 정보",
+    "stepProfile": "2단계: 프로필",
+    "tableNumberLabel": "테이블 번호",
+    "tableNumberPlaceholder": "예: 5",
+    "tableNumberHint": "1~{max} 사이의 번호를 입력하세요",
+    "invalidTableNumber": "1~{max} 사이의 번호를 입력하세요",
+    "tableTitleLabel": "테이블 제목",
+    "tableTitlePlaceholder": "예: 금요일 회식 🍻",
+    "nicknameLabel": "닉네임",
+    "nicknameHint": "매장에서 표시되는 이름입니다",
+    "join": "참여하기",
+    "privacyNote": "닉네임은 매장 내 다른 손님에게 표시됩니다. 실명이나 개인정보는 입력하지 마세요."
   }
 }

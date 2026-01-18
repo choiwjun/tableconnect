@@ -1,177 +1,211 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { QrCode, MessageCircle, Gift, Shield, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import {
+  DashboardHeader,
+  PopularTablesSidebar,
+  PopularTablesHorizontal,
+  TableCardGrid,
+  DashboardFooter,
+  MenuModal,
+  MobileBottomNav,
+  TableRegistrationModal,
+} from '@/components/dashboard';
+
+// Mock data for demo - in production, this would come from Supabase realtime
+const mockPopularTables = [
+  {
+    id: '1',
+    tableNumber: 5,
+    label: 'Table 05',
+    status: 'hot' as const,
+    description: '🔥 분위기 최고조 (Hype)',
+  },
+  {
+    id: '2',
+    tableNumber: 1,
+    label: 'VIP Room 1',
+    status: 'private' as const,
+    description: '비밀 대화 중 (Private)',
+  },
+  {
+    id: '3',
+    tableNumber: 12,
+    label: 'Table 12',
+    status: 'new' as const,
+    description: '새로운 만남 대기 (Waiting)',
+  },
+];
+
+const mockActiveTables = [
+  {
+    id: '1',
+    tableNumber: 8,
+    title: '즐거운 금요일! 🍻',
+    description: '도쿄 여행 온 친구들끼리 한잔 중입니다. 합석 환영해요!',
+    members: [
+      { id: 'm1', nickname: 'Yuki' },
+      { id: 'm2', nickname: 'Taro' },
+      { id: 'm3', nickname: 'Hana' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '2',
+    tableNumber: 14,
+    title: '음악 얘기할 사람 🎵',
+    description: '시티팝 좋아하는 사람들 모여라. 신청곡 받습니다.',
+    members: [
+      { id: 'm4', nickname: 'Ken' },
+      { id: 'm5', nickname: 'Miki' },
+    ],
+    status: 'music' as const,
+  },
+  {
+    id: '3',
+    tableNumber: 2,
+    title: '회사 뒤풀이 중 💼',
+    description: '직장인들의 고충 토로... 같이 욕해줄 사람 구함',
+    members: [
+      { id: 'm6', nickname: 'Sato' },
+      { id: 'm7', nickname: 'Yamada' },
+      { id: 'm8', nickname: 'Tanaka' },
+      { id: 'm9', nickname: 'Suzuki' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '4',
+    tableNumber: 99,
+    title: '비공개 모임',
+    description: 'VIP 전용 테이블입니다.',
+    members: [],
+    status: 'private' as const,
+    isPrivate: true,
+  },
+  {
+    id: '5',
+    tableNumber: 5,
+    title: '생일 축하해 🎂',
+    description: '친구 생일 파티 중입니다! 케이크 나눠드려요.',
+    members: [
+      { id: 'm10', nickname: 'Akiko' },
+      { id: 'm11', nickname: 'Naomi' },
+      { id: 'm12', nickname: 'Ryo' },
+      { id: 'm13', nickname: 'Kenji' },
+      { id: 'm14', nickname: 'Yui' },
+      { id: 'm15', nickname: 'Haruto' },
+      { id: 'm16', nickname: 'Sakura' },
+      { id: 'm17', nickname: 'Takeshi' },
+      { id: 'm18', nickname: 'Mai' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '6',
+    tableNumber: 22,
+    title: '조용한 대화',
+    description: '진지한 이야기 중. 방해 금지 부탁드려요.',
+    members: [
+      { id: 'm19', nickname: 'Emi' },
+      { id: 'm20', nickname: 'Daiki' },
+    ],
+    status: 'busy' as const,
+  },
+];
 
 export default function Home() {
-  const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
 
-  useEffect(() => {
-    // Check if there's a stored session and redirect
-    const storedSession = localStorage.getItem('tableconnect_session');
-    if (storedSession) {
-      try {
-        const session = JSON.parse(storedSession);
-        if (session.merchantId && session.tableNumber) {
-          router.push(`/${session.merchantId}/${session.tableNumber}`);
-        }
-      } catch {
-        // Invalid session data, stay on landing page
-      }
-    }
-  }, [router]);
+  const handleTableClick = (tableId: string) => {
+    console.log('Navigate to table:', tableId);
+  };
+
+  const handleSendGift = (tableId: string) => {
+    console.log('Send gift to table:', tableId);
+  };
+
+  const handleTableRegistration = async (data: {
+    tableNumber: number;
+    nickname: string;
+    tableTitle?: string;
+  }) => {
+    console.log('Register table:', data);
+    // TODO: Connect to session API
+    // 1. POST /api/sessions to create session
+    // 2. POST /api/sessions/[sessionId]/join to join with nickname
+    // 3. Store session in localStorage
+    // 4. Navigate to dashboard or reload
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
+    <div className="bg-background-dark text-white font-body antialiased selection:bg-primary selection:text-black overflow-hidden h-screen flex flex-col">
+      {/* Ambient Background Effects */}
+      <div className="fixed inset-0 bg-gradient-radial from-[#1a2530] via-background-dark to-black z-0" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
-          <div className="text-center">
-            {/* Logo */}
-            <div className="flex justify-center mb-8">
-              <div className="relative">
-                <div className="absolute inset-0 blur-3xl bg-gradient-to-r from-pink-500 to-purple-500 opacity-30 rounded-full" />
-                <div className="relative bg-gradient-to-r from-pink-500 to-purple-600 p-4 rounded-2xl">
-                  <MessageCircle className="w-12 h-12 text-white" />
-                </div>
-              </div>
-            </div>
+      {/* Header */}
+      <DashboardHeader
+        merchantName="Tokyo Shinjuku"
+        isOnline={true}
+        onMenuClick={() => setIsMenuOpen(true)}
+      />
 
-            {/* Title */}
-            <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6">
-              <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                Table Connect
-              </span>
-            </h1>
+      {/* Main Content Area - pb-20 for mobile bottom nav space, md:pb-4 for desktop */}
+      <main className="relative z-10 flex flex-col lg:flex-row flex-1 overflow-hidden p-4 gap-4 pb-20 md:pb-4">
+        {/* Mobile: Horizontal Popular Tables */}
+        <PopularTablesHorizontal
+          tables={mockPopularTables}
+          onTableClick={handleTableClick}
+        />
 
-            {/* Subtitle */}
-            <p className="text-xl sm:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              居酒屋のテーブル同士で
-              <br className="sm:hidden" />
-              匿名コミュニケーション
-            </p>
-
-            {/* CTA */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-                <QrCode className="w-16 h-16 text-pink-400 mx-auto mb-3" />
-                <p className="text-white font-medium">QRコードをスキャン</p>
-                <p className="text-gray-400 text-sm mt-1">テーブルのQRコードから参加</p>
-              </div>
-            </div>
-          </div>
+        {/* Desktop: Left Sidebar - Real-time Popular */}
+        <div className="hidden lg:block flex-none">
+          <PopularTablesSidebar
+            tables={mockPopularTables}
+            onTableClick={handleTableClick}
+            onRegisterClick={() => setIsRegistrationOpen(true)}
+          />
         </div>
+
+        {/* Central Discovery Hub */}
+        <TableCardGrid
+          tables={mockActiveTables}
+          locationName="Live Feed • Tokyo Shinjuku"
+          onViewProfile={handleTableClick}
+          onSendGift={handleSendGift}
+        />
+      </main>
+
+      {/* Footer Status Bar - Hidden on mobile */}
+      <div className="hidden md:block">
+        <DashboardFooter isConnected={true} version="V1.0.0" />
       </div>
 
-      {/* Features Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-12">
-          主な機能
-        </h2>
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav
+        activeTab="home"
+        onHomeClick={() => console.log('Home')}
+        onMenuClick={() => setIsMenuOpen(true)}
+        onMessageClick={() => console.log('Messages')}
+        onOrderClick={() => console.log('Orders')}
+        onRegisterClick={() => setIsRegistrationOpen(true)}
+      />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Feature 1: Chat */}
-          <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 hover:border-pink-500/50 transition-colors">
-            <div className="bg-gradient-to-r from-pink-500 to-purple-500 p-3 rounded-xl w-fit mb-4">
-              <MessageCircle className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">匿名チャット</h3>
-            <p className="text-gray-400 text-sm">
-              ニックネームで気軽に他のテーブルとチャット
-            </p>
-          </div>
+      {/* Menu Modal */}
+      <MenuModal
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        merchantName="Tokyo Shinjuku"
+      />
 
-          {/* Feature 2: Gift */}
-          <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 hover:border-pink-500/50 transition-colors">
-            <div className="bg-gradient-to-r from-orange-500 to-pink-500 p-3 rounded-xl w-fit mb-4">
-              <Gift className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">ギフト送信</h3>
-            <p className="text-gray-400 text-sm">
-              ドリンクやフードをギフトとして送れます
-            </p>
-          </div>
-
-          {/* Feature 3: Safety */}
-          <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 hover:border-pink-500/50 transition-colors">
-            <div className="bg-gradient-to-r from-green-500 to-teal-500 p-3 rounded-xl w-fit mb-4">
-              <Shield className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">安心・安全</h3>
-            <p className="text-gray-400 text-sm">
-              ブロック・報告機能で安心して利用可能
-            </p>
-          </div>
-
-          {/* Feature 4: Real-time */}
-          <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10 hover:border-pink-500/50 transition-colors">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-xl w-fit mb-4">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">リアルタイム</h3>
-            <p className="text-gray-400 text-sm">
-              メッセージは即座に相手に届きます
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* How to Use Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-12">
-          使い方
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="bg-gradient-to-r from-pink-500 to-purple-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
-              1
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">QRコードをスキャン</h3>
-            <p className="text-gray-400 text-sm">
-              テーブルに置かれたQRコードをスマートフォンでスキャン
-            </p>
-          </div>
-
-          <div className="text-center">
-            <div className="bg-gradient-to-r from-pink-500 to-purple-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
-              2
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">ニックネームを入力</h3>
-            <p className="text-gray-400 text-sm">
-              好きなニックネームを入力して参加
-            </p>
-          </div>
-
-          <div className="text-center">
-            <div className="bg-gradient-to-r from-pink-500 to-purple-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
-              3
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">チャット開始</h3>
-            <p className="text-gray-400 text-sm">
-              他のテーブルの人とチャットやギフト送信を楽しもう
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="border-t border-white/10 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <MessageCircle className="w-5 h-5 text-pink-400" />
-              <span className="text-white font-semibold">Table Connect</span>
-            </div>
-            <p className="text-gray-500 text-sm">
-              © 2024 Table Connect. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      {/* Table Registration Modal */}
+      <TableRegistrationModal
+        isOpen={isRegistrationOpen}
+        onClose={() => setIsRegistrationOpen(false)}
+        onSubmit={handleTableRegistration}
+        maxTableNumber={50}
+      />
     </div>
   );
 }

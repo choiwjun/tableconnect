@@ -1,37 +1,30 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
-
-const languages = [
-  { code: 'ja', name: '日本語', flag: '🇯🇵' },
-  { code: 'ko', name: '한국어', flag: '🇰🇷' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' },
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-] as const;
-
-type LanguageCode = (typeof languages)[number]['code'];
+import { cn } from '@/lib/utils/cn';
+import { useI18n } from '@/lib/i18n/context';
+import {
+  locales,
+  languageNames,
+  languageFlags,
+  type Locale,
+} from '@/lib/i18n';
 
 interface LanguageSelectorProps {
-  currentLocale?: string;
   className?: string;
 }
 
-export function LanguageSelector({
-  currentLocale = 'ja',
-  className,
-}: LanguageSelectorProps) {
+export function LanguageSelector({ className }: LanguageSelectorProps) {
+  const { locale, setLocale } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
-  const [locale, setLocale] = useState<LanguageCode>(currentLocale as LanguageCode);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-
-  const currentLanguage = languages.find((l) => l.code === locale) || languages[0];
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -40,19 +33,9 @@ export function LanguageSelector({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLanguageChange = async (code: LanguageCode) => {
-    setLocale(code);
+  const handleLanguageChange = async (code: Locale) => {
+    await setLocale(code);
     setIsOpen(false);
-
-    // Save to cookie via API
-    await fetch('/api/locale', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ locale: code }),
-    });
-
-    // Refresh to apply new locale
-    router.refresh();
   };
 
   return (
@@ -61,55 +44,34 @@ export function LanguageSelector({
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-midnight border border-steel/50 hover:border-steel transition-colors"
       >
-        <span className="text-lg">{currentLanguage.flag}</span>
-        <span className="text-sm text-soft-white">{currentLanguage.name}</span>
-        <svg
-          className={cn(
-            'w-4 h-4 text-muted transition-transform',
-            isOpen && 'rotate-180'
-          )}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        <span className="text-lg">{languageFlags[locale]}</span>
+        <span className="text-sm text-soft-white hidden sm:inline">
+          {languageNames[locale]}
+        </span>
+        <span className="material-symbols-outlined text-muted text-sm">
+          {isOpen ? 'expand_less' : 'expand_more'}
+        </span>
       </button>
 
       {isOpen && (
         <div className="absolute right-0 top-full mt-2 w-40 glass rounded-lg overflow-hidden z-50 animate-fadeIn">
-          {languages.map((language) => (
+          {locales.map((lang) => (
             <button
-              key={language.code}
-              onClick={() => handleLanguageChange(language.code)}
+              key={lang}
+              onClick={() => handleLanguageChange(lang)}
               className={cn(
                 'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors',
-                language.code === locale
-                  ? 'bg-neon-cyan/10 text-neon-cyan'
+                lang === locale
+                  ? 'bg-primary/10 text-primary'
                   : 'text-muted hover:bg-steel/20 hover:text-soft-white'
               )}
             >
-              <span className="text-lg">{language.flag}</span>
-              <span className="text-sm">{language.name}</span>
-              {language.code === locale && (
-                <svg
-                  className="w-4 h-4 ml-auto"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+              <span className="text-lg">{languageFlags[lang]}</span>
+              <span className="text-sm">{languageNames[lang]}</span>
+              {lang === locale && (
+                <span className="material-symbols-outlined text-sm ml-auto">
+                  check
+                </span>
               )}
             </button>
           ))}
