@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fredoka:wght@300..700&family=Righteous&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tokyo Night Pulse 기본 테마 */
+:root {
+  --background: #0a0a0f;
+  --foreground: #ffffff;
+
+  /* 색상 변수 */
+  --color-void: #0a0a0f;
+  --color-midnight: #1a1a27;
+  --color-steel: #2a2a3d;
+  --color-neon-pink: #ff0080;
+  --color-neon-cyan: #00ffff;
+  --color-neon-purple: #bf00ff;
+  --color-silver: #c0c0c0;
+  --color-muted: #6b7280;
+}
+
+/* 기본 body 스타일 */
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "DM Sans", sans-serif;
+  min-height: 100vh;
+}
+
+/* 기본 레이어 */
+@layer base {
+  /* 스크롤바 커스텀 (웹킷) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-midnight);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-steel);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neon-pink);
+  }
+
+  /* 선택 영역 스타일 */
+  ::selection {
+    background: rgba(255, 0, 128, 0.3);
+    color: #ffffff;
+  }
+
+  /* 포커스 링 기본 스타일 */
+  *:focus-visible {
+    outline: 2px solid var(--color-neon-cyan);
+    outline-offset: 2px;
+  }
+}
+
+/* 컴포넌트 레이어 */
+@layer components {
+  /* Glass Morphism 카드 */
+  .glass {
+    background: rgba(26, 26, 39, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-hover {
+    @apply glass transition-all duration-300;
+  }
+
+  .glass-hover:hover {
+    background: rgba(26, 26, 39, 0.8);
+    border-color: rgba(255, 0, 128, 0.3);
+    box-shadow: 0 0 30px rgba(255, 0, 128, 0.15);
+  }
+
+  /* 네온 텍스트 */
+  .text-neon {
+    text-shadow:
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 40px currentColor;
+  }
+
+  /* 네온 버튼 */
+  .btn-neon {
+    @apply px-6 py-3 rounded-xl font-accent font-semibold;
+    @apply bg-gradient-to-r from-neon-pink to-neon-purple;
+    @apply text-white shadow-neon-pink;
+    @apply hover:shadow-neon-pink-lg hover:scale-105;
+    @apply active:scale-95;
+    @apply transition-all duration-300;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+
+  /* 세컨더리 버튼 */
+  .btn-secondary {
+    @apply px-6 py-3 rounded-xl font-accent font-semibold;
+    @apply bg-steel/50 border border-neon-cyan/30;
+    @apply text-neon-cyan;
+    @apply hover:bg-steel hover:border-neon-cyan;
+    @apply transition-all duration-300;
+  }
+
+  /* 고스트 버튼 */
+  .btn-ghost {
+    @apply px-6 py-3 rounded-xl font-accent font-semibold;
+    @apply bg-transparent text-silver;
+    @apply hover:text-white hover:bg-white/5;
+    @apply transition-all duration-300;
+  }
+
+  /* 인풋 필드 */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl;
+    @apply bg-steel/50 border border-white/10;
+    @apply text-white placeholder:text-muted;
+    @apply font-body;
+    @apply focus:outline-none focus:border-neon-cyan/50;
+    @apply focus:shadow-[0_0_20px_rgba(0,255,255,0.15)];
+    @apply transition-all duration-300;
+  }
+
+  /* 메시지 버블 - 보낸 메시지 */
+  .message-sent {
+    @apply bg-gradient-to-r from-neon-pink to-neon-purple;
+    @apply text-white rounded-2xl rounded-br-sm;
+  }
+
+  /* 메시지 버블 - 받은 메시지 */
+  .message-received {
+    @apply bg-steel/60 text-silver;
+    @apply rounded-2xl rounded-bl-sm;
+  }
+}
+
+/* 유틸리티 레이어 */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* 그라디언트 텍스트 */
+  .text-gradient {
+    @apply bg-gradient-to-r from-neon-pink via-neon-purple to-neon-cyan;
+    @apply bg-clip-text text-transparent;
+  }
+
+  /* 그라디언트 보더 */
+  .border-gradient {
+    border: 2px solid transparent;
+    background:
+      linear-gradient(var(--color-midnight), var(--color-midnight)) padding-box,
+      linear-gradient(135deg, var(--color-neon-pink), var(--color-neon-cyan)) border-box;
+  }
+
+  /* 시머 로딩 효과 */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--color-steel) 0%,
+      var(--color-midnight) 50%,
+      var(--color-steel) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* 숨김 스크롤바 */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
