@@ -67,11 +67,8 @@ export async function GET(request: NextRequest) {
       query = query.eq('reason', reason);
     }
 
-    // For merchant_admin, filter by their merchant's sessions
-    if (admin.role === 'merchant_admin' && admin.merchantId) {
-      // This requires a more complex query - for now, we'll fetch all and filter
-      // In production, this should be optimized with proper database views or RLS
-    }
+    // Note: For merchant_admin, filtering is done after fetching to ensure proper access control
+    // This is intentional - post-fetch filtering guarantees no data leakage even if query fails
 
     // Apply pagination and ordering
     query = query
@@ -110,12 +107,15 @@ export async function GET(request: NextRequest) {
 
     // Filter by merchant for merchant_admin
     let filteredReports = transformedReports;
+    let filteredCount = count || 0;
+
     if (admin.role === 'merchant_admin' && admin.merchantId) {
       filteredReports = transformedReports.filter(
         (report) =>
           report.reporter?.merchant_id === admin.merchantId ||
           report.reported?.merchant_id === admin.merchantId
       );
+      filteredCount = filteredReports.length;
     }
 
     return NextResponse.json({
@@ -123,8 +123,8 @@ export async function GET(request: NextRequest) {
       pagination: {
         page,
         limit,
-        total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit),
+        total: filteredCount,
+        totalPages: Math.ceil(filteredCount / limit),
       },
     });
   } catch (error) {

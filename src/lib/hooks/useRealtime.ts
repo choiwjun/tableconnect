@@ -92,16 +92,6 @@ export function useRealtime<T extends Record<string, unknown>>({
       }
     };
   }, [supabase, table, event, filter, enabled, handleChange]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-        channelRef.current = null;
-      }
-    };
-  }, [supabase]);
 }
 
 /**

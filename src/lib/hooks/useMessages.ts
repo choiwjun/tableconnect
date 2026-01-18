@@ -89,7 +89,7 @@ export function useMessages({
     [sessionId, partnerSessionId, pageSize, supabase]
   );
 
-  // Send a message
+  // Send a message via API (includes content moderation)
   const sendMessage = useCallback(
     async (content: string, receiverSessionId: string): Promise<Message | null> => {
       if (!sessionId) {
@@ -98,21 +98,24 @@ export function useMessages({
       }
 
       try {
-        const { data, error: sendError } = await supabase
-          .from('messages')
-          .insert({
-            sender_session_id: sessionId,
-            receiver_session_id: receiverSessionId,
+        const response = await fetch('/api/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            senderSessionId: sessionId,
+            receiverSessionId: receiverSessionId,
             content,
-            is_read: false,
-          })
-          .select()
-          .single();
+          }),
+        });
 
-        if (sendError) throw sendError;
+        const data = await response.json();
 
-        if (data) {
-          const newMessage = data as Message;
+        if (!response.ok) {
+          throw new Error(data.error || 'メッセージの送信に失敗しました');
+        }
+
+        if (data.message) {
+          const newMessage = data.message as Message;
           setMessages((prev) => [newMessage, ...prev]);
           return newMessage;
         }
@@ -120,11 +123,11 @@ export function useMessages({
         return null;
       } catch (err) {
         console.error('Error sending message:', err);
-        setError('メッセージの送信に失敗しました');
+        setError(err instanceof Error ? err.message : 'メッセージの送信に失敗しました');
         return null;
       }
     },
-    [sessionId, supabase]
+    [sessionId]
   );
 
   // Load more messages

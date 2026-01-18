@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { isValidUUID } from '@/lib/utils/validators';
 
 // GET /api/gifts - Get gifts for a session (sent and received)
 export async function GET(request: NextRequest) {
@@ -11,6 +12,13 @@ export async function GET(request: NextRequest) {
   if (!sessionId) {
     return NextResponse.json(
       { error: 'sessionId is required' },
+      { status: 400 }
+    );
+  }
+
+  if (!isValidUUID(sessionId)) {
+    return NextResponse.json(
+      { error: 'Invalid session ID format' },
       { status: 400 }
     );
   }

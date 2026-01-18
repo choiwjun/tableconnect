@@ -100,13 +100,19 @@ export function ChatRoom({
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.error || 'Failed to send message');
       }
 
-      const { message } = await response.json();
-      setMessages((prev) => [...prev, message]);
+      // Add message with duplicate check (realtime may also add it)
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === data.message.id)) {
+          return prev;
+        }
+        return [...prev, data.message];
+      });
     },
     [sessionId, partnerId]
   );
