@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { Button, Modal } from '@/components/ui';
+import { useTranslation } from '@/lib/i18n/context';
 
 type ReportReason = 'harassment' | 'spam' | 'inappropriate' | 'other';
 
@@ -15,13 +16,6 @@ interface ReportModalProps {
   onReport?: () => void;
 }
 
-const reasonLabels: Record<ReportReason, string> = {
-  harassment: '嫌がらせ・ハラスメント',
-  spam: 'スパム・迷惑行為',
-  inappropriate: '不適切なコンテンツ',
-  other: 'その他',
-};
-
 export function ReportModal({
   isOpen,
   onClose,
@@ -31,11 +25,19 @@ export function ReportModal({
   messageId,
   onReport,
 }: ReportModalProps) {
+  const { t } = useTranslation();
   const [selectedReason, setSelectedReason] = useState<ReportReason | null>(null);
   const [description, setDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const reasonLabels: Record<ReportReason, string> = {
+    harassment: t('safety.harassment'),
+    spam: t('safety.spam'),
+    inappropriate: t('safety.inappropriate'),
+    other: t('safety.other'),
+  };
 
   const handleSubmit = useCallback(async () => {
     if (!selectedReason) return;
@@ -65,11 +67,11 @@ export function ReportModal({
       onReport?.();
     } catch (err) {
       console.error('Error submitting report:', err);
-      setError(err instanceof Error ? err.message : '報告に失敗しました');
+      setError(err instanceof Error ? err.message : t('safety.report'));
     } finally {
       setIsLoading(false);
     }
-  }, [currentSessionId, targetSessionId, messageId, selectedReason, description, onReport]);
+  }, [currentSessionId, targetSessionId, messageId, selectedReason, description, onReport, t]);
 
   const handleClose = useCallback(() => {
     setSelectedReason(null);
@@ -100,16 +102,14 @@ export function ReportModal({
           </div>
 
           <h2 className="font-display text-xl text-soft-white mb-2">
-            報告を受け付けました
+            {t('safety.reportSuccess')}
           </h2>
           <p className="text-muted text-sm mb-6">
-            ご報告ありがとうございます。
-            <br />
-            内容を確認し、適切に対応いたします。
+            {t('safety.reportSuccessDescription')}
           </p>
 
           <Button variant="primary" className="w-full" onClick={handleClose}>
-            閉じる
+            {t('common.close')}
           </Button>
         </div>
       </Modal>
@@ -120,10 +120,10 @@ export function ReportModal({
     <Modal isOpen={isOpen} onClose={handleClose}>
       <div>
         <h2 className="font-display text-xl text-soft-white text-center mb-2">
-          {targetNickname}さんを報告
+          {t('safety.reportNickname', { nickname: targetNickname })}
         </h2>
         <p className="text-muted text-sm text-center mb-6">
-          報告理由を選択してください
+          {t('safety.reportReason')}
         </p>
 
         {/* Reason Selection */}
@@ -159,12 +159,12 @@ export function ReportModal({
         {/* Description */}
         <div className="mb-6">
           <label className="block text-soft-white text-sm mb-2">
-            詳細（任意）
+            {t('safety.reportDescription')}
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="詳細な内容があればご記入ください..."
+            placeholder={t('safety.reportDescriptionPlaceholder')}
             maxLength={500}
             rows={3}
             className="w-full px-4 py-3 rounded-xl bg-midnight border border-steel/50 text-soft-white placeholder:text-muted resize-none focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan/30"
@@ -188,7 +188,7 @@ export function ReportModal({
             onClick={handleClose}
             disabled={isLoading}
           >
-            キャンセル
+            {t('common.cancel')}
           </Button>
           <Button
             variant="danger"
@@ -197,7 +197,7 @@ export function ReportModal({
             loading={isLoading}
             disabled={isLoading || !selectedReason}
           >
-            報告する
+            {t('safety.report')}
           </Button>
         </div>
       </div>

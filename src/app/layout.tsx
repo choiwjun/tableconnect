@@ -73,6 +73,9 @@ export const metadata: Metadata = {
   title: "Table Connect - 居酒屋で繋がる",
   description: "居酒屋のテーブル同士で匿名コミュニケーション・ギフト送信ができるアプリ",
   manifest: "/manifest.json",
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -83,11 +86,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/icons/icon.svg", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "/icons/icon-152x152.png", sizes: "152x152", type: "image/png" },
+      { url: "/icons/icon.svg", type: "image/svg+xml" },
     ],
   },
 };

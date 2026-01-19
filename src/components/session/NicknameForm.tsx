@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { Input, Button } from '@/components/ui';
 import { isValidNickname } from '@/lib/utils/validators';
 import { MAX_NICKNAME_LENGTH } from '@/lib/utils/constants';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface NicknameFormProps {
   onSubmit: (nickname: string) => Promise<void>;
@@ -16,6 +17,7 @@ export function NicknameForm({
   isLoading = false,
   initialValue = '',
 }: NicknameFormProps) {
+  const { t } = useTranslation();
   const [nickname, setNickname] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,14 +29,12 @@ export function NicknameForm({
       const trimmedNickname = nickname.trim();
 
       if (!trimmedNickname) {
-        setError('ニックネームを入力してください');
+        setError(t('session.nicknameRequired'));
         return;
       }
 
       if (!isValidNickname(trimmedNickname)) {
-        setError(
-          `ニックネームは${MAX_NICKNAME_LENGTH}文字以内で、不適切な表現を含まないようにしてください`
-        );
+        setError(t('session.nicknameTooLong', { max: MAX_NICKNAME_LENGTH }));
         return;
       }
 
@@ -42,10 +42,10 @@ export function NicknameForm({
         await onSubmit(trimmedNickname);
       } catch (err) {
         console.error('Nickname submission error:', err);
-        setError('エラーが発生しました。もう一度お試しください。');
+        setError(t('session.errorOccurred'));
       }
     },
-    [nickname, onSubmit]
+    [nickname, onSubmit, t]
   );
 
   const handleChange = useCallback((value: string) => {
@@ -63,7 +63,7 @@ export function NicknameForm({
           type="text"
           value={nickname}
           onChange={handleChange}
-          placeholder="ニックネームを入力"
+          placeholder={t('session.enterNickname')}
           maxLength={MAX_NICKNAME_LENGTH + 5} // Allow slight overflow to show error
           disabled={isLoading}
           error={error ?? undefined}
@@ -72,7 +72,7 @@ export function NicknameForm({
         />
         <div className="flex justify-between mt-2 text-sm">
           <span className="text-muted">
-            店内で表示される名前です
+            {t('session.nicknameHint')}
           </span>
           <span
             className={
@@ -95,7 +95,7 @@ export function NicknameForm({
         loading={isLoading}
         disabled={isLoading || isOverLimit || !nickname.trim()}
       >
-        参加する
+        {t('session.joinSession')}
       </Button>
     </form>
   );

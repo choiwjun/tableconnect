@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Modal, Button } from '@/components/ui';
+import { useTranslation } from '@/lib/i18n/context';
 import type { Session } from '@/types/database';
 import {
   isSessionExpired,
@@ -21,6 +22,7 @@ export function SessionExpiryWarning({
   onSessionEnd,
   warningThresholdMs = 10 * 60 * 1000, // 10 minutes
 }: SessionExpiryWarningProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [showWarning, setShowWarning] = useState(false);
   const [showExpired, setShowExpired] = useState(false);
@@ -81,7 +83,7 @@ export function SessionExpiryWarning({
       <Modal
         isOpen={showWarning}
         onClose={handleContinue}
-        title="セッション終了まもなく"
+        title={t('session.sessionExpiringSoon')}
       >
         <div className="text-center space-y-4">
           <div className="w-16 h-16 mx-auto rounded-full bg-yellow-500/20 flex items-center justify-center">
@@ -101,7 +103,7 @@ export function SessionExpiryWarning({
           </div>
 
           <p className="text-soft-white">
-            セッションがまもなく終了します
+            {t('session.sessionEndingSoon')}
           </p>
 
           <div className="text-3xl font-display text-neon-cyan">
@@ -109,11 +111,11 @@ export function SessionExpiryWarning({
           </div>
 
           <p className="text-muted text-sm">
-            セッション終了後は新しいQRコードをスキャンしてください
+            {t('session.sessionEndingSoonDesc')}
           </p>
 
           <Button variant="primary" onClick={handleContinue} fullWidth>
-            了解
+            {t('common.confirm')}
           </Button>
         </div>
       </Modal>
@@ -122,7 +124,7 @@ export function SessionExpiryWarning({
       <Modal
         isOpen={showExpired}
         onClose={handleExpiredConfirm}
-        title="セッション終了"
+        title={t('session.sessionEnded')}
       >
         <div className="text-center space-y-4">
           <div className="w-16 h-16 mx-auto rounded-full bg-red-500/20 flex items-center justify-center">
@@ -142,17 +144,15 @@ export function SessionExpiryWarning({
           </div>
 
           <p className="text-soft-white">
-            セッションが終了しました
+            {t('session.sessionExpired')}
           </p>
 
           <p className="text-muted text-sm">
-            ご利用ありがとうございました。
-            <br />
-            続けてご利用いただく場合は、再度QRコードをスキャンしてください。
+            {t('session.sessionEndedDesc')}
           </p>
 
           <Button variant="primary" onClick={handleExpiredConfirm} fullWidth>
-            トップページへ
+            {t('common.confirm')}
           </Button>
         </div>
       </Modal>

@@ -5,6 +5,90 @@ import { MenuCard } from './MenuCard';
 import { Spinner, Button } from '@/components/ui';
 import type { Menu } from '@/types/database';
 
+// Demo menu data
+const DEMO_MENUS: Menu[] = [
+  {
+    id: 'demo-menu-1',
+    merchant_id: 'demo',
+    name: '生ビール',
+    description: 'キンキンに冷えた生ビール',
+    price: 500,
+    category: 'ドリンク',
+    image_url: null,
+    is_available: true,
+    sort_order: 1,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'demo-menu-2',
+    merchant_id: 'demo',
+    name: 'ハイボール',
+    description: '爽やかなウイスキーハイボール',
+    price: 450,
+    category: 'ドリンク',
+    image_url: null,
+    is_available: true,
+    sort_order: 2,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'demo-menu-3',
+    merchant_id: 'demo',
+    name: '日本酒（一合）',
+    description: '厳選された日本酒',
+    price: 600,
+    category: 'ドリンク',
+    image_url: null,
+    is_available: true,
+    sort_order: 3,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'demo-menu-4',
+    merchant_id: 'demo',
+    name: '枝豆',
+    description: '塩茹でした枝豆',
+    price: 300,
+    category: 'おつまみ',
+    image_url: null,
+    is_available: true,
+    sort_order: 4,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'demo-menu-5',
+    merchant_id: 'demo',
+    name: '唐揚げ',
+    description: 'ジューシーな鶏の唐揚げ',
+    price: 550,
+    category: 'おつまみ',
+    image_url: null,
+    is_available: true,
+    sort_order: 5,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'demo-menu-6',
+    merchant_id: 'demo',
+    name: '焼き鳥盛り合わせ',
+    description: '5本セット（塩・タレ選択可）',
+    price: 700,
+    category: 'おつまみ',
+    image_url: null,
+    is_available: true,
+    sort_order: 6,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+];
+
+const DEMO_CATEGORIES = ['ドリンク', 'おつまみ'];
+
 interface MenuSelectorProps {
   merchantId: string;
   onSelect: (menu: Menu) => void;
@@ -19,10 +103,20 @@ export function MenuSelector({ merchantId, onSelect, onCancel }: MenuSelectorPro
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const isDemo = merchantId === 'demo';
+
   const fetchMenus = useCallback(async () => {
     try {
       setError(null);
       setIsLoading(true);
+
+      // Demo mode: use mock data
+      if (isDemo) {
+        setMenus(DEMO_MENUS);
+        setCategories(DEMO_CATEGORIES);
+        setIsLoading(false);
+        return;
+      }
 
       const response = await fetch(`/api/merchants/${merchantId}/menus`);
 
@@ -39,7 +133,7 @@ export function MenuSelector({ merchantId, onSelect, onCancel }: MenuSelectorPro
     } finally {
       setIsLoading(false);
     }
-  }, [merchantId]);
+  }, [merchantId, isDemo]);
 
   useEffect(() => {
     fetchMenus();

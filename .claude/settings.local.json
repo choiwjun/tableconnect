@@ -14,7 +14,13 @@
       "Bash(npx playwright install chromium)",
       "Bash(npm run lint)",
       "Bash(cd:*)",
-      "Bash(npm show:*)"
+      "Bash(npm show:*)",
+      "Bash(npm run dev:*)",
+      "Bash(taskkill:*)",
+      "Bash(pkill:*)",
+      "Bash(Get-Content \"C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-User-Downloads-tableconnect\\\\tasks\\\\ba20e97.output\" -Tail 30)",
+      "Bash(curl:*)",
+      "Bash(powershell -Command \"Get-Process -Name node -ErrorAction SilentlyContinue | Stop-Process -Force; Write-Host ''Node processes terminated''\")"
     ]
   }
 }

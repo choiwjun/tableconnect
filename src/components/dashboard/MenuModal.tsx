@@ -27,6 +27,7 @@ const mockMenus: Menu[] = [
     is_available: true,
     sort_order: 1,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: '2',
@@ -39,6 +40,7 @@ const mockMenus: Menu[] = [
     is_available: true,
     sort_order: 2,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: '3',
@@ -51,6 +53,7 @@ const mockMenus: Menu[] = [
     is_available: true,
     sort_order: 3,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: '4',
@@ -63,6 +66,7 @@ const mockMenus: Menu[] = [
     is_available: true,
     sort_order: 4,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: '5',
@@ -75,6 +79,7 @@ const mockMenus: Menu[] = [
     is_available: true,
     sort_order: 5,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: '6',
@@ -87,6 +92,7 @@ const mockMenus: Menu[] = [
     is_available: true,
     sort_order: 6,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: '7',
@@ -99,6 +105,7 @@ const mockMenus: Menu[] = [
     is_available: true,
     sort_order: 7,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: '8',
@@ -111,6 +118,7 @@ const mockMenus: Menu[] = [
     is_available: true,
     sort_order: 8,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
 ];
 

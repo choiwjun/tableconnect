@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   DashboardHeader,
   PopularTablesSidebar,
@@ -10,7 +11,10 @@ import {
   MenuModal,
   MobileBottomNav,
   TableRegistrationModal,
+  TableProfileModal,
+  OrderHistoryModal,
 } from '@/components/dashboard';
+import { useSessionStore } from '@/lib/stores/sessionStore';
 
 // Mock data for demo - in production, this would come from Supabase realtime
 const mockPopularTables = [
@@ -115,15 +119,30 @@ const mockActiveTables = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+  const { setCurrentSession, setMerchantInfo } = useSessionStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isOrderHistoryOpen, setIsOrderHistoryOpen] = useState(false);
+  const [selectedTable, setSelectedTable] = useState<typeof mockActiveTables[0] | null>(null);
 
   const handleTableClick = (tableId: string) => {
-    console.log('Navigate to table:', tableId);
+    const table = mockActiveTables.find((t) => t.id === tableId);
+    if (table) {
+      setSelectedTable(table);
+      setIsProfileOpen(true);
+    }
   };
 
   const handleSendGift = (tableId: string) => {
     console.log('Send gift to table:', tableId);
+  };
+
+  const handleStartChat = (tableId: string) => {
+    // Open registration to create session first
+    setIsProfileOpen(false);
+    setIsRegistrationOpen(true);
   };
 
   const handleTableRegistration = async (data: {
@@ -131,12 +150,29 @@ export default function Home() {
     nickname: string;
     tableTitle?: string;
   }) => {
-    console.log('Register table:', data);
-    // TODO: Connect to session API
-    // 1. POST /api/sessions to create session
-    // 2. POST /api/sessions/[sessionId]/join to join with nickname
-    // 3. Store session in localStorage
-    // 4. Navigate to dashboard or reload
+    // Home page is for demo purposes - create local session without API call
+    // Real merchant pages (/[merchant]/[table]/...) handle actual Supabase integration
+    const demoSessionId = `demo-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const expiresAt = new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString();
+
+    // Store session in localStorage
+    localStorage.setItem('tableconnect_session_id', demoSessionId);
+    localStorage.setItem(`tableconnect_session_demo_${data.tableNumber}`, demoSessionId);
+
+    // Store session in sessionStore for chat page
+    setCurrentSession({
+      id: demoSessionId,
+      merchant_id: 'demo',
+      table_number: data.tableNumber,
+      nickname: data.nickname,
+      is_active: true,
+      created_at: new Date().toISOString(),
+      expires_at: expiresAt,
+    });
+    setMerchantInfo('demo', data.tableNumber);
+
+    // Navigate to chat page
+    router.push(`/demo/${data.tableNumber}/chat`);
   };
 
   return (
@@ -185,10 +221,10 @@ export default function Home() {
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav
         activeTab="home"
-        onHomeClick={() => console.log('Home')}
+        onHomeClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onMenuClick={() => setIsMenuOpen(true)}
-        onMessageClick={() => console.log('Messages')}
-        onOrderClick={() => console.log('Orders')}
+        onMessageClick={() => setIsRegistrationOpen(true)}
+        onOrderClick={() => setIsOrderHistoryOpen(true)}
         onRegisterClick={() => setIsRegistrationOpen(true)}
       />
 
@@ -205,6 +241,21 @@ export default function Home() {
         onClose={() => setIsRegistrationOpen(false)}
         onSubmit={handleTableRegistration}
         maxTableNumber={50}
+      />
+
+      {/* Table Profile Modal */}
+      <TableProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        table={selectedTable}
+        onSendGift={handleSendGift}
+        onStartChat={handleStartChat}
+      />
+
+      {/* Order History Modal */}
+      <OrderHistoryModal
+        isOpen={isOrderHistoryOpen}
+        onClose={() => setIsOrderHistoryOpen(false)}
       />
     </div>
   );

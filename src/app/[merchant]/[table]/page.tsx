@@ -17,10 +17,33 @@ export default function TablePage() {
   const merchantSlug = params.merchant;
   const tableNumber = parseInt(params.table, 10);
 
+  // Check if this is demo mode
+  const isDemo = merchantSlug === 'demo';
+
   useEffect(() => {
     async function loadMerchant() {
       if (!merchantSlug || !isValidTableNumber(tableNumber)) {
         setError('無効なURLです');
+        setIsLoading(false);
+        return;
+      }
+
+      // Demo mode: skip Supabase call and use mock merchant
+      if (isDemo) {
+        const demoMerchant: Merchant = {
+          id: 'demo',
+          name: 'Demo Store',
+          slug: 'demo',
+          description: 'Demo store for testing',
+          address: null,
+          phone: null,
+          business_hours: null,
+          settings: { max_tables: 50 },
+          is_active: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        setMerchant(demoMerchant);
         setIsLoading(false);
         return;
       }
@@ -59,7 +82,7 @@ export default function TablePage() {
     }
 
     loadMerchant();
-  }, [merchantSlug, tableNumber]);
+  }, [merchantSlug, tableNumber, isDemo]);
 
   if (isLoading) {
     return (

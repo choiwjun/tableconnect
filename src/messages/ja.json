@@ -28,44 +28,68 @@
     "enterNickname": "ニックネームを入力",
     "nicknamePlaceholder": "例: タロウ",
     "nicknameRequired": "ニックネームを入力してください",
-    "nicknameTooLong": "ニックネームは20文字以内で入力してください",
+    "nicknameTooLong": "ニックネームは{max}文字以内で、不適切な表現を含まないようにしてください",
+    "nicknameHint": "店内で表示される名前です",
     "joinSession": "参加する",
     "sessionExpired": "セッションが期限切れです",
     "sessionExpiringSoon": "セッションがまもなく期限切れになります",
-    "table": "テーブル"
+    "sessionEndingSoon": "セッションがまもなく終了します",
+    "sessionEndingSoonDesc": "セッション終了後は新しいQRコードをスキャンしてください",
+    "sessionEnded": "セッション終了",
+    "sessionEndedDesc": "続けてご利用いただく場合は、再度QRコードをスキャンしてください。",
+    "table": "テーブル",
+    "errorOccurred": "エラーが発生しました。もう一度お試しください。"
   },
   "chat": {
     "sendMessage": "メッセージを送信",
     "messagePlaceholder": "メッセージを入力...",
     "noMessages": "メッセージはありません",
-    "startConversation": "会話を始めましょう",
+    "startConversation": "{nickname}さんとの会話を始めましょう",
     "sendFirstMessage": "最初のメッセージを送信してください",
     "messageTooLong": "メッセージは500文字以内で入力してください",
-    "read": "既読"
+    "read": "既読",
+    "gift": "ギフト",
+    "report": "報告する",
+    "fetchFailed": "メッセージの取得に失敗しました",
+    "tableNumber": "テーブル {number}"
   },
   "gift": {
     "sendGift": "ギフトを送る",
     "selectMenu": "メニューを選択",
+    "selectGift": "ギフトを選ぶ",
+    "addMessage": "メッセージを添える",
     "giftMessage": "メッセージ（任意）",
-    "giftMessagePlaceholder": "お礼のメッセージを添えてください...",
+    "giftMessagePlaceholder": "ありがとう！など...",
     "payment": "お支払い",
     "payNow": "支払う",
+    "proceedToPayment": "支払いへ進む",
     "processing": "処理中...",
     "paymentSuccess": "支払いが完了しました",
     "paymentFailed": "支払いに失敗しました",
-    "giftReceived": "ギフトを受け取りました！",
-    "thankYou": "ありがとうございます",
+    "paymentPrepareFailed": "決済の準備に失敗しました",
+    "giftSent": "ギフトを送りました！",
+    "giftSentTo": "{nickname}さんに{menu}を送りました。",
+    "giftReceived": "ギフトが届きました！",
+    "giftReceivedFrom": "{nickname} (テーブル {table}) さんから",
+    "thankYou": "ありがとう！",
     "from": "から",
-    "noMenus": "メニューがありません"
+    "noMenus": "メニューがありません",
+    "sendTo": "送り先",
+    "recipient": "受取人",
+    "message": "メッセージ",
+    "sendingTo": "{nickname}さんにギフトを送る",
+    "tableNumber": "テーブル {number}"
   },
   "safety": {
     "block": "ブロック",
     "blockUser": "ブロックする",
+    "blockNickname": "{nickname}さんをブロック",
     "blockConfirm": "この相手をブロックしますか？",
     "blockDescription": "この相手からのメッセージを受け取れなくなります。ブロックはいつでも解除できます。",
     "unblock": "ブロック解除",
     "report": "報告する",
     "reportUser": "報告",
+    "reportNickname": "{nickname}さんを報告",
     "reportReason": "報告理由を選択してください",
     "reportDescription": "詳細（任意）",
     "reportDescriptionPlaceholder": "詳細な内容があればご記入ください...",
@@ -181,5 +205,59 @@
     "nicknameHint": "店内で表示される名前です",
     "join": "参加する",
     "privacyNote": "ニックネームは店内の他のお客様に表示されます。本名や個人情報は入力しないでください。"
+  },
+  "offline": {
+    "title": "オフラインです",
+    "description": "インターネット接続を確認してください。接続が回復すると自動的に再読み込みされます。",
+    "status": "接続なし",
+    "retry": "再読み込み"
+  },
+  "mockTables": {
+    "popular": {
+      "table05": {
+        "label": "テーブル 05",
+        "description": "🔥 盛り上がり最高潮"
+      },
+      "vipRoom1": {
+        "label": "VIPルーム 1",
+        "description": "プライベートな会話中"
+      },
+      "table12": {
+        "label": "テーブル 12",
+        "description": "新しい出会い待機中"
+      }
+    },
+    "active": {
+      "fridayFun": {
+        "title": "金曜日楽しもう！🍻",
+        "description": "東京旅行中の友達と一杯やってます。合席歓迎！"
+      },
+      "musicTalk": {
+        "title": "音楽好き集まれ 🎵",
+        "description": "シティポップ好きな人集合。リクエスト受付中。"
+      },
+      "afterWork": {
+        "title": "会社の打ち上げ中 💼",
+        "description": "サラリーマンの愚痴大会...一緒に文句言ってくれる人募集"
+      },
+      "privateGathering": {
+        "title": "プライベート会",
+        "description": "VIP専用テーブルです。"
+      },
+      "birthdayParty": {
+        "title": "お誕生日おめでとう 🎂",
+        "description": "友達の誕生日パーティー中！ケーキおすそ分けします。"
+      },
+      "quietTalk": {
+        "title": "静かな会話",
+        "description": "真剣な話し中。お邪魔しないでください。"
+      }
+    },
+    "errors": {
+      "storeNotFound": "店舗が見つかりません",
+      "error": "エラー",
+      "errorOccurred": "エラーが発生しました",
+      "goHome": "ホームに戻る"
+    }
   }
 }

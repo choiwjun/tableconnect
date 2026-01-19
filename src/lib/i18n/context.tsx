@@ -31,9 +31,9 @@ type TranslationKey = NestedKeyOf<Messages>;
 
 const messages: Record<Locale, Messages> = {
   ja: jaMessages,
-  ko: koMessages,
-  zh: zhMessages as Messages,
-  en: enMessages as Messages,
+  ko: koMessages as unknown as Messages,
+  zh: zhMessages as unknown as Messages,
+  en: enMessages as unknown as Messages,
 };
 
 interface I18nContextType {

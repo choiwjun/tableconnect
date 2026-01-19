@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Modal, Button } from '@/components/ui';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface Gift {
   id: string;
@@ -19,6 +20,7 @@ interface GiftNotificationProps {
 }
 
 export function GiftNotification({ gift, onClose }: GiftNotificationProps) {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -65,12 +67,12 @@ export function GiftNotification({ gift, onClose }: GiftNotificationProps) {
 
         {/* Title */}
         <h2 className="font-display text-2xl text-center text-soft-white mb-2">
-          ギフトが届きました！
+          {t('gift.giftReceived')}
         </h2>
 
         {/* Sender Info */}
         <p className="text-center text-muted mb-6">
-          {gift.senderNickname} (テーブル {gift.senderTableNumber}) さんから
+          {t('gift.giftReceivedFrom', { nickname: gift.senderNickname, table: gift.senderTableNumber })}
         </p>
 
         {/* Gift Details */}
@@ -82,7 +84,7 @@ export function GiftNotification({ gift, onClose }: GiftNotificationProps) {
 
           {gift.message && (
             <div className="pt-3 border-t border-steel/30">
-              <p className="text-sm text-muted mb-1">メッセージ</p>
+              <p className="text-sm text-muted mb-1">{t('gift.message')}</p>
               <p className="text-soft-white italic">&ldquo;{gift.message}&rdquo;</p>
             </div>
           )}
@@ -90,7 +92,7 @@ export function GiftNotification({ gift, onClose }: GiftNotificationProps) {
 
         {/* Action Button */}
         <Button variant="primary" className="w-full" onClick={handleClose}>
-          ありがとう！
+          {t('gift.thankYou')}
         </Button>
       </div>
     </Modal>

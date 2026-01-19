@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { isValidMessage } from '@/lib/utils/validators';
 import { MAX_MESSAGE_LENGTH } from '@/lib/utils/constants';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface MessageInputProps {
   onSend: (content: string) => Promise<void>;
@@ -13,11 +14,14 @@ interface MessageInputProps {
 export function MessageInput({
   onSend,
   disabled = false,
-  placeholder = 'メッセージを入力...',
+  placeholder,
 }: MessageInputProps) {
+  const { t } = useTranslation();
   const [content, setContent] = useState('');
   const [isSending, setIsSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const inputPlaceholder = placeholder || t('chat.messagePlaceholder');
 
   const adjustTextareaHeight = useCallback(() => {
     const textarea = textareaRef.current;
@@ -80,22 +84,22 @@ export function MessageInput({
   const canSend = content.trim().length > 0 && !isOverLimit && !isSending && !disabled;
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-end gap-2">
+    <form onSubmit={handleSubmit} className="flex items-end gap-3">
       <div className="flex-1 relative">
         <textarea
           ref={textareaRef}
           value={content}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder}
+          placeholder={inputPlaceholder}
           disabled={disabled || isSending}
           maxLength={MAX_MESSAGE_LENGTH + 10}
           rows={1}
-          className="w-full px-4 py-3 rounded-2xl bg-midnight border border-steel/50 text-soft-white placeholder:text-muted resize-none focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan/30 transition-all duration-200 disabled:opacity-50"
+          className="w-full px-4 py-3 rounded-2xl bg-midnight border border-steel/50 text-soft-white placeholder:text-muted resize-none focus:outline-none focus:border-neon-cyan focus:ring-2 focus:ring-neon-cyan/20 transition-all duration-200 disabled:opacity-50"
         />
         {content.length > 0 && (
           <span
-            className={`absolute bottom-1 right-3 text-xs ${
+            className={`absolute bottom-2 right-3 text-xs font-medium ${
               isOverLimit
                 ? 'text-red-400'
                 : remainingChars <= 50
@@ -111,7 +115,7 @@ export function MessageInput({
       <button
         type="submit"
         disabled={!canSend}
-        className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-r from-neon-pink to-neon-purple text-white flex items-center justify-center transition-all duration-200 hover:shadow-lg hover:shadow-neon-pink/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+        className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-r from-neon-pink to-neon-purple text-white flex items-center justify-center transition-all duration-300 hover:shadow-lg hover:shadow-neon-pink/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
       >
         {isSending ? (
           <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24">

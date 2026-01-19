@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { cn } from '@/lib/utils/cn';
-import { useTranslation } from '@/lib/i18n/context';
+import { useI18n, useTranslation } from '@/lib/i18n/context';
 import { isValidNickname } from '@/lib/utils/validators';
 import { MAX_NICKNAME_LENGTH } from '@/lib/utils/constants';
+import { LanguageSelector } from '@/components/ui/LanguageSelector';
+import type { Locale } from '@/lib/i18n';
 
 interface TableRegistrationModalProps {
   isOpen: boolean;
@@ -20,21 +22,48 @@ export function TableRegistrationModal({
   maxTableNumber = 50,
 }: TableRegistrationModalProps) {
   const { t } = useTranslation();
-  const [step, setStep] = useState<'table' | 'profile'>('table');
+  const { setLocale, isHydrated } = useI18n();
+  const [step, setStep] = useState<'language' | 'table' | 'profile'>('language');
+  const [hasSelectedLanguage, setHasSelectedLanguage] = useState(false);
   const [tableNumber, setTableNumber] = useState('');
   const [nickname, setNickname] = useState('');
   const [tableTitle, setTableTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Check if user has already selected language (cookie exists)
+  useEffect(() => {
+    if (isHydrated) {
+      const cookieLocale = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('NEXT_LOCALE='))
+        ?.split('=')[1];
+
+      if (cookieLocale) {
+        setHasSelectedLanguage(true);
+        setStep('table');
+      }
+    }
+  }, [isHydrated]);
+
   const resetForm = useCallback(() => {
-    setStep('table');
+    // Only reset to 'table' if language has been selected
+    setStep(hasSelectedLanguage ? 'table' : 'language');
     setTableNumber('');
     setNickname('');
     setTableTitle('');
     setError(null);
     setIsLoading(false);
-  }, []);
+  }, [hasSelectedLanguage]);
+
+  const handleLanguageSelect = useCallback(
+    async (locale: Locale) => {
+      await setLocale(locale);
+      setHasSelectedLanguage(true);
+      setStep('table');
+    },
+    [setLocale]
+  );
 
   const handleClose = useCallback(() => {
     resetForm();
@@ -112,15 +141,15 @@ export function TableRegistrationModal({
             <div className="flex items-center gap-3">
               <div className="size-10 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center">
                 <span className="material-symbols-outlined text-primary">
-                  {step === 'table' ? 'table_restaurant' : 'person'}
+                  {step === 'language' ? 'language' : step === 'table' ? 'table_restaurant' : 'person'}
                 </span>
               </div>
               <div>
                 <h2 className="font-display text-xl font-bold text-white">
-                  {t('registration.title')}
+                  {step === 'language' ? 'Select Language' : t('registration.title')}
                 </h2>
                 <p className="text-xs text-gray-400">
-                  {step === 'table' ? t('registration.stepTable') : t('registration.stepProfile')}
+                  {step === 'language' ? '言語を選択 / 언어 선택' : step === 'table' ? t('registration.stepTable') : t('registration.stepProfile')}
                 </p>
               </div>
             </div>
@@ -132,12 +161,18 @@ export function TableRegistrationModal({
             </button>
           </div>
 
-          {/* Step Indicator */}
+          {/* Step Indicator - 3 steps now */}
           <div className="flex items-center gap-2 mt-4">
             <div
               className={cn(
                 'flex-1 h-1 rounded-full transition-colors',
-                step === 'table' ? 'bg-primary' : 'bg-primary/30'
+                step === 'language' ? 'bg-primary' : 'bg-primary/30'
+              )}
+            />
+            <div
+              className={cn(
+                'flex-1 h-1 rounded-full transition-colors',
+                step === 'table' ? 'bg-primary' : step === 'profile' ? 'bg-primary/30' : 'bg-white/10'
               )}
             />
             <div
@@ -151,7 +186,9 @@ export function TableRegistrationModal({
 
         {/* Content */}
         <div className="p-6">
-          {step === 'table' ? (
+          {step === 'language' ? (
+            <LanguageSelector onSelect={handleLanguageSelect} />
+          ) : step === 'table' ? (
             <form onSubmit={handleTableSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">

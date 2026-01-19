@@ -6,3 +6,5 @@ export { DashboardFooter } from './DashboardFooter';
 export { MenuModal } from './MenuModal';
 export { MobileBottomNav } from './MobileBottomNav';
 export { TableRegistrationModal } from './TableRegistrationModal';
+export { TableProfileModal } from './TableProfileModal';
+export { OrderHistoryModal } from './OrderHistoryModal';

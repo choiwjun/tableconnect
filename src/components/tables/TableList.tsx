@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Spinner } from '@/components/ui';
 import { TableCard } from './TableCard';
+import { useTranslation } from '@/lib/i18n/context';
 import type { ActiveTable } from '@/app/api/tables/route';
 
 interface TableListProps {
@@ -10,6 +11,7 @@ interface TableListProps {
   currentSessionId: string;
   onSelectTable: (table: ActiveTable) => void;
   unreadSessions?: Set<string>;
+  demoTables?: ActiveTable[];
 }
 
 export function TableList({
@@ -17,12 +19,21 @@ export function TableList({
   currentSessionId,
   onSelectTable,
   unreadSessions = new Set(),
+  demoTables,
 }: TableListProps) {
+  const { t } = useTranslation();
   const [tables, setTables] = useState<ActiveTable[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!demoTables);
   const [error, setError] = useState<string | null>(null);
 
   const fetchTables = useCallback(async () => {
+    // Skip API call in demo mode
+    if (demoTables) {
+      setTables(demoTables);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       setError(null);
 
@@ -38,19 +49,26 @@ export function TableList({
       setTables(fetchedTables);
     } catch (err) {
       console.error('Error fetching tables:', err);
-      setError('テーブル一覧の取得に失敗しました');
+      setError(t('tables.fetchFailed'));
     } finally {
       setIsLoading(false);
     }
-  }, [merchantId, currentSessionId]);
+  }, [merchantId, currentSessionId, demoTables, t]);
 
   useEffect(() => {
+    // In demo mode, just set the demo tables
+    if (demoTables) {
+      setTables(demoTables);
+      setIsLoading(false);
+      return;
+    }
+
     fetchTables();
 
-    // Refresh every 30 seconds
+    // Refresh every 30 seconds (only for real API mode)
     const interval = setInterval(fetchTables, 30000);
     return () => clearInterval(interval);
-  }, [fetchTables]);
+  }, [fetchTables, demoTables]);
 
   if (isLoading) {
     return (
@@ -68,7 +86,7 @@ export function TableList({
           onClick={fetchTables}
           className="text-neon-cyan hover:underline"
         >
-          再試行
+          {t('common.retry')}
         </button>
       </div>
     );
@@ -93,10 +111,10 @@ export function TableList({
           </svg>
         </div>
         <p className="text-muted">
-          まだ他のテーブルに参加者がいません
+          {t('tables.noParticipants')}
         </p>
         <p className="text-muted text-sm mt-2">
-          新しい参加者が来るとここに表示されます
+          {t('tables.newParticipantsNotice')}
         </p>
       </div>
     );
@@ -106,10 +124,10 @@ export function TableList({
     <div className="space-y-3">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-soft-white font-medium">
-          参加中のテーブル
+          {t('tables.participatingTables')}
         </h2>
         <span className="text-sm text-muted">
-          {tables.length} テーブル
+          {t('tables.tableCount', { count: tables.length })}
         </span>
       </div>
 
@@ -117,7 +135,7 @@ export function TableList({
         <TableCard
           key={table.sessionId}
           tableNumber={table.tableNumber}
-          nickname={table.nickname || `テーブル ${table.tableNumber}`}
+          nickname={table.nickname || t('tables.tableLabel', { number: table.tableNumber })}
           createdAt={table.createdAt}
           onClick={() => onSelectTable(table)}
           hasUnread={unreadSessions.has(table.sessionId)}

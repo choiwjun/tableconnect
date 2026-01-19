@@ -28,44 +28,68 @@
     "enterNickname": "Enter nickname",
     "nicknamePlaceholder": "e.g., John",
     "nicknameRequired": "Please enter a nickname",
-    "nicknameTooLong": "Nickname must be 20 characters or less",
+    "nicknameTooLong": "Nickname must be {max} characters or less and cannot contain inappropriate content",
+    "nicknameHint": "This name will be displayed in the venue",
     "joinSession": "Join",
     "sessionExpired": "Session expired",
     "sessionExpiringSoon": "Session expiring soon",
-    "table": "Table"
+    "sessionEndingSoon": "Your session is ending soon",
+    "sessionEndingSoonDesc": "Please scan a new QR code after the session ends",
+    "sessionEnded": "Session Ended",
+    "sessionEndedDesc": "To continue using the service, please scan the QR code again.",
+    "table": "Table",
+    "errorOccurred": "An error occurred. Please try again."
   },
   "chat": {
     "sendMessage": "Send message",
     "messagePlaceholder": "Type a message...",
     "noMessages": "No messages",
-    "startConversation": "Start a conversation",
+    "startConversation": "Start a conversation with {nickname}",
     "sendFirstMessage": "Send the first message",
     "messageTooLong": "Message must be 500 characters or less",
-    "read": "Read"
+    "read": "Read",
+    "gift": "Gift",
+    "report": "Report",
+    "fetchFailed": "Failed to load messages",
+    "tableNumber": "Table {number}"
   },
   "gift": {
     "sendGift": "Send Gift",
     "selectMenu": "Select Menu",
+    "selectGift": "Select a Gift",
+    "addMessage": "Add a Message",
     "giftMessage": "Message (optional)",
-    "giftMessagePlaceholder": "Add a thank you message...",
+    "giftMessagePlaceholder": "Thank you!...",
     "payment": "Payment",
     "payNow": "Pay Now",
+    "proceedToPayment": "Proceed to Payment",
     "processing": "Processing...",
     "paymentSuccess": "Payment successful",
     "paymentFailed": "Payment failed",
+    "paymentPrepareFailed": "Failed to prepare payment",
+    "giftSent": "Gift Sent!",
+    "giftSentTo": "Sent {menu} to {nickname}.",
     "giftReceived": "You received a gift!",
-    "thankYou": "Thank you",
+    "giftReceivedFrom": "From {nickname} (Table {table})",
+    "thankYou": "Thank you!",
     "from": "From",
-    "noMenus": "No menu items available"
+    "noMenus": "No menu items available",
+    "sendTo": "Sending gift to",
+    "recipient": "Recipient",
+    "message": "Message",
+    "sendingTo": "Sending gift to {nickname}",
+    "tableNumber": "Table {number}"
   },
   "safety": {
     "block": "Block",
     "blockUser": "Block User",
+    "blockNickname": "Block {nickname}",
     "blockConfirm": "Block this user?",
     "blockDescription": "You will no longer receive messages from this user. You can unblock them at any time.",
     "unblock": "Unblock",
     "report": "Report",
     "reportUser": "Report User",
+    "reportNickname": "Report {nickname}",
     "reportReason": "Select a reason for reporting",
     "reportDescription": "Details (optional)",
     "reportDescriptionPlaceholder": "Provide additional details...",
@@ -79,7 +103,13 @@
   "tables": {
     "activeTables": "Active Tables",
     "noActiveTables": "No active tables at the moment",
-    "selectTable": "Select a table to start chatting"
+    "selectTable": "Select a table to start chatting",
+    "participatingTables": "Participating Tables",
+    "tableCount": "{count} tables",
+    "fetchFailed": "Failed to load table list",
+    "noParticipants": "No other participants at other tables yet",
+    "newParticipantsNotice": "New participants will appear here",
+    "tableLabel": "Table {number}"
   },
   "admin": {
     "dashboard": "Dashboard",
@@ -149,5 +179,72 @@
     "nicknameHint": "This name will be displayed in the venue",
     "join": "Join",
     "privacyNote": "Your nickname will be visible to other guests. Please do not enter your real name or personal information."
+  },
+  "offline": {
+    "title": "You're Offline",
+    "description": "Please check your internet connection. The page will reload automatically when connection is restored.",
+    "status": "No Connection",
+    "retry": "Retry"
+  },
+  "profile": {
+    "title": "Profile",
+    "members": "Members",
+    "noMembers": "No members yet",
+    "startChat": "Start Chat",
+    "privateNotice": "This is a private table",
+    "status": {
+      "active": "Active",
+      "music": "Music",
+      "private": "Private",
+      "busy": "Busy"
+    }
+  },
+  "mockTables": {
+    "popular": {
+      "table05": {
+        "label": "Table 05",
+        "description": "🔥 Peak vibes"
+      },
+      "vipRoom1": {
+        "label": "VIP Room 1",
+        "description": "Private conversation"
+      },
+      "table12": {
+        "label": "Table 12",
+        "description": "Waiting for new friends"
+      }
+    },
+    "active": {
+      "fridayFun": {
+        "title": "Happy Friday! 🍻",
+        "description": "Friends visiting Tokyo having drinks. Join us!"
+      },
+      "musicTalk": {
+        "title": "Music lovers 🎵",
+        "description": "City pop fans gather here. Taking song requests."
+      },
+      "afterWork": {
+        "title": "After work party 💼",
+        "description": "Office workers venting... looking for someone to join in"
+      },
+      "privateGathering": {
+        "title": "Private gathering",
+        "description": "VIP-only table."
+      },
+      "birthdayParty": {
+        "title": "Happy Birthday 🎂",
+        "description": "Friend's birthday party! Sharing cake with everyone."
+      },
+      "quietTalk": {
+        "title": "Quiet conversation",
+        "description": "Serious talk in progress. Please don't disturb."
+      }
+    },
+    "errors": {
+      "storeNotFound": "Store not found",
+      "error": "Error",
+      "errorOccurred": "An error occurred",
+      "goHome": "Go to Home"
+    }
   }
 }

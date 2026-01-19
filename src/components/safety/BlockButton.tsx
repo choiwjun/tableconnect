@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { Button, Modal } from '@/components/ui';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface BlockButtonProps {
   targetSessionId: string;
@@ -18,6 +19,7 @@ export function BlockButton({
   onBlock,
   className = '',
 }: BlockButtonProps) {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,18 +47,18 @@ export function BlockButton({
       onBlock?.();
     } catch (err) {
       console.error('Error blocking user:', err);
-      setError(err instanceof Error ? err.message : 'ブロックに失敗しました');
+      setError(err instanceof Error ? err.message : t('safety.blockUser'));
     } finally {
       setIsLoading(false);
     }
-  }, [currentSessionId, targetSessionId, onBlock]);
+  }, [currentSessionId, targetSessionId, onBlock, t]);
 
   return (
     <>
       <button
         onClick={() => setIsModalOpen(true)}
         className={`text-muted hover:text-red-400 transition-colors ${className}`}
-        title="ブロック"
+        title={t('safety.block')}
       >
         <svg
           className="w-5 h-5"
@@ -92,12 +94,10 @@ export function BlockButton({
           </div>
 
           <h2 className="font-display text-xl text-soft-white mb-2">
-            {targetNickname}さんをブロック
+            {t('safety.blockNickname', { nickname: targetNickname })}
           </h2>
           <p className="text-muted text-sm mb-6">
-            この相手からのメッセージを受け取れなくなります。
-            <br />
-            ブロックはいつでも解除できます。
+            {t('safety.blockDescription')}
           </p>
 
           {error && (
@@ -113,7 +113,7 @@ export function BlockButton({
               onClick={() => setIsModalOpen(false)}
               disabled={isLoading}
             >
-              キャンセル
+              {t('common.cancel')}
             </Button>
             <Button
               variant="danger"
@@ -122,7 +122,7 @@ export function BlockButton({
               loading={isLoading}
               disabled={isLoading}
             >
-              ブロックする
+              {t('safety.blockUser')}
             </Button>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { MenuSelector } from './MenuSelector';
 import { PaymentForm } from './PaymentForm';
 import { Spinner, Button } from '@/components/ui';
 import { getStripe, stripeAppearance } from '@/lib/stripe/client';
+import { useTranslation } from '@/lib/i18n/context';
 import type { Menu } from '@/types/database';
 
 type GiftStep = 'menu' | 'message' | 'payment' | 'success';
@@ -27,6 +28,7 @@ export function GiftFlow({
   receiverTableNumber,
   onClose,
 }: GiftFlowProps) {
+  const { t } = useTranslation();
   const [step, setStep] = useState<GiftStep>('menu');
   const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null);
   const [message, setMessage] = useState('');
@@ -67,11 +69,11 @@ export function GiftFlow({
       setStep('payment');
     } catch (err) {
       console.error('Error creating payment intent:', err);
-      setError(err instanceof Error ? err.message : '決済の準備に失敗しました');
+      setError(err instanceof Error ? err.message : t('gift.paymentPrepareFailed'));
     } finally {
       setIsCreatingIntent(false);
     }
-  }, [selectedMenu, senderSessionId, receiverSessionId, message]);
+  }, [selectedMenu, senderSessionId, receiverSessionId, message, t]);
 
   const handlePaymentSuccess = useCallback(() => {
     setStep('success');
@@ -135,21 +137,21 @@ export function GiftFlow({
 
             {/* Recipient Info */}
             <div className="text-center">
-              <p className="text-muted text-sm">送り先</p>
+              <p className="text-muted text-sm">{t('gift.sendTo')}</p>
               <p className="text-soft-white font-medium">
-                {receiverNickname} (テーブル {receiverTableNumber})
+                {receiverNickname} ({t('gift.tableNumber', { number: receiverTableNumber })})
               </p>
             </div>
 
             {/* Message Input */}
             <div>
               <label className="block text-soft-white text-sm mb-2">
-                メッセージ（任意）
+                {t('gift.giftMessage')}
               </label>
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="ありがとう！など..."
+                placeholder={t('gift.giftMessagePlaceholder')}
                 maxLength={100}
                 rows={3}
                 className="w-full px-4 py-3 rounded-xl bg-midnight border border-steel/50 text-soft-white placeholder:text-muted resize-none focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan/30"
@@ -168,7 +170,7 @@ export function GiftFlow({
             {/* Action Buttons */}
             <div className="flex gap-3">
               <Button variant="ghost" className="flex-1" onClick={handleBack}>
-                戻る
+                {t('common.back')}
               </Button>
               <Button
                 variant="primary"
@@ -177,7 +179,7 @@ export function GiftFlow({
                 loading={isCreatingIntent}
                 disabled={isCreatingIntent}
               >
-                支払いへ進む
+                {t('gift.proceedToPayment')}
               </Button>
             </div>
           </div>
@@ -208,7 +210,7 @@ export function GiftFlow({
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-                戻る
+                {t('common.back')}
               </button>
 
               <PaymentForm
@@ -242,14 +244,14 @@ export function GiftFlow({
             </div>
 
             <h2 className="font-display text-2xl text-soft-white mb-2">
-              ギフトを送りました！
+              {t('gift.giftSent')}
             </h2>
             <p className="text-muted mb-6">
-              {receiverNickname}さんに{selectedMenu?.name}を送りました。
+              {t('gift.giftSentTo', { nickname: receiverNickname, menu: selectedMenu?.name || '' })}
             </p>
 
             <Button variant="primary" className="w-full" onClick={onClose}>
-              閉じる
+              {t('common.close')}
             </Button>
           </div>
         );
@@ -262,12 +264,12 @@ export function GiftFlow({
       {step !== 'success' && (
         <div className="text-center mb-6">
           <h2 className="font-display text-xl text-soft-white">
-            {step === 'menu' && 'ギフトを選ぶ'}
-            {step === 'message' && 'メッセージを添える'}
-            {step === 'payment' && '支払い'}
+            {step === 'menu' && t('gift.selectGift')}
+            {step === 'message' && t('gift.addMessage')}
+            {step === 'payment' && t('gift.payment')}
           </h2>
           <p className="text-sm text-muted mt-1">
-            {receiverNickname}さんにギフトを送る
+            {t('gift.sendingTo', { nickname: receiverNickname })}
           </p>
         </div>
       )}

@@ -79,7 +79,45 @@
   "tables": {
     "activeTables": "活跃桌位",
     "noActiveTables": "当前没有活跃桌位",
-    "selectTable": "选择桌位开始聊天"
+    "selectTable": "选择桌位开始聊天",
+    "participatingTables": "参与中的桌位",
+    "tableCount": "{count}个桌位",
+    "fetchFailed": "获取桌位列表失败",
+    "noParticipants": "其他桌位暂无参与者",
+    "newParticipantsNotice": "新参与者出现时会在这里显示",
+    "tableLabel": "桌位 {number}"
+  },
+  "errors": {
+    "fetchMessagesFailed": "获取消息失败",
+    "sendMessageFailed": "发送消息失败",
+    "sessionExpired": "会话已过期",
+    "networkError": "网络错误",
+    "unknownError": "发生未知错误",
+    "nicknameInUse": "该昵称已被使用",
+    "invalidNickname": "无效的昵称",
+    "forbiddenWord": "包含不允许的字符"
+  },
+  "landing": {
+    "title": "Table Connect",
+    "subtitle": "居酒屋桌位之间的匿名社交",
+    "scanQR": "扫描二维码",
+    "scanQRDescription": "从桌上的二维码加入",
+    "features": "主要功能",
+    "anonymousChat": "匿名聊天",
+    "anonymousChatDescription": "用昵称轻松与其他桌位聊天",
+    "giftSending": "送礼物",
+    "giftSendingDescription": "可以送饮料和美食作为礼物",
+    "safety": "安全可靠",
+    "safetyDescription": "屏蔽和举报功能让您放心使用",
+    "realtime": "实时通信",
+    "realtimeDescription": "消息即时送达",
+    "howToUse": "使用方法",
+    "step1Title": "扫描二维码",
+    "step1Description": "用手机扫描桌上的二维码",
+    "step2Title": "输入昵称",
+    "step2Description": "输入喜欢的昵称加入",
+    "step3Title": "开始聊天",
+    "step3Description": "与其他桌位的人聊天和送礼物吧"
   },
   "admin": {
     "dashboard": "仪表盘",
@@ -149,5 +187,66 @@
     "nicknameHint": "在店内显示的名字",
     "join": "加入",
     "privacyNote": "昵称将显示给店内其他顾客。请勿输入真实姓名或个人信息。"
+  },
+  "profile": {
+    "title": "个人资料",
+    "members": "参与者",
+    "noMembers": "暂无参与者",
+    "startChat": "开始聊天",
+    "privateNotice": "私密桌位无法加入",
+    "status": {
+      "active": "活跃",
+      "music": "音乐",
+      "private": "私密",
+      "busy": "忙碌"
+    }
+  },
+  "mockTables": {
+    "popular": {
+      "table05": {
+        "label": "桌位 05",
+        "description": "🔥 气氛正嗨"
+      },
+      "vipRoom1": {
+        "label": "VIP包间 1",
+        "description": "私密对话中"
+      },
+      "table12": {
+        "label": "桌位 12",
+        "description": "等待新朋友加入"
+      }
+    },
+    "active": {
+      "fridayFun": {
+        "title": "周五嗨起来！🍻",
+        "description": "和朋友一起喝一杯。欢迎加入！"
+      },
+      "musicTalk": {
+        "title": "音乐爱好者 🎵",
+        "description": "喜欢城市流行音乐的朋友们集合。"
+      },
+      "afterWork": {
+        "title": "下班聚会 💼",
+        "description": "上班族吐槽大会...一起来吐槽吧"
+      },
+      "privateGathering": {
+        "title": "私人聚会",
+        "description": "VIP专属桌位。"
+      },
+      "birthdayParty": {
+        "title": "生日快乐 🎂",
+        "description": "朋友的生日派对中！有蛋糕分享哦。"
+      },
+      "quietTalk": {
+        "title": "安静聊天",
+        "description": "正在认真聊天中。请勿打扰。"
+      }
+    },
+    "errors": {
+      "storeNotFound": "找不到店铺",
+      "error": "错误",
+      "errorOccurred": "发生错误",
+      "goHome": "返回首页"
+    }
   }
 }
