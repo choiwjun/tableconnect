@@ -134,7 +134,7 @@ export default function RootLayout({
         className={`${fontVariables} antialiased bg-void text-soft-white min-h-screen`}
       >
         <CustomCursor />
-        <PWAInstallPrompt />
+        {/* <PWAInstallPrompt /> */}
         <I18nProvider>
           <ServiceWorkerRegistration />
           {children}
