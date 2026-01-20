@@ -85,7 +85,7 @@ export function CustomCursor() {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <path d="M5 3v3.54l6 9 9H21V6.46L12.01 2.74L5 3v3.54z" />
+            <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
           </svg>
           
           {/* Glow effect */}

@@ -66,7 +66,7 @@ export function PWAInstallPrompt({ onInstall, onClose }: PWAInstallPromptProps =
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M4 16v1a3 3 0 013-3 0H2a3 3 0 01-3 0v1H2a3 3 0 01-3 0v1m0-2h12a3 3 0 013 0v2a3 3 0 01-3 0H3a3 3 0 01-3 0v2m12-2V9a3 3 0 01-3 0h12a3 3 0 013-0v6"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
               />
             </svg>
           </div>
