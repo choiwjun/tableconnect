@@ -12,7 +12,7 @@ import {
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import { I18nProvider } from "@/lib/i18n/context";
 import { CustomCursor } from "@/components/ui/CustomCursor";
-import { PWAInstallPrompt } from "@/components/pwa/PWAInstallPrompt";
+// import { PWAInstallPrompt } from "@/components/pwa/PWAInstallPrompt";
 import "./globals.css";
 
 // Display fonts
