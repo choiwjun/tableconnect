@@ -27,7 +27,9 @@ type NestedKeyOf<T> = T extends object
     }[keyof T]
   : never;
 
-type TranslationKey = NestedKeyOf<Messages>;
+// Type for nested translation keys (used for type checking)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _TranslationKey = NestedKeyOf<Messages>;
 
 const messages: Record<Locale, Messages> = {
   ja: jaMessages,

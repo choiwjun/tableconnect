@@ -139,7 +139,8 @@ export default function Home() {
     console.log('Send gift to table:', tableId);
   };
 
-  const handleStartChat = (tableId: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleStartChat = (_tableId: string) => {
     // Open registration to create session first
     setIsProfileOpen(false);
     setIsRegistrationOpen(true);
