@@ -7,10 +7,10 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const supabase = getSupabaseAdmin();
 
     // Get merchant
@@ -44,10 +44,10 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const body = await request.json();
     const {
       name,
@@ -63,7 +63,7 @@ export async function PUT(
     // Get merchant
     const { data: merchant, error: merchantError } = await supabase
       .from('merchants')
-      .select('id')
+      .select('id, settings')
       .eq('slug', slug)
       .eq('is_active', true)
       .single();
@@ -76,7 +76,7 @@ export async function PUT(
     }
 
     // Update merchant settings
-    const updateData: any = {};
+    const updateData: Record<string, string | number | boolean | object | null> = {};
     
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;

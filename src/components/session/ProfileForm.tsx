@@ -6,10 +6,10 @@ import { MAX_NICKNAME_LENGTH, MIN_PARTY_SIZE, MAX_PARTY_SIZE } from '@/lib/utils
 import { useTranslation } from '@/lib/i18n/context';
 
 // Types
-type Gender = 'male' | 'female';
-type AgeRange = '20s_early' | '20s_mid' | '20s_late' | '30s_early' | '30s_mid' | '30s_late' | '40s';
+export type Gender = 'male' | 'female';
+export type AgeRange = '20s_early' | '20s_mid' | '20s_late' | '30s_early' | '30s_mid' | '30s_late' | '40s';
 
-interface ProfileData {
+export interface ProfileData {
   gender: Gender;
   ageRange: AgeRange;
   partySize: number;
@@ -295,7 +295,7 @@ export function ProfileForm({ onSubmit, isLoading = false }: ProfileFormProps) {
         <div className="space-y-3 mt-4">
           <button
             onClick={handleSubmit}
-            disabled={isLoading || (nickname.trim() && isOverLimit)}
+            disabled={isLoading || (nickname.trim() !== '' && isOverLimit)}
             className="w-full py-4 rounded-xl bg-gradient-to-r from-neon-pink to-neon-purple text-white font-medium hover:shadow-lg hover:shadow-neon-pink/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {isLoading ? (

@@ -3,12 +3,18 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui';
 
-interface PWAInstallPromptProps {
-  onInstall: () => void;
-  onClose: () => void;
+// Define BeforeInstallPromptEvent type
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-export function PWAInstallPrompt({ onInstall, onClose }: PWAInstallPromptProps) {
+export interface PWAInstallPromptProps {
+  onInstall?: () => void;
+  onClose?: () => void;
+}
+
+export function PWAInstallPrompt({ onInstall, onClose }: PWAInstallPromptProps = {}) {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
 
@@ -36,13 +42,13 @@ export function PWAInstallPrompt({ onInstall, onClose }: PWAInstallPromptProps) 
     if (deferredPrompt) {
       await deferredPrompt.prompt();
       setDeferredPrompt(null);
-      onInstall();
+      onInstall?.();
     }
   };
 
   const handleDismiss = () => {
     setDeferredPrompt(null);
-    onClose();
+    onClose?.();
   };
 
   return (

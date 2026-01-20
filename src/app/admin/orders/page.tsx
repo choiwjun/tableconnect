@@ -10,6 +10,8 @@ import { useSessionStore } from '@/lib/stores/sessionStore';
 interface OrderItem extends Gift {
   menu_name?: string; // For menu gifts
   status_display: string;
+  gift_type?: 'menu_item' | 'point';
+  merchant_id?: string;
 }
 
 export default function OrdersPage() {
@@ -37,7 +39,7 @@ export default function OrdersPage() {
         // Combine gifts with menu names
         const ordersWithMenu: OrderItem[] = gifts.map((gift: Gift) => ({
           ...gift,
-          menu_name: menuItems.find((item: any) => item.id === gift.menu_item_id)?.name,
+          menu_name: menuItems.find((item: { id: string; name: string }) => item.id === gift.menu_id)?.name,
           status_display: gift.status,
         }));
 
@@ -54,11 +56,11 @@ export default function OrdersPage() {
 
   // Handle real-time new orders
   const handleNewGift = (newGift: Record<string, unknown>) => {
-    const gift = newGift as Gift;
+    const gift = newGift as unknown as Gift & { merchant_id?: string };
     if (gift.merchant_id !== merchantId) return;
 
     // Fetch menu name
-    fetch(`/api/admin/menus/${gift.menu_item_id}`)
+    fetch(`/api/admin/menus/${gift.menu_id}`)
       .then((res) => res.json())
       .then(({ data: menuItem }) => {
         const orderItem: OrderItem = {

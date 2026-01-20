@@ -44,12 +44,16 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch menu items for displaying menu names
+    interface GiftItem {
+      gift_type: string;
+      menu_item_id: string;
+    }
     const { data: menuItems } = await supabase
       .from('menus')
       .select('id, name, price')
       .in('id', gifts
-        .filter((gift: any) => gift.gift_type === 'menu_item')
-        .map((gift: any) => gift.menu_item_id)
+        .filter((gift: GiftItem) => gift.gift_type === 'menu_item')
+        .map((gift: GiftItem) => gift.menu_item_id)
       );
 
     return NextResponse.json({

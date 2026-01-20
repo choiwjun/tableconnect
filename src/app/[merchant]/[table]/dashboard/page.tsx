@@ -152,7 +152,10 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [merchant, currentSession?.id, isDemo]);
 
-  const handleTableSelect = useCallback((sessionId: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleTableSelect = useCallback((session: any) => {
+    // Get session id from either format
+    const sessionId = session.id || session.sessionId;
     const selectedSession = activeSessions.find(s => s.id === sessionId);
     if (!selectedSession) return;
 

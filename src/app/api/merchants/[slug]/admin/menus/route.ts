@@ -7,10 +7,10 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const supabase = getSupabaseAdmin();
 
     // Get merchant
@@ -59,10 +59,10 @@ export async function GET(
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const body = await request.json();
     const { name, price, description, is_available } = body;
 

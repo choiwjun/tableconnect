@@ -46,14 +46,13 @@ export async function POST(request: NextRequest) {
         'ja'
       );
 
-      // Record warning
-      await recordWarning(
-        supabase,
-        senderSessionId,
-        moderationResult.categories,
-        moderationResult.categoryScores,
-        moderationResult.flagged
-      );
+      // Record warning - determine severity based on flagged status
+      const severity = moderationResult.flagged ? 'high' : 'medium';
+      const category = Object.entries(moderationResult.categories || {})
+        .filter(([, flagged]) => flagged)
+        .map(([cat]) => cat)
+        .join(', ') || 'unknown';
+      await recordWarning(senderSessionId, category, severity);
 
       // Check for session block
       const warnings = await getSessionWarnings(supabase, senderSessionId);
@@ -139,8 +138,7 @@ export async function GET(request: NextRequest) {
       .from('messages')
       .select('*')
       .or(
-        `and(sender_session_id.eq.${sessionId},receiver_session_id.eq.${partnerId})`,
-        `and(sender_session_id.eq.${partnerId},receiver_session_id.eq.${sessionId})`
+        `and(sender_session_id.eq.${sessionId},receiver_session_id.eq.${partnerId}),and(sender_session_id.eq.${partnerId},receiver_session_id.eq.${sessionId})`
       )
       .order('created_at', { ascending: true });
 

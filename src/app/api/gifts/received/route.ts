@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       .filter(gift => gift.gift_type === 'menu_item' && gift.menu_item_id)
       .map(gift => gift.menu_item_id);
 
-    let menuItems = [];
+    let menuItems: { id: string; name: string; price: number }[] = [];
     if (menuItemIds.length > 0) {
       const { data: items, error: menuError } = await supabase
         .from('menus')

@@ -61,12 +61,12 @@ export function isValidJSON(json: string): boolean {
  */
 export function hasSQLInjection(input: string): boolean {
   const sqlPatterns = [
-    /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|EXEC|EXEC\b)/i,
-    /(\b(OR|AND|NOT|XOR)\b)/i,
-    /(\b(WHERE|GROUP BY|HAVING|LIMIT|OFFSET|ORDER BY)\b)/i,
-    /(;|\-{2})/,
-    /(\".*\")/,
-    /\'.*'/,
+    /\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|EXEC)\b/i,
+    /\b(OR|AND|NOT|XOR)\b/i,
+    /\b(WHERE|GROUP BY|HAVING|LIMIT|OFFSET|ORDER BY)\b/i,
+    /(;|--)/,
+    /".*"/,
+    /'.*'/,
   ];
 
   return sqlPatterns.some(pattern => pattern.test(input));

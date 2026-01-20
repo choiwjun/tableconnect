@@ -15,7 +15,7 @@ interface ActiveTable {
   title: string;
   description: string;
   members: TableMember[];
-  status: 'active' | 'music' | 'private' | 'busy';
+  status: 'active' | 'music' | 'private' | 'busy' | 'new';
   imageUrl?: string;
   isPrivate?: boolean;
 }
@@ -47,6 +47,11 @@ const statusConfig = {
     text: 'Busy',
     className: 'bg-yellow-500/20 border-yellow-500/40 text-yellow-400',
     dot: false,
+  },
+  new: {
+    text: 'New',
+    className: 'bg-green-500/20 border-green-500/40 text-green-400',
+    dot: true,
   },
 };
 

@@ -12,6 +12,8 @@ import type { Gift } from '@/types/database';
 interface OrderItem extends Gift {
   menu_name?: string;
   status_display: string;
+  gift_type?: 'menu_item' | 'point';
+  merchant_id?: string;
 }
 
 export default function MerchantOrdersPage() {
@@ -44,7 +46,7 @@ export default function MerchantOrdersPage() {
         
         const ordersWithMenu: OrderItem[] = gifts.map((gift: Gift) => ({
           ...gift,
-          menu_name: menuItems?.find((item: { id: string; name: string }) => item.id === gift.menu_item_id)?.name,
+          menu_name: menuItems?.find((item: { id: string; name: string }) => item.id === gift.menu_id)?.name,
           status_display: gift.status,
         }));
 
@@ -61,8 +63,8 @@ export default function MerchantOrdersPage() {
   }, [merchantSlug, merchantId]);
 
   const handleNewGift = (newGift: Record<string, unknown>) => {
-    const gift = newGift as Gift;
-    if (gift.merchant_id !== merchantId) return;
+    const gift = newGift as unknown as Gift;
+    if ((gift as Gift & { merchant_id: string }).merchant_id !== merchantId) return;
 
     setOrders((prev) => [{
       ...gift,

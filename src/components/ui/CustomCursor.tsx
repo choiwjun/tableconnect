@@ -29,14 +29,16 @@ export function CustomCursor() {
       setTrail((prevTrail) => {
         let needsUpdate = false;
 
-        const newTrail = prevTrail.map((point) => {
-          const newPoint = { ...point, opacity: point.opacity - 0.02 };
-          if (newPoint.opacity <= 0) {
-            needsUpdate = true;
-            return null; // Remove faded points
-          }
-          return newPoint;
-        }).filter(Boolean);
+        const newTrail = prevTrail
+          .map((point) => {
+            const newPoint = { ...point, opacity: point.opacity - 0.02 };
+            if (newPoint.opacity <= 0) {
+              needsUpdate = true;
+              return null; // Remove faded points
+            }
+            return newPoint;
+          })
+          .filter((point): point is { x: number; y: number; id: number; opacity: number } => point !== null);
 
         if (needsUpdate) {
           return newTrail;

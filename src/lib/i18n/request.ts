@@ -21,7 +21,7 @@ export function getTranslation(locale: string = 'ja') {
   const messages = MESSAGES[locale as keyof typeof MESSAGES] || MESSAGES.ja;
 
   return (key: MessageKeys, params?: Record<string, string | number>): string => {
-    const message = messages[key];
+    const message = (messages as Record<string, unknown>)[key as string];
 
     if (!message) {
       return key;

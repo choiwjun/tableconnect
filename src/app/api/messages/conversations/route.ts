@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const receiverIds = new Set((sentMessages || []).map(m => m.receiver_session_id));
+    const receiverIds = Array.from(new Set((sentMessages || []).map(m => m.receiver_session_id)));
 
     // Fetch session info for each receiver
     const conversations = [];

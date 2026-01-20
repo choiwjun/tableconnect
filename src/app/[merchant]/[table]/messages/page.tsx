@@ -68,7 +68,13 @@ export default function MessagesPage() {
         partnerSession: Session;
       }>();
 
-      messages?.forEach((message: Message) => {
+      // Extended message type with joined session data
+      type MessageWithSessions = Message & {
+        sender?: { nickname: string | null; table_number: number };
+        receiver?: { nickname: string | null; table_number: number };
+      };
+
+      messages?.forEach((message: MessageWithSessions) => {
         const isSender = message.sender_session_id === currentSession.id;
         const partnerSessionId = isSender ? message.receiver_session_id : message.sender_session_id;
         const partnerData = isSender ? message.receiver : message.sender;
@@ -162,7 +168,7 @@ export default function MessagesPage() {
     <div className="flex flex-col min-h-screen bg-void text-soft-white">
       <Header
         title={t('dashboard.messages')}
-        showBackButton
+        showBack
         onBack={() => router.push(`/${merchantSlug}/${currentTableNumber}/dashboard`)}
       />
 

@@ -49,7 +49,7 @@ export async function GET(
     );
 
     // Fetch menu items
-    let menuItems: any[] = [];
+    let menuItems: { id: string; name: string }[] = [];
     if (menuItemIds.length > 0) {
       const { data: items, error: menuError } = await supabase
         .from('menus')

@@ -45,8 +45,19 @@ export default function ChatPage() {
     setIsLoading(false);
   }, [currentSession, merchantSlug, tableNumber, router]);
 
-  const handleSelectTable = useCallback((table: ActiveTable) => {
-    setSelectedPartner(table);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSelectTable = useCallback((table: any) => {
+    // Convert to ActiveTable format if needed
+    if ('sessionId' in table) {
+      setSelectedPartner(table as ActiveTable);
+    } else {
+      setSelectedPartner({
+        sessionId: table.id,
+        tableNumber: table.table_number,
+        nickname: table.nickname,
+        createdAt: table.created_at,
+      });
+    }
   }, []);
 
   const handleBack = useCallback(() => {

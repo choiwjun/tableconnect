@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useI18n } from '@/lib/i18n/context';
 
 const LANGUAGES = [
@@ -16,7 +16,7 @@ export function ChatLanguageSelector() {
   const [selectedLang, setSelectedLang] = useState<string>('ja-JP');
 
   // 초기 언어 설정 로드
-  useState(() => {
+  useEffect(() => {
     const savedLang = localStorage.getItem('chat-preferred-language') || locale;
     if (savedLang && LANGUAGES.find(l => l.code === savedLang)) {
       setSelectedLang(savedLang);

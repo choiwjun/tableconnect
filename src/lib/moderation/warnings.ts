@@ -119,3 +119,48 @@ export async function clearWarnings(sessionId: string): Promise<void> {
     console.error('Error clearing warnings:', err);
   }
 }
+
+/**
+ * Get all recent warnings for a session (server-side with supabase client)
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getSessionWarnings(supabase: any, sessionId: string): Promise<WarningRecord[]> {
+  try {
+    const { data: warnings, error } = await supabase
+      .from('session_warnings')
+      .select('*')
+      .eq('session_id', sessionId)
+      .gte('timestamp', new Date(Date.now() - WARNING_DURATION_MS).toISOString())
+      .order('timestamp', { ascending: false });
+
+    if (error) {
+      console.error('Error getting session warnings:', error);
+      return [];
+    }
+
+    return (warnings || []).map((w: { session_id: string; category: string; timestamp: string; severity: string }) => ({
+      sessionId: w.session_id,
+      category: w.category,
+      timestamp: w.timestamp,
+      severity: w.severity as WarningRecord['severity'],
+    }));
+  } catch (err) {
+    console.error('Error getting session warnings:', err);
+    return [];
+  }
+}
+
+/**
+ * Block a session (server-side with supabase client)
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function blockSession(supabase: any, sessionId: string): Promise<void> {
+  try {
+    await supabase
+      .from('sessions')
+      .update({ is_active: false })
+      .eq('id', sessionId);
+  } catch (err) {
+    console.error('Error blocking session:', err);
+  }
+}

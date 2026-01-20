@@ -58,7 +58,7 @@ export default function GiftsPage() {
       // Format gifts data
       const formattedGifts = (gifts || []).map((gift: Gift & { menu?: Menu; sender?: { nickname?: string; table_number?: number } }) => ({
         gift,
-        menu: gift.menu,
+        menu: gift.menu || null,
         senderNickname: gift.sender?.nickname || `${t('session.table')} ${gift.sender?.table_number || ''}`,
         senderTableNumber: gift.sender?.table_number || 0,
       }));
@@ -128,7 +128,7 @@ export default function GiftsPage() {
     <div className="flex flex-col min-h-screen bg-void text-soft-white">
       <Header
         title={t('gift.receivedGifts')}
-        showBackButton
+        showBack
         onBack={handleBack}
       />
 

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
-import { getTranslation } from '@/lib/i18n/request';
 
 /**
  * POST /api/gifts/auto-thank-you
@@ -19,7 +18,6 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = getSupabaseAdmin();
-    const t = getTranslation(locale);
 
     // Get gift details
     const { data: gift, error: giftError } = await supabase
