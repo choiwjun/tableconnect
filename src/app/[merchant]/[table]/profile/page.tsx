@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Container, Spinner, Button, LanguageSelector } from '@/components/ui';
-import { NicknameForm } from '@/components/session';
+import { ProfileForm, type ProfileData } from '@/components/session/ProfileForm';
 import { createClient } from '@/lib/supabase/client';
 import { useSessionStore } from '@/lib/stores/sessionStore';
 import { useI18n, useTranslation } from '@/lib/i18n/context';
@@ -112,9 +112,8 @@ export default function ProfilePage() {
   }, [merchantSlug, tableNumber, setMerchantInfo, t, isDemo]);
 
   const handleJoin = useCallback(
-    async (nickname: string) => {
+    async (profileData: ProfileData) => {
       if (!merchant) return;
-
       setIsJoining(true);
 
       try {
@@ -127,7 +126,10 @@ export default function ProfilePage() {
             id: demoSessionId,
             merchant_id: 'demo',
             table_number: tableNumber,
-            nickname,
+            nickname: profileData.nickname || null,
+            gender: profileData.gender,
+            age_range: profileData.ageRange,
+            party_size: profileData.partySize,
             is_active: true,
             created_at: new Date().toISOString(),
             expires_at: expiresAt,
@@ -137,11 +139,11 @@ export default function ProfilePage() {
           localStorage.setItem('tableconnect_session_id', demoSessionId);
           localStorage.setItem(`tableconnect_session_demo_${tableNumber}`, demoSessionId);
 
-          router.push(`/${merchantSlug}/${tableNumber}/chat`);
+          router.push(`/${merchantSlug}/${tableNumber}/dashboard`);
           return;
         }
 
-        // Create or get session via API
+        // Create session via API
         const response = await fetch('/api/sessions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -157,25 +159,25 @@ export default function ProfilePage() {
 
         const { sessionId } = await response.json();
 
-        // Update session with nickname
-        const joinResponse = await fetch(`/api/sessions/${sessionId}/join`, {
+        // Update session with profile data
+        const updateResponse = await fetch(`/api/sessions/${sessionId}/join`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nickname }),
+          body: JSON.stringify(profileData),
         });
 
-        if (!joinResponse.ok) {
+        if (!updateResponse.ok) {
           throw new Error('Failed to join session');
         }
 
-        const { session } = await joinResponse.json();
+        const { session } = await updateResponse.json();
 
         // Store session in Zustand and localStorage
         setCurrentSession(session);
         localStorage.setItem('tableconnect_session_id', sessionId);
 
-        // Navigate to main chat/table view
-        router.push(`/${merchantSlug}/${tableNumber}/chat`);
+        // Navigate to dashboard
+        router.push(`/${merchantSlug}/${tableNumber}/dashboard`);
       } catch (err) {
         console.error('Error joining session:', err);
         setError(t('session.errorOccurred'));
@@ -212,9 +214,8 @@ export default function ProfilePage() {
         <div className="fixed inset-0 bg-gradient-radial from-[#1a2530] via-background-dark to-black z-0" />
         <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-red-500/5 rounded-full blur-3xl" />
         <div className="fixed bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/5 rounded-full blur-3xl" />
-
         <Container maxWidth="sm" className="relative z-10 text-center">
-          <div className="glass-panel rounded-2xl p-8 border border-steel/30 shadow-2xl">
+          <div className="glass-panel rounded-2xl p-8 border border-steel/30 shadow-2xl stagger-children">
             <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center border border-red-500/30">
               <svg
                 className="w-8 h-8 text-red-400"
@@ -259,9 +260,8 @@ export default function ProfilePage() {
         <div className="fixed inset-0 bg-gradient-radial from-[#1a2530] via-background-dark to-black z-0" />
         <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-neon-cyan/5 rounded-full blur-3xl" />
         <div className="fixed bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/5 rounded-full blur-3xl" />
-
         <Container maxWidth="sm" className="relative z-10">
-          <div className="glass-panel rounded-2xl p-8 border border-steel/30 shadow-2xl">
+          <div className="glass-panel rounded-2xl p-8 border border-steel/30 shadow-2xl stagger-children">
             {/* Language Icon */}
             <div className="text-center mb-6">
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-neon-cyan/20 to-neon-purple/10 flex items-center justify-center border border-neon-cyan/30">
@@ -292,7 +292,6 @@ export default function ProfilePage() {
       <div className="fixed inset-0 bg-gradient-radial from-[#1a2530] via-background-dark to-black z-0" />
       <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-neon-cyan/5 rounded-full blur-3xl" />
       <div className="fixed bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/5 rounded-full blur-3xl" />
-
       <Container maxWidth="sm" className="relative z-10">
         <div className="glass-panel rounded-2xl p-8 border border-steel/30 shadow-2xl">
           <div className="text-center mb-8">
@@ -325,7 +324,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <NicknameForm onSubmit={handleJoin} isLoading={isJoining} />
+          <ProfileForm onSubmit={handleJoin} isLoading={isJoining} />
 
           <p className="text-center text-muted text-sm mt-6 leading-relaxed">
             {t('registration.privacyNote')}

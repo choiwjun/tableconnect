@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { MenuSelector } from './MenuSelector';
 import { PaymentForm } from './PaymentForm';
+import { GiftCelebration } from './GiftCelebration';
 import { Spinner, Button } from '@/components/ui';
 import { getStripe, stripeAppearance } from '@/lib/stripe/client';
 import { useTranslation } from '@/lib/i18n/context';
@@ -77,6 +78,7 @@ export function GiftFlow({
 
   const handlePaymentSuccess = useCallback(() => {
     setStep('success');
+    // Celebration animation will be shown for 3 seconds
   }, []);
 
   const handlePaymentError = useCallback((errorMsg: string) => {
@@ -226,34 +228,39 @@ export function GiftFlow({
 
       case 'success':
         return (
-          <div className="text-center py-8">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center animate-celebrate">
-              <svg
-                className="w-10 h-10 text-green-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+          <>
+            {/* Celebration Animation */}
+            <GiftCelebration show={step === 'success'} />
+
+            <div className="text-center py-8">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                <svg
+                  className="w-10 h-10 text-green-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+
+              <h2 className="font-display text-2xl text-soft-white mb-2">
+                {t('gift.giftSent')}
+              </h2>
+              <p className="text-muted mb-6">
+                {t('gift.giftSentTo', { nickname: receiverNickname, menu: selectedMenu?.name || '' })}
+              </p>
+
+              <Button variant="primary" className="w-full" onClick={onClose}>
+                {t('common.close')}
+              </Button>
             </div>
-
-            <h2 className="font-display text-2xl text-soft-white mb-2">
-              {t('gift.giftSent')}
-            </h2>
-            <p className="text-muted mb-6">
-              {t('gift.giftSentTo', { nickname: receiverNickname, menu: selectedMenu?.name || '' })}
-            </p>
-
-            <Button variant="primary" className="w-full" onClick={onClose}>
-              {t('common.close')}
-            </Button>
-          </div>
+          </>
         );
     }
   };

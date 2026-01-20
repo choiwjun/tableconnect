@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { isValidUUID, isValidNickname } from '@/lib/utils/validators';
+import { MIN_PARTY_SIZE, MAX_PARTY_SIZE } from '@/lib/utils/constants';
 
 interface RouteParams {
   params: Promise<{ sessionId: string }>;
@@ -8,7 +9,7 @@ interface RouteParams {
 
 /**
  * POST /api/sessions/[sessionId]/join
- * Join a session with a nickname
+ * Join a session with profile data (nickname, gender, ageRange, partySize)
  */
 export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     const body = await request.json();
-    const { nickname } = body;
+    const { nickname, gender, ageRange, partySize } = body;
 
     // Validate nickname
     if (!nickname || typeof nickname !== 'string') {
@@ -37,6 +38,39 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (!isValidNickname(trimmedNickname)) {
       return NextResponse.json(
         { error: 'Invalid nickname' },
+        { status: 400 }
+      );
+    }
+
+    // Validate profile data
+    if (!gender || !['male', 'female'].includes(gender)) {
+      return NextResponse.json(
+        { error: 'Gender is required' },
+        { status: 400 }
+      );
+    }
+
+    if (!ageRange || ![
+      '20s_early', '20s_mid', '20s_late',
+      '30s_early', '30s_mid', '30s_late',
+      '40s'
+    ].includes(ageRange)) {
+      return NextResponse.json(
+        { error: 'Age range is required' },
+        { status: 400 }
+      );
+    }
+
+    if (!partySize || typeof partySize !== 'number') {
+      return NextResponse.json(
+        { error: 'Party size is required' },
+        { status: 400 }
+      );
+    }
+
+    if (partySize < MIN_PARTY_SIZE || partySize > MAX_PARTY_SIZE) {
+      return NextResponse.json(
+        { error: `Party size must be between ${MIN_PARTY_SIZE} and ${MAX_PARTY_SIZE}` },
         { status: 400 }
       );
     }
@@ -66,16 +100,18 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Check for duplicate nickname in same merchant
+    // Check for duplicate nickname in same merchant (only for same age range and gender to allow more flexibility)
     const { data: duplicateNickname } = await supabase
       .from('sessions')
       .select('id')
       .eq('merchant_id', existingSession.merchant_id)
       .eq('nickname', trimmedNickname)
+      .eq('gender', gender)
+      .eq('age_range', ageRange)
       .eq('is_active', true)
       .gt('expires_at', new Date().toISOString())
       .neq('id', sessionId)
-      .single();
+      .limit(1);
 
     if (duplicateNickname) {
       return NextResponse.json(
@@ -84,10 +120,15 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Update session with nickname
+    // Update session with profile data
     const { data: updatedSession, error: updateError } = await supabase
       .from('sessions')
-      .update({ nickname: trimmedNickname })
+      .update({
+        nickname: trimmedNickname,
+        gender,
+        age_range: ageRange,
+        party_size: partySize,
+      })
       .eq('id', sessionId)
       .select()
       .single();

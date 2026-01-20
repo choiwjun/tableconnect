@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import type { Session } from '@/types/database';
+import type { Session, Gender, AgeRange } from '@/types/database';
 
 interface SessionState {
   // Current user session
   currentSession: Session | null;
   // Partner session (chat partner)
-  partnerSession: Pick<Session, 'id' | 'table_number' | 'nickname'> | null;
+  partnerSession: Pick<Session, 'id' | 'table_number' | 'nickname' | 'gender' | 'age_range' | 'party_size'> | null;
   // Merchant ID from URL
   merchantId: string | null;
   // Table number from URL
@@ -14,10 +14,11 @@ interface SessionState {
 
   // Actions
   setCurrentSession: (session: Session | null) => void;
-  setPartnerSession: (session: Pick<Session, 'id' | 'table_number' | 'nickname'> | null) => void;
+  setPartnerSession: (session: Pick<Session, 'id' | 'table_number' | 'nickname' | 'gender' | 'age_range' | 'party_size'> | null) => void;
   setMerchantInfo: (merchantId: string, tableNumber: number) => void;
   clearSession: () => void;
   updateNickname: (nickname: string) => void;
+  updateProfile: (profile: { gender: Gender; ageRange: AgeRange; partySize: number }) => void;
 }
 
 export const useSessionStore = create<SessionState>()(
@@ -59,6 +60,17 @@ export const useSessionStore = create<SessionState>()(
             }),
             false,
             'updateNickname'
+          ),
+
+        updateProfile: (profile) =>
+          set(
+            (state) => ({
+              currentSession: state.currentSession
+                ? { ...state.currentSession, ...profile }
+                : null,
+            }),
+            false,
+            'updateProfile'
           ),
       }),
       {

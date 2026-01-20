@@ -1,0 +1,11 @@
+{
+  "buildCommand": "next build",
+  "devCommand": "next dev",
+  "installCommand": "npm install",
+  "crons": [
+    {
+      "path": "/api/sessions/cleanup",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+}

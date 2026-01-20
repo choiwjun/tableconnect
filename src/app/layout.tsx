@@ -11,6 +11,8 @@ import {
 } from "next/font/google";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 import { I18nProvider } from "@/lib/i18n/context";
+import { CustomCursor } from "@/components/ui/CustomCursor";
+import { PWAInstallPrompt } from "@/components/pwa/PWAInstallPrompt";
 import "./globals.css";
 
 // Display fonts
@@ -131,6 +133,8 @@ export default function RootLayout({
       <body
         className={`${fontVariables} antialiased bg-void text-soft-white min-h-screen`}
       >
+        <CustomCursor />
+        <PWAInstallPrompt />
         <I18nProvider>
           <ServiceWorkerRegistration />
           {children}

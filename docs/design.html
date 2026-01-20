@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Table Connect: Tokyo Night Pulse</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00ffff", // Cyan Neon
+                        "background-light": "#f2f2f2",
+                        "background-dark": "#080a0c", // Deep cosmic dark
+                        "glass-border": "rgba(255, 255, 255, 0.08)",
+                        "glass-bg": "rgba(18, 22, 28, 0.6)",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "sans": ["Noto Sans KR", "sans-serif"],
+                    },
+                    boxShadow: {
+                        "neon": "0 0 10px rgba(0, 255, 255, 0.3), 0 0 20px rgba(0, 255, 255, 0.1)",
+                        "neon-strong": "0 0 15px rgba(0, 255, 255, 0.5), 0 0 30px rgba(0, 255, 255, 0.2)",
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                },
+            },
+        }
+    </script>
+<style>/* Custom Scrollbar for a cyberpunk feel */
+::-webkit-scrollbar {
+    width: 6px
+    }
+::-webkit-scrollbar-track {
+    background: #080a0c
+    }
+::-webkit-scrollbar-thumb {
+    background: #2a3540;
+    border-radius: 3px
+    }
+/* Ambient Noise Texture Simulation using CSS */
+.bg-noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.03;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAWB387rXrnUpB_Qm2vmuF87-09fDRuK5kpowZjZsU45KHLYj8gjOgjMXC598nKDakGlhSZszwL5tw0gq8Ig-d8gzPuRGR26-RM6Z92JMmvF6kzT6fsdJi5xYxpMbBlXcqF08USViSWnDwJvMBs5BsxPtyl_U0AaqsRUhHvRvS7yR_lK2M7lBlxUPnEM9L6taKnYx1IuCzW6KJ-KfzDKTjSRZ5EwiJuAtTHkYtXiScaStzax056X9VY6QdRz44UmAZhwXwWadirwQ)
+    }
+.glass-panel {
+    background: rgba(20, 25, 30, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    }
+.text-neon {
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5)
+    }</style>
+</head>
+<body class="bg-background-dark text-white font-sans antialiased selection:bg-primary selection:text-black overflow-hidden h-screen flex flex-col">
+<!-- Ambient Background Effects -->
+<div class="fixed inset-0 bg-gradient-radial from-[#1a2530] via-[#080a0c] to-[#000000] z-0"></div>
+<div class="bg-noise"></div>
+<!-- Top Navigation -->
+<header class="relative z-50 flex-none w-full glass-panel border-b border-glass-border">
+<div class="flex items-center justify-between px-6 py-4 h-16">
+<!-- Logo Section -->
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-lg bg-primary/10 border border-primary/30 text-primary shadow-neon">
+<span class="material-symbols-outlined text-xl">radar</span>
+</div>
+<h1 class="font-display text-xl font-bold tracking-tight text-white uppercase">Table<span class="text-primary text-neon">Connect</span></h1>
+<div class="hidden md:flex ml-4 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">
+<span class="text-[10px] font-display font-medium text-primary tracking-widest uppercase">Tokyo Night Pulse</span>
+</div>
+</div>
+<!-- Nav Links -->
+<div class="flex items-center gap-8">
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium text-white hover:text-primary transition-colors hover:shadow-neon duration-300" href="#">홈</a>
+<a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors duration-300" href="#">메시지</a>
+<a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors duration-300" href="#">내 주문</a>
+</nav>
+<!-- Profile -->
+<div class="flex items-center gap-4 pl-6 border-l border-white/10">
+<div class="text-right hidden sm:block">
+<p class="text-xs text-gray-400 font-display">Status</p>
+<div class="flex items-center gap-1.5 justify-end">
+<span class="size-1.5 rounded-full bg-primary shadow-neon animate-pulse"></span>
+<p class="text-xs font-bold text-white tracking-wide">ONLINE</p>
+</div>
+</div>
+<div class="size-9 rounded-full bg-cover bg-center border border-white/20 shadow-lg" data-alt="User profile avatar showing a stylized cyberpunk character" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB4olD9TW_NZKIakuXID_xZkzZR1c3aHUPWM9cEjX_ddDTE2T0QqSiZVOcsenEdX0JjMzqmCh3uXsvYJqrxWbQTphGtghi1dbQZmSbIcc5hip2I_-G-QqYZIwN0HLfpaJN1zf4GRGLOj-yngyZVp-ODR1G_s6mVTgXIs9087nQ9akq8rvHaX8FgCK22m-3y-Z7ftnksPw5D4AQ6_UkxvlJpuWNHhKv7CO0cX3p7MRO7pdtgERH9Bl835nId-5K32lwxBS0vMkjVxQ");'></div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="relative z-10 flex flex-1 overflow-hidden p-4 gap-4">
+<!-- Left Sidebar: Real-time Popular -->
+<aside class="w-80 flex-none flex flex-col glass-panel rounded-xl overflow-hidden shadow-2xl">
+<div class="p-5 border-b border-white/5">
+<div class="flex items-center justify-between">
+<h2 class="font-display text-white font-bold tracking-tight">실시간 인기</h2>
+<span class="material-symbols-outlined text-primary animate-pulse text-lg">local_fire_department</span>
+</div>
+<p class="text-xs text-gray-500 mt-1 font-display uppercase tracking-wider">Live Popular Tables</p>
+</div>
+<div class="flex-1 overflow-y-auto p-3 space-y-2">
+<!-- List Item 1 -->
+<div class="group flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 border border-transparent hover:border-primary/40 hover:shadow-neon transition-all duration-300 cursor-pointer">
+<div class="relative size-12 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/50 transition-colors">
+<img class="size-full object-cover" data-alt="Dimly lit table with drinks" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6Db0LvKsS-3xvmxkAO6cdnpPiu626kdAdmtVnEHQpN5b1HhSmhqvisVWZ2FX6bXyRoKJq60P-n9eT1MCr8GgieRenE6CNibfycsIfCOoZWllxz9CkFpSumNa7H9mXL7J4jlfqxMs7uFP3-PzrdeSOK5o6uGLnhKsuITVAsrmxrKWz0pe-GM9M40xlY4PFIEtZ_YhrBq2EzS5a7tgn1lsWk1djuomZQWplo1WiVSJAsY8FASSsRCqKDTBsUn8T7RBYfgkLR6xRbQ"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<h3 class="font-display font-bold text-white text-sm truncate group-hover:text-primary transition-colors">Table 05</h3>
+<span class="text-[10px] font-bold bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30">HOT</span>
+</div>
+<p class="text-xs text-gray-400 truncate">🔥 분위기 최고조 (Hype)</p>
+</div>
+<span class="material-symbols-outlined text-gray-600 group-hover:text-primary transition-colors text-lg">chevron_right</span>
+</div>
+<!-- List Item 2 -->
+<div class="group flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 border border-transparent hover:border-primary/40 hover:shadow-neon transition-all duration-300 cursor-pointer">
+<div class="relative size-12 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/50 transition-colors">
+<img class="size-full object-cover" data-alt="VIP room interior view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXFjolARx9Qe-WrMGhO9u-qxTpZhYkwQx83kYq9GC5k962ezOFqYFMzjObRVo6enTH97gnu7_00NgyP5bhin_1EFasGUEXmqEAx40lAZz_LS0m3W_ESjp2utmoBPFfwbFBPO2SVjWGpP30khd4NwhNUIdHFWXHFmdPJf17nw2-io2GbO9uQJONKT6TsiK-6iS5DL5O193rWWxIdXq8cyufjSyQwPAojZP8vOrD1S9EIW2xzbAFIx4VIjFakeMpb4BHUD6lMxm5vw"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<h3 class="font-display font-bold text-white text-sm truncate group-hover:text-primary transition-colors">VIP Room 1</h3>
+<span class="material-symbols-outlined text-[10px] text-gray-500">lock</span>
+</div>
+<p class="text-xs text-gray-400 truncate">비밀 대화 중 (Private)</p>
+</div>
+<span class="material-symbols-outlined text-gray-600 group-hover:text-primary transition-colors text-lg">chevron_right</span>
+</div>
+<!-- List Item 3 -->
+<div class="group flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 border border-transparent hover:border-primary/40 hover:shadow-neon transition-all duration-300 cursor-pointer">
+<div class="relative size-12 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/50 transition-colors">
+<img class="size-full object-cover" data-alt="Table with vibrant lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu28b2DxhYrkybXJCCd8o7Ke7bXeJvCJHCV7RU64QPrYZJ_rHV0zXpsccR5GmbbPH0jDZPDSNXvoR8jmqsBCJi9hMWfjEY9NJjORSjwK0j39OHiLGazc87z2_uZSOR1od5L0xg0osa_Tt-hsBWCcTtUotf226I52Ojn4kn2xgYIUSUwLSJUA9SkdpkT3lgEnC5RbGd8wU-F09fw2XpCDasZhkNF6egsYkd3Ww3o_YTrpvd_gqqLKkERbzzcvrC8qdxD2J5Y6-smw"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<h3 class="font-display font-bold text-white text-sm truncate group-hover:text-primary transition-colors">Table 12</h3>
+<span class="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded border border-primary/30">NEW</span>
+</div>
+<p class="text-xs text-gray-400 truncate">새로운 만남 대기 (Waiting)</p>
+</div>
+<span class="material-symbols-outlined text-gray-600 group-hover:text-primary transition-colors text-lg">chevron_right</span>
+</div>
+</div>
+<!-- Sidebar Footer -->
+<div class="p-4 border-t border-white/5 bg-white/5 backdrop-blur-md">
+<button class="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-white/10 bg-white/5 hover:bg-primary/20 hover:border-primary hover:text-primary hover:shadow-neon transition-all duration-300 text-sm font-medium text-gray-300 group">
+<span class="material-symbols-outlined text-lg group-hover:animate-bounce">add</span>
+                    내 테이블 등록
+                </button>
+</div>
+</aside>
+<!-- Central Discovery Hub -->
+<section class="flex-1 flex flex-col glass-panel rounded-xl overflow-hidden shadow-2xl relative">
+<!-- Hub Header -->
+<div class="p-6 pb-2 flex-none z-10">
+<div class="flex items-end justify-between mb-4 border-b border-white/10 pb-4">
+<div>
+<h2 class="font-display text-2xl md:text-3xl font-bold text-white mb-1">지금 대화 중인 테이블</h2>
+<div class="flex items-center gap-2">
+<span class="flex size-2 rounded-full bg-primary shadow-neon"></span>
+<p class="text-sm text-primary font-display tracking-widest uppercase">Live Feed • Tokyo Shinjuku</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="size-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Scrollable Grid -->
+<div class="flex-1 overflow-y-auto px-6 pb-6 custom-scrollbar">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<article class="group relative flex flex-col bg-[#161b22]/80 border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-primary hover:shadow-neon-strong">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-[#161b22] to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Abstract neon lights representing a busy table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw-XY_RLpOCnx82czPwfBm3f40RJth7zdBd7hC3QfW4_KhRoc6H0L9YBez_shGg-z_Ob53-chefT1rfZteSzlf_KzD1Zn-lJAgmdOO3KNPP2TiW4cuTfr37dzS3-zmcKw4d7brWIH3BGYfisM-VqoJtd9C7p4Xm-stc3pmhI3ztySjrC7acL0Tja3YX9sOAMM_1_92_FGGDFBr58Uw1YzV2b2adRxeuPek6uKkJ6P7O1cq6sBzy5-g1bA1OUjM22lTbg-0J9ovxw"/>
+<div class="absolute top-3 left-3 z-20 flex gap-2">
+<span class="px-2 py-1 rounded bg-black/60 border border-white/10 backdrop-blur-sm text-xs text-white font-display">T-08</span>
+</div>
+<div class="absolute top-3 right-3 z-20">
+<span class="flex items-center gap-1 px-2 py-1 rounded-full bg-primary/20 border border-primary/40 backdrop-blur-sm text-[10px] text-primary font-bold uppercase tracking-wide">
+<span class="block size-1.5 rounded-full bg-primary animate-pulse"></span> Active
+                                </span>
+</div>
+</div>
+<div class="p-4 pt-0 flex flex-col flex-1 z-20 -mt-6">
+<h3 class="text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">즐거운 금요일! 🍻</h3>
+<p class="text-sm text-gray-400 mb-4 line-clamp-2">도쿄 여행 온 친구들끼리 한잔 중입니다. 합석 환영해요!</p>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex -space-x-2">
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5qoJyREApl2Es20bK4GK5fHsSN-L9KKKTsJpVucIywodrWBHBgs0f2ncaQrAu-1OYwZAzBHTt1SHxr1tfHcXiecTy2LRKdOU71NzOYtC8UwSodzXDu-3L7tNYfaA6s9Im-MNvqAx_2LBgGNkX8D5dWO6r-nMM_g5MKo_Jxzvg15TO4ecZ6HDITJeD4mCN5juv4eZHqw8plFIblid3Ouoh9iMrQXY0uk7PAx6U7BnzbwATk951b9kL32dx7jOaGUNPoK-cy2ggAw"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfHXA71YPEwBCNaAOL9UJMVxPIetOqHhFPmFN6oqsWm5DZSWoUYkhbGcCxl_z0b4AKsmSQFuXGpwHJyItZ7Z3lk8fFY09QZP4djuTQfjISJnD8sTIDbR4ukP-tRs27CsKn4kV3DI2cyTCLS5Ev6MZ8S25NMm7WNIWiihfsvw9evRmbu8J-1KB2Dg8wLdGKk9b56WV0IawQTsbe9368Q8F2vHS_sbUyYakRFg6dOjmJnscGf1vrZ42xCrOtbXMp3s51RBFDfaDnuQ"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmZFYzw5VMwd_WIuUKLkFsha73I6QZVJLYSs9YR4oSUOJQ3S2hMWUmelPQafgsRrwToNj2_J6m23lfZLyeUfdp7veqVxdqioAUX-Wv1TiMOI2SxjI668cUIfnQUKHcdPejdwtnqHRUKy59FnKQL0TMWrBctixTzi2izRJmfS1AN-e70sgglCbqMeV_eOoZatfdfnpTbAF9amtsPagREJvFVuBT9nwOHNJpTc0d4JjolNe6B8C11pAJWPa3vAtZ6lfnnjb_pZOJtw"/>
+</div>
+<span class="text-xs text-gray-500">+2 others</span>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-white hover:bg-white/10 transition-colors">
+                                    프로필 보기
+                                </button>
+<button class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-primary/10 border border-primary/30 text-xs font-bold text-primary hover:bg-primary hover:text-black transition-all shadow-[0_0_10px_rgba(0,255,255,0.1)] hover:shadow-[0_0_15px_rgba(0,255,255,0.4)]">
+<span class="material-symbols-outlined text-sm">redeem</span>
+                                    선물 보내기
+                                </button>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="group relative flex flex-col bg-[#161b22]/80 border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-primary hover:shadow-neon-strong">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-[#161b22] to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Dark moody izakaya corner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQs1mmjEUMSV2lQSfUNAUvH_YsCIcFfzCIrH7U8woGmdpGEOGbexuLKkiCImxW76WG2JxEoPtGTZQP8gc81jdzWW-mz1aibkDxkQaqTVl_Bya3wOXTDc6E-ebe75cakj4wU7V68xWrOalt256RHE9Scpy5JzVHIkVEFliRcExEMqiBtG7tbKHYkwDujwMe7WkuerApqwoM1ZsF8uCX4f5nXcno3OOUKNNcQM_rTdaMRAdbiZKlog0wxrJRK7uueJCkO3rzIBLGhA"/>
+<div class="absolute top-3 left-3 z-20 flex gap-2">
+<span class="px-2 py-1 rounded bg-black/60 border border-white/10 backdrop-blur-sm text-xs text-white font-display">T-14</span>
+</div>
+<div class="absolute top-3 right-3 z-20">
+<span class="flex items-center gap-1 px-2 py-1 rounded-full bg-purple-500/20 border border-purple-500/40 backdrop-blur-sm text-[10px] text-purple-400 font-bold uppercase tracking-wide">
+                                    Music
+                                </span>
+</div>
+</div>
+<div class="p-4 pt-0 flex flex-col flex-1 z-20 -mt-6">
+<h3 class="text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">음악 얘기할 사람 🎵</h3>
+<p class="text-sm text-gray-400 mb-4 line-clamp-2">시티팝 좋아하는 사람들 모여라. 신청곡 받습니다.</p>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex -space-x-2">
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5DrvLdGWG8mOyzL2C4zrogtGWKA7-fJnLT-pHbKmOtMWA7dosy9-rHsuK2OFi9KkP41SlkrmEMB2ZFk2dc2RQIKEnHkhexmt8pGAJP8dpNOJS9fIjEXAdlLq9ClBq-YxnPCGZy-jOAHqZNtYcWqqxcshK-ex_sQ87TUyHZPV3cc_DpczpN9IhhaJ48OLh2-SeT8SV8GcmMwJpHKcMUcZPa_b_ojiy_zANAoOK5rxcbkX-LbwMP9apXlYgKpaGYYyRFfrCaRPVNg"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLGBwgu48mwanXFSNSrO-o7H6A3rluqdjtR_AUiZIcNi12ko9nBbT892r6yIzKhzuUJbIHtEHwst0eRnOJQfJhbU6EYZt1NCcYND0vcSuI851ZAszquXTQnahU5YjupHvFQo7yNtV27_8mcoGeHAhVW_kBxk1yfacxiy1woIV6ArUNLTn7eA8NSnBxhnlchCMdkv6VJOXE2lI20eMMtaCbTQoVlwjBjt_p_HJN7rsnXfvDBcIdFo3bpbMQqp6w41EtjLbAaIC-xA"/>
+</div>
+<span class="text-xs text-gray-500">Listening now</span>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-white hover:bg-white/10 transition-colors">
+                                    프로필 보기
+                                </button>
+<button class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-primary/10 border border-primary/30 text-xs font-bold text-primary hover:bg-primary hover:text-black transition-all shadow-[0_0_10px_rgba(0,255,255,0.1)] hover:shadow-[0_0_15px_rgba(0,255,255,0.4)]">
+<span class="material-symbols-outlined text-sm">redeem</span>
+                                    선물 보내기
+                                </button>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="group relative flex flex-col bg-[#161b22]/80 border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-primary hover:shadow-neon-strong">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-[#161b22] to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Close up of beer glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGCZzawUQHBZZWQnPL_vWU6D_-Qm2OfWfTINVSnfanGVPCF7ZTNin09rzvVEuk8qz4W5D88vCCMH8pEDeH_USyPpy7RNLhGOsfDuCvwq2KxWGRnMV4eCHLZOpSIi1Ke8cz5PNeNyIBUeD6SMridJom90jdEgy4lk63j4DVWm4kg5HpnZZewFS-zFzq1-wKmPD8aZ-R8T9IlMc0K0rg165ULsiLQi1phJ_rx4l6kMTFTZ8Cw_QpaFVokFUHrkNX5yJ6P_Acxu_YYA"/>
+<div class="absolute top-3 left-3 z-20 flex gap-2">
+<span class="px-2 py-1 rounded bg-black/60 border border-white/10 backdrop-blur-sm text-xs text-white font-display">T-02</span>
+</div>
+</div>
+<div class="p-4 pt-0 flex flex-col flex-1 z-20 -mt-6">
+<h3 class="text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">회사 뒤풀이 중 💼</h3>
+<p class="text-sm text-gray-400 mb-4 line-clamp-2">직장인들의 고충 토로... 같이 욕해줄 사람 구함</p>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex -space-x-2">
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACgv8XjESVjTGAf1ozswhGEdt5qNY-M3EXSMRVAXALFHtDSzYzF4--c6Q4c_Ly1m5pRp9BeANm-okskxcd9WegaPYcXiSonu2wFMJevnvMVUCTaYMaeY39A6X7To9_cbp1ryMD87PhIzaurtj512KP47tTq4IimasYYLJoLKBHPAkCYLmXIEWREUpceDqpAtKrEdDBCU3Y2jYa9IKsKs8DRAy41qCNX6iKRjwypSIB2MxwXHZHXA2ae8oe69zhAJxu1lQtcUBz_A"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPByNMHXP6oWrN5AS-s3WjMtpFvAFsvW4XtBXZFaus3Q9kdhxHE9pOnrRpKUK48dRTYi_OPktI9TsHkiRvrW_uwhn56KBmhkNsTh280u1RnInb-J2xvBp1ssHNuj0FyMG1qvldL5GyY6h3YLRiibBbIqz-vtrTmtdtFwOUy86wv5pKKyAK15sxKY_RnivMsWXM_ExTOtx_ggA49QAoFSJ1aeOWJ8vSBGTUh8pJ3a0sofp2NvBiu5riRaY8JNwSpD_QTUuBt7ZzrA"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTGMFr6ePsF71Pt08AAMPkD5Mok7dUDARdM7v0kjqCOiRbTmh6mOJi84RTT8iO7QqbUP4W0HpwRNXuWJgPIoZ6dlLNRVtq6isJndQQnoAueY8URsMPPoe9dopKhmA2T3WWyGRNKheA99MyH6Dz6580FYcHy8jZRIGz7PkPNJ_NtAvEk5WmeQj4FQnDu82m83UwXAg17WOpPN8iH1CbmKY3T8VbcUV1MDVCeaLblXBFMW-ECE-Xdm2wzxR_St8mHljxxLlGm15fpw"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2n9ieq0WKk-zYjRPZ78aojK-ntFnE6cLkqu9ohZv2Obyro_ORWUS-axYgwTkyxxIXv6E2ffQCm_B9J5jCCG4HvbiaWs74QV-HXcMBdyLYD2nnfFewtcksCwDKy-V1DcUFhXx83_2-Pi5jRhsgRooSSnhbRsBCW3hGmrkv8ECh3lQ3dnlBehfL-FbL2gM2to2jEOcHIaUZlydWaUtM0EGNp1FOxcFatd4aphkf6PzU3FwxwW5G8aGkuppckQ2Tlb_Ja5kIQ03mbQ"/>
+</div>
+<span class="text-xs text-gray-500">+1 other</span>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-white hover:bg-white/10 transition-colors">
+                                    프로필 보기
+                                </button>
+<button class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-primary/10 border border-primary/30 text-xs font-bold text-primary hover:bg-primary hover:text-black transition-all shadow-[0_0_10px_rgba(0,255,255,0.1)] hover:shadow-[0_0_15px_rgba(0,255,255,0.4)]">
+<span class="material-symbols-outlined text-sm">redeem</span>
+                                    선물 보내기
+                                </button>
+</div>
+</div>
+</article>
+<!-- Card 4 (Locked/Private) -->
+<article class="group relative flex flex-col bg-[#161b22]/40 border border-white/5 rounded-xl overflow-hidden opacity-75 hover:opacity-100 transition-all duration-300">
+<div class="relative h-48 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
+<div class="absolute inset-0 bg-black/60 z-10 backdrop-blur-[2px]"></div>
+<img class="w-full h-full object-cover" data-alt="Silhouette of people in a dark room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC3gF0ScWZoHr8seAeszyChEAI4b5i498FQYYaOktKuvrhd7bKIAjTIN9fa_X5pCbhUkIQuGkfWGLpYL3JgGF0lbLFkkHxRzAp0C9C1sXqzvo8_VM2pGOUmSqiFay0BqbpmM_1GvYUoLN-LO3sBWpOtlwNd86a99giYnewKEXLGJmNJyf8yHifQHI2LKFAL01jjz_EVCDsAHntFsNyIyO8mRMWRP32dtgjxLRjCYNMp7VJdHjU87ghKbV2Vu36ujJJrzrVkBF2Pg"/>
+<div class="absolute inset-0 flex items-center justify-center z-20 flex-col gap-2">
+<span class="material-symbols-outlined text-4xl text-gray-400">lock</span>
+<span class="text-sm font-display text-gray-400 font-bold uppercase tracking-widest">Private Table</span>
+</div>
+</div>
+<div class="p-4 flex flex-col flex-1 border-t border-white/5">
+<h3 class="text-lg font-bold text-gray-400 mb-1">비공개 모임</h3>
+<p class="text-sm text-gray-600 mb-4">VIP 전용 테이블입니다.</p>
+<div class="mt-auto">
+<button class="w-full py-2 px-3 rounded-lg bg-white/5 border border-white/5 text-xs font-medium text-gray-500 cursor-not-allowed">
+                                    접근 불가
+                                </button>
+</div>
+</div>
+</article>
+<!-- Card 5 -->
+<article class="group relative flex flex-col bg-[#161b22]/80 border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-primary hover:shadow-neon-strong">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-[#161b22] to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Neon sign background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTC2_xUx8E7b9eefd5dB9mZamYLcZRdgmkdTJflIzN_hHo_QiQ5tSqPBmKAg-sgDYRitAY3w5mGAQ4edMJ9Xpt9nZZFNWxsBqHvZjKhjtKLSuP7DSiEtzepED21zCkyIH-YVGuZBt_l4pFiplFVVZul2X_3kwt4EjlFf17KBEUb4saE9qzUWzy_6xOpJByMA-67qf5OmPjGdkTQ7OD_Rb6ds56Fj7YQ3SOLswf-7X2N-FVM0MH0uIijVxaSblKXkTXQYccDeny6A"/>
+<div class="absolute top-3 left-3 z-20 flex gap-2">
+<span class="px-2 py-1 rounded bg-black/60 border border-white/10 backdrop-blur-sm text-xs text-white font-display">T-05</span>
+</div>
+<div class="absolute top-3 right-3 z-20">
+<span class="flex items-center gap-1 px-2 py-1 rounded-full bg-primary/20 border border-primary/40 backdrop-blur-sm text-[10px] text-primary font-bold uppercase tracking-wide">
+<span class="block size-1.5 rounded-full bg-primary animate-pulse"></span> Active
+                                </span>
+</div>
+</div>
+<div class="p-4 pt-0 flex flex-col flex-1 z-20 -mt-6">
+<h3 class="text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">생일 축하해 🎂</h3>
+<p class="text-sm text-gray-400 mb-4 line-clamp-2">친구 생일 파티 중입니다! 케이크 나눠드려요.</p>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex -space-x-2">
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmvxRaO1LSbrAlQd7_0u377uDW1veeJyTFs8xZJH2M0h0MhVYITr4qc4izxHJkEGgP3GgUJoycKaeNY_oLKSceIR3OBWWfOE459FXdgwRZpvHmzX1uzCGLZBUMVNcUzoJdN7a-HYOV1tw-DxyCh09YjHEuuaGk3Osuxn4KN305-fGhsJ1iLDU4JrQjIrJ0_SiLpf6igYc4xENy5uiUto1M-Ab13C2yvAgFc_mPgYcxlgy-4SgELCzpd9pcWBOndNEFYIO0QPftDQ"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiM8-Dj2Poi6gwcYXyguyl_5HPCakdqAd-Ozea_sN_kBEyp3ipcF32aVSRYkefba5UznL6HZr8193i1zDVYXslewymBowepRRaxBrylgRQpUBC-K9sAwAsdvPyhz2hnweyV-oL8DbeaozHumHiq0mhXQSkRGrZym43ApCaBJmsQNXwepA4GQOHiEmEQzjrrHTsfFNTDVi2GqSpSYYc6boP7yBQ1vcgV4VvufwfqSiDIaeqTbONhAXYYMVHjIciiGBko-ZtMP2Bqw"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1nQakPBvdZEzZ-6F9iP5taZRRD1D6EgX3o759RjfXO-1nDI-ve_0rvyoTXOXcneVDqxAqBtODbKdsKB65JqRSVpM_UOaVhHqeym-IZxLKU0V7y24P1dBIP5ORAvwDzm2fxLidoskSaaY15CSHM2G22cZ4wZRgL1WwZLgtGNuYdsXnWz6yzuN2sYJhVenWg5zfc-g98y6rcENTs9w1RxNIBicD_k45HxZp6JjF9IR5nM9skqsT83byF3rd-UOx7lBW3ZoMo4oJ3Q"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5iyD9-1m7s133broOfPousGM9rv5o8ehgY3x_o6eAFySY_JlRfGCuG1fAuVSwDQ130FFE8vCQywQ68fpwuv_N0P6UK1UddQ7b6QAoDWigAY9U0e3ay1CwTze0IbeoNpQX9pReD3MSM1f7Gx3cEDrqh2KwRuzpEfl0jaUv57lInf1l6uXGogeSr4y_oyb6xBQIhnf4dy8fZTeKYrKxEyz9eskzEbvAFaJnj_Ep0_vN4BfJWgNmqm4iR-Lq_dcjLTu-CxeZGzdKUA"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSLckntzGlFTb0GMt8tlR_4YbjDGqLgSKjjGL7zmt8Dh_LSXR-SCxoZg5pSgXkUeBjOL-fCVFRkws7P9X1KElqLEvs0HoXzZZ5Wf37eD-_7M25yTKfYXZgOHBEzlqfPyJVEpnfAylDs-JK4Gwi24kG_E_bG0Cqdhe2FRsy7_prT7_VCARpnpYlq7pCA_jzRURwS2KCX8gmerVQCSp8SMLcqmIdPZ2B2fDRh1hFQo10_u0VN_Z084FKbMDG5YEp4y7aZppmNP6jNw"/>
+</div>
+<span class="text-xs text-gray-500">+4 others</span>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-white hover:bg-white/10 transition-colors">
+                                    프로필 보기
+                                </button>
+<button class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-primary/10 border border-primary/30 text-xs font-bold text-primary hover:bg-primary hover:text-black transition-all shadow-[0_0_10px_rgba(0,255,255,0.1)] hover:shadow-[0_0_15px_rgba(0,255,255,0.4)]">
+<span class="material-symbols-outlined text-sm">redeem</span>
+                                    선물 보내기
+                                </button>
+</div>
+</div>
+</article>
+<!-- Card 6 -->
+<article class="group relative flex flex-col bg-[#161b22]/80 border border-white/5 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-primary hover:shadow-neon-strong">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-[#161b22] to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Couple toasting drinks" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdGfuz2GRntb4ovzygNYLjOMmTqqFYFVBVbkT2T1p9bg6B0-BPrXd8hCmm-dkWUaG8kS5bBr_fQ8vER_RSZ27GMC2aHe64a-yXsobnN-sR_DblS2fpR_EWz7roLJJNfleiIEfT37m3kUX2wYCsXc2OsM7SCOos01QvtCa9IyplQhE4XH9oGEI-NEnCRYhS2eX6nS1sAd7RdH0az1cQ_y6tRBqQErsf5egD0wuZLWkSRL63DW2QRrchPX5XZcEAJP4fu3FYvuBvpg"/>
+<div class="absolute top-3 left-3 z-20 flex gap-2">
+<span class="px-2 py-1 rounded bg-black/60 border border-white/10 backdrop-blur-sm text-xs text-white font-display">T-22</span>
+</div>
+</div>
+<div class="p-4 pt-0 flex flex-col flex-1 z-20 -mt-6">
+<h3 class="text-lg font-bold text-white mb-1 group-hover:text-primary transition-colors">조용한 대화</h3>
+<p class="text-sm text-gray-400 mb-4 line-clamp-2">진지한 이야기 중. 방해 금지 부탁드려요.</p>
+<div class="flex items-center gap-2 mb-4">
+<div class="flex -space-x-2">
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw37GqM5NB7sElbPpU4kWbJop0A6jxDIma9EZR8CyYfgQyaWjy7SxfsWPhsH4S88NcrBXqku_DDRzixkJpQxOX4ChKeU0zOx1KAOLfOgSuCxsA6huN_hvLh9yCLolJB4Xb3KKfuFrTSuXgBOEMZaCNMmhr7iWVPIDqx5HVP2bPTt9qiLZm_4nyR0WScbNw2WAeWfxFSFs-W_RwviycKEliqZmMULAUD7nkrllKVix_E2GwPC7iyTxnzCgMkfurJ8OW5zjo-2ajjQ"/>
+<img alt="" class="inline-block size-6 rounded-full ring-2 ring-[#161b22]" data-alt="User avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCencl4KrwcSo8Xd5mhLHqNml3ixKMag6TBhJSWvAumi47oRrpMjDODv22-ziED6ZowaUscwY5RCk6RrJX-UyjTNpov5pEr__b1g1NW10hMQNqBU5S4x_fpk0G6bwrFHFOhhQD-GfYc1iw8gDDLLhQNdxgwn49mpJN1EPMj1k8Io3dG6z-nX6XhOlGYEpDVTn20-piMrKXLbmZgXaeEuo6TAuZTpL3SbI-yc1cyiHQCgUgNLk1NhgvKMHZm8IOm8rJjhElPO3Nu3Q"/>
+</div>
+<span class="text-xs text-gray-500">Busy</span>
+</div>
+<div class="mt-auto grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-white hover:bg-white/10 transition-colors">
+                                    프로필 보기
+                                </button>
+<button class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-primary/10 border border-primary/30 text-xs font-bold text-primary hover:bg-primary hover:text-black transition-all shadow-[0_0_10px_rgba(0,255,255,0.1)] hover:shadow-[0_0_15px_rgba(0,255,255,0.4)]">
+<span class="material-symbols-outlined text-sm">redeem</span>
+                                    선물 보내기
+                                </button>
+</div>
+</div>
+</article>
+</div>
+<!-- Spacer for bottom scrolling -->
+<div class="h-10"></div>
+</div>
+</section>
+</main>
+<!-- Footer Status Bar -->
+<footer class="flex-none px-6 py-2 flex justify-between items-center text-[10px] text-gray-600 font-display uppercase tracking-widest border-t border-white/5 bg-background-dark/80 backdrop-blur-sm">
+<div class="flex items-center gap-4">
+<span>Server: Tokyo-JP-01</span>
+<span class="text-primary/50">● Connected</span>
+</div>
+<div>
+<span>System V2.4.0</span>
+</div>
+</footer>
+</body></html>

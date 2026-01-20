@@ -22,7 +22,7 @@
     "password": "Password",
     "loginFailed": "Login failed",
     "unauthorized": "Access Denied",
-    "unauthorizedDescription": "You don't have permission to access this page. Please contact the administrator."
+    "unauthorizedDescription": "You don't have permission to access this page. Please contact administrator."
   },
   "session": {
     "enterNickname": "Enter nickname",
@@ -34,24 +34,42 @@
     "sessionExpired": "Session expired",
     "sessionExpiringSoon": "Session expiring soon",
     "sessionEndingSoon": "Your session is ending soon",
-    "sessionEndingSoonDesc": "Please scan a new QR code after the session ends",
+    "sessionEndingSoonDesc": "Please scan a new QR code after session ends",
     "sessionEnded": "Session Ended",
-    "sessionEndedDesc": "To continue using the service, please scan the QR code again.",
+    "sessionEndedDesc": "To continue using service, please scan the QR code again.",
     "table": "Table",
-    "errorOccurred": "An error occurred. Please try again."
+    "errorOccurred": "An error occurred. Please try again.",
+    "leaveConfirmation": "Are you sure you want to leave?",
+    "leaveWarning": "After leaving, you won't be able to send or read messages.",
+    "leaveWarningDetail": "Message history will be deleted and cannot be recovered.",
+    "leaveStore": "Leave Store",
+    "leaveButton": "Leave"
   },
   "chat": {
     "sendMessage": "Send message",
     "messagePlaceholder": "Type a message...",
     "noMessages": "No messages",
     "startConversation": "Start a conversation with {nickname}",
-    "sendFirstMessage": "Send the first message",
+    "sendFirstMessage": "Send first message",
     "messageTooLong": "Message must be 500 characters or less",
     "read": "Read",
     "gift": "Gift",
     "report": "Report",
     "fetchFailed": "Failed to load messages",
-    "tableNumber": "Table {number}"
+    "tableNumber": "Table {number}",
+    "justNow": "Just now",
+    "minutesAgo": " minutes ago",
+    "hoursAgo": " hours ago",
+    "daysAgo": " days ago",
+    "quickReplies": [
+      "Hi there! 🍻",
+      "Cheers! 🥂",
+      "Have a great time! ✨",
+      "Thank you! 🙏"
+    ],
+    "translate": "Translate",
+    "translating": "Translating...",
+    "showOriginal": "Show original"
   },
   "gift": {
     "sendGift": "Send Gift",
@@ -78,7 +96,15 @@
     "recipient": "Recipient",
     "message": "Message",
     "sendingTo": "Sending gift to {nickname}",
-    "tableNumber": "Table {number}"
+    "tableNumber": "Table {number}",
+    "receivedGifts": "Received Gifts",
+    "noGifts": "No gifts received yet",
+    "noGiftsDescription": "Send gifts from other tables",
+    "browseMenu": "Browse Menu",
+    "pointGift": "Point Gift",
+    "received": "Received",
+    "pending": "Pending",
+    "failed": "Failed"
   },
   "safety": {
     "block": "Block",
@@ -117,8 +143,8 @@
     "settlements": "Settlements",
     "reports": "Reports",
     "merchants": "Merchants",
-    "thisMonthRevenue": "This Month Revenue",
-    "thisMonthGifts": "Gifts This Month",
+    "thisMonthRevenue": "This Month's Revenue",
+    "giftsThisMonth": "Gifts This Month",
     "pendingReports": "Pending Reports",
     "pendingAmount": "Pending Amount",
     "revenueChart": "Revenue (Last 7 Days)",

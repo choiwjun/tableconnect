@@ -38,7 +38,12 @@
     "sessionEnded": "セッション終了",
     "sessionEndedDesc": "続けてご利用いただく場合は、再度QRコードをスキャンしてください。",
     "table": "テーブル",
-    "errorOccurred": "エラーが発生しました。もう一度お試しください。"
+    "errorOccurred": "エラーが発生しました。もう一度お試しください。",
+    "leaveConfirmation": "本当に退店しますか？",
+    "leaveWarning": "退店すると、メッセージの閲覧・送信ができなくなります。",
+    "leaveWarningDetail": "メッセージ履歴は削除され、復元できません。",
+    "leaveStore": "退店する",
+    "leaveButton": "退店する"
   },
   "chat": {
     "sendMessage": "メッセージを送信",
@@ -51,7 +56,20 @@
     "gift": "ギフト",
     "report": "報告する",
     "fetchFailed": "メッセージの取得に失敗しました",
-    "tableNumber": "テーブル {number}"
+    "tableNumber": "テーブル {number}",
+    "justNow": "たった今",
+    "minutesAgo": "分前",
+    "hoursAgo": "時間前",
+    "daysAgo": "日前",
+    "quickReplies": [
+      "こんにちは! 🍻",
+      "乾杯! 🥂",
+      "楽しい時間をお過ごしください ✨",
+      "ありがとうございます 🙏"
+    ],
+    "translate": "翻訳",
+    "translating": "翻訳中...",
+    "showOriginal": "原文を表示"
   },
   "gift": {
     "sendGift": "ギフトを送る",
@@ -78,7 +96,12 @@
     "recipient": "受取人",
     "message": "メッセージ",
     "sendingTo": "{nickname}さんにギフトを送る",
-    "tableNumber": "テーブル {number}"
+    "tableNumber": "テーブル {number}",
+    "receivedGifts": "もらったギフト",
+    "noGifts": "まだギフトを受け取っていません",
+    "noGiftsDescription": "他のテーブルからギフトを受け取りましょう",
+    "browseMenu": "メニューを見る",
+    "pointGift": "ポイントギフト"
   },
   "safety": {
     "block": "ブロック",

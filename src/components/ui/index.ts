@@ -8,3 +8,4 @@ export { Spinner, Loading } from './Spinner';
 export { Container } from './Container';
 export { Header } from './Header';
 export { LanguageSelector } from './LanguageSelector';
+export { OfflineBanner } from './OfflineBanner';

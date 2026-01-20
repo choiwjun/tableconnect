@@ -134,7 +134,7 @@ export default function TablePage() {
 
   // Redirect to profile page to enter nickname
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center stagger-children">
       <Container maxWidth="sm" className="text-center">
         <div className="glass rounded-2xl p-8">
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-neon-pink/20 flex items-center justify-center">

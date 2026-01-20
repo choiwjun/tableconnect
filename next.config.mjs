@@ -30,9 +30,16 @@ const nextConfig = {
   experimental: {
     // Enable optimized package imports
     optimizePackageImports: ['zustand', '@supabase/supabase-js'],
+    // Enable SWC minification
+    swcMinify: true,
+    // Enable CSS Modules
+    cssChunking: true,
   },
 
-  // Headers for caching
+  // Compression for better performance
+  compress: true,
+
+  // Headers for caching and performance
   async headers() {
     return [
       {
@@ -53,7 +60,52 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/manifest.json',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:all*(svg|jpg|jpeg|png|gif|webp|avif)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ];
+  },
+
+  // Rewrites for static assets
+  async rewrites() {
+    return [];
+  },
+
+  // Webpack configuration for performance
+  webpack: (config, { dev, isServer }) => {
+    // Optimize bundle size
+    if (!dev && !isServer) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              priority: 10,
+              reuseExistingChunk: true,
+            },
+          },
+        },
+      };
+    }
+    return config;
   },
 };
 

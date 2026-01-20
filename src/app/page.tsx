@@ -39,6 +39,20 @@ const mockPopularTables = [
     status: 'new' as const,
     description: '새로운 만남 대기 (Waiting)',
   },
+  {
+    id: '4',
+    tableNumber: 8,
+    label: 'Table 08',
+    status: 'hot' as const,
+    description: '🎉 분위기 최고! (Hot)',
+  },
+  {
+    id: '5',
+    tableNumber: 25,
+    label: 'Table 25',
+    status: 'new' as const,
+    description: '👋 새로운 팀 (New Team)',
+  },
 ];
 
 const mockActiveTables = [
@@ -116,6 +130,172 @@ const mockActiveTables = [
     ],
     status: 'busy' as const,
   },
+  {
+    id: '7',
+    tableNumber: 15,
+    title: '한국 여행객들 🇰🇷',
+    description: '서울에서 왔어요! 일본 친구들 사귀고 싶어요.',
+    members: [
+      { id: 'm21', nickname: 'Minji' },
+      { id: 'm22', nickname: 'Jin' },
+      { id: 'm23', nickname: 'Sora' },
+      { id: 'm24', nickname: 'Hyeon' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '8',
+    tableNumber: 33,
+    title: '개발자 모임 💻',
+    description: 'React, TypeScript 얘기할 사람! 취업 정보도 공유해요.',
+    members: [
+      { id: 'm25', nickname: 'CodeMaster' },
+      { id: 'm26', nickname: 'FrontendKing' },
+      { id: 'm27', nickname: 'FullStackSam' },
+    ],
+    status: 'music' as const,
+  },
+  {
+    id: '9',
+    tableNumber: 7,
+    title: '맛집 투어 중 🍜',
+    description: '도쿄 맛집 여행 중이에요. 추천 부탁드려요!',
+    members: [
+      { id: 'm28', nickname: 'FoodieKun' },
+      { id: 'm29', nickname: 'RamenLover' },
+      { id: 'm30', nickname: 'SushiGirl' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '10',
+    tableNumber: 18,
+    title: '게임할 사람? 🎮',
+    description: '스마트폰 게임 팀원 찾아요. 랭크 상관없어요!',
+    members: [
+      { id: 'm31', nickname: 'GamerX' },
+      { id: 'm32', nickname: 'ProPlayer' },
+      { id: 'm33', nickname: 'CasualGamer' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '11',
+    tableNumber: 11,
+    title: '술자리 찾아요 🍶',
+    description: '혼자 왔는데 같이 마실 사람 구합니다!',
+    members: [
+      { id: 'm34', nickname: 'SoloDrinker' },
+    ],
+    status: 'new' as const,
+  },
+  {
+    id: '12',
+    tableNumber: 26,
+    title: '취업 면접 준비중 📝',
+    description: '면접 준비하는 분들끼리 정보 공유할까요?',
+    members: [
+      { id: 'm35', nickname: 'JobHunter1' },
+      { id: 'm36', nickname: 'JobHunter2' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '13',
+    tableNumber: 40,
+    title: '팬클럽 모임 💖',
+    description: 'K-POP 좋아하는 사람들 모임!',
+    members: [
+      { id: 'm37', nickname: 'ArmyForever' },
+      { id: 'm38', nickname: 'BlinkForever' },
+      { id: 'm39', nickname: 'KpopFan' },
+      { id: 'm40', nickname: 'StanGirl' },
+      { id: 'm41', nickname: 'IdolLover' },
+    ],
+    status: 'music' as const,
+  },
+  {
+    id: '14',
+    tableNumber: 6,
+    title: '사진 찍는 중 📸',
+    description: '인스타그램용 사진 찍어요! 같이 찍을 사람?',
+    members: [
+      { id: 'm42', nickname: 'InstaGirl' },
+      { id: 'm43', nickname: 'PhotoBoy' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '15',
+    tableNumber: 30,
+    title: '외국인 친구 구함 🌍',
+    description: '영어 회화 연습하고 싶어요! 언어 상관없어요.',
+    members: [
+      { id: 'm44', nickname: 'EnglishLearner' },
+      { id: 'm45', nickname: 'GlobalCitizen' },
+    ],
+    status: 'new' as const,
+  },
+  {
+    id: '16',
+    tableNumber: 45,
+    title: '주말 데이트 중 💕',
+    description: '데이트 장소 추천 부탁드려요!',
+    members: [
+      { id: 'm46', nickname: 'CoupleGirl' },
+      { id: 'm47', nickname: 'CoupleBoy' },
+    ],
+    status: 'private' as const,
+  },
+  {
+    id: '17',
+    tableNumber: 19,
+    title: '운동 동료 찾아요 🏋️',
+    description: '헬스장 같이 갈 사람 구해요! PT 트레이너도 환영',
+    members: [
+      { id: 'm48', nickname: 'GymRat' },
+      { id: 'm49', nickname: 'FitnessKing' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '18',
+    tableNumber: 9,
+    title: '맛있는 거 먹어요 🍣',
+    description: '오늘 회식이에요! 같이 즐겁게 먹어요.',
+    members: [
+      { id: 'm50', nickname: 'ManagerSama' },
+      { id: 'm51', nickname: 'Employee1' },
+      { id: 'm52', nickname: 'Employee2' },
+      { id: 'm53', nickname: 'Employee3' },
+      { id: 'm54', nickname: 'Employee4' },
+    ],
+    status: 'active' as const,
+  },
+  {
+    id: '19',
+    tableNumber: 13,
+    title: '주식 투자자 모임 📈',
+    description: '주식 정보 공유해요! 수익률 자랑도 환영',
+    members: [
+      { id: 'm55', nickname: 'StockKing' },
+      { id: 'm56', nickname: 'CryptoTrader' },
+      { id: 'm57', nickname: 'InvestorGuru' },
+    ],
+    status: 'busy' as const,
+  },
+  {
+    id: '20',
+    tableNumber: 38,
+    title: '영화 좋아하는 사람 🎬',
+    description: '최신 영화 이야기 나눠요! 감독, 배우 얘기도 OK',
+    members: [
+      { id: 'm58', nickname: 'MovieBuff' },
+      { id: 'm59', nickname: 'CinemaLover' },
+      { id: 'm60', nickname: 'FilmCritic' },
+    ],
+    status: 'music' as const,
+  },
 ];
 
 export default function Home() {
@@ -189,7 +369,7 @@ export default function Home() {
       />
 
       {/* Main Content Area - pb-20 for mobile bottom nav space, md:pb-4 for desktop */}
-      <main className="relative z-10 flex flex-col lg:flex-row flex-1 overflow-hidden p-4 gap-4 pb-20 md:pb-4">
+      <main className="relative z-10 flex flex-col lg:flex-row flex-1 overflow-hidden p-4 gap-4 pb-20 md:pb-4 stagger-children">
         {/* Mobile: Horizontal Popular Tables */}
         <PopularTablesHorizontal
           tables={mockPopularTables}

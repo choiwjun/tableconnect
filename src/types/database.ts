@@ -45,6 +45,29 @@ export interface MerchantSettings {
 }
 
 // ============================================
+// Session (세션)
+// ============================================
+export type Gender = 'male' | 'female';
+export type AgeRange = '20s_early' | '20s_mid' | '20s_late' | '30s_early' | '30s_mid' | '30s_late' | '40s';
+
+export interface Session {
+  id: string;
+  merchant_id: string;
+  table_number: number;
+  nickname: string | null;
+  gender: Gender | null;      // New field
+  age_range: AgeRange | null;   // New field
+  party_size: number | null;    // New field
+  is_active: boolean;
+  created_at: string;
+  expires_at: string;
+}
+
+export interface SessionWithMerchant extends Session {
+  merchant: Pick<Merchant, 'id' | 'name' | 'slug'>;
+}
+
+// ============================================
 // Menu (메뉴)
 // ============================================
 export interface Menu {
@@ -59,23 +82,6 @@ export interface Menu {
   sort_order: number;
   created_at: string;
   updated_at: string;
-}
-
-// ============================================
-// Session (세션)
-// ============================================
-export interface Session {
-  id: string;
-  merchant_id: string;
-  table_number: number;
-  nickname: string | null;
-  is_active: boolean;
-  created_at: string;
-  expires_at: string;
-}
-
-export interface SessionWithMerchant extends Session {
-  merchant: Pick<Merchant, 'id' | 'name' | 'slug'>;
 }
 
 // ============================================

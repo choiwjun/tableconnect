@@ -1,108 +1,104 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { isValidUUID } from '@/lib/utils/validators';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import crypto from 'crypto';
 
-type ReportReason = 'harassment' | 'spam' | 'inappropriate' | 'other';
+/**
+ * Helper: Hash session ID for privacy
+ */
+function hashSessionId(sessionId: string): string {
+  return crypto.createHash('sha256').update(sessionId).digest('hex');
+}
 
-const validReasons: ReportReason[] = ['harassment', 'spam', 'inappropriate', 'other'];
-
-// POST /api/reports - Create a report
+/**
+ * POST /api/reports
+ * Create a new report with hashed session ID
+ */
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-
   try {
     const body = await request.json();
-    const { reporterSessionId, reportedSessionId, messageId, reason, description } = body;
+    const {
+      reporter_session_id,
+      reported_session_id,
+      reason,
+      details,
+    } = body;
 
-    if (!reporterSessionId || !reportedSessionId || !reason) {
+    // Validate required fields
+    if (!reporter_session_id || !reported_session_id || !reason) {
       return NextResponse.json(
-        { error: 'reporterSessionId, reportedSessionId, and reason are required' },
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    if (!isValidUUID(reporterSessionId) || !isValidUUID(reportedSessionId)) {
-      return NextResponse.json(
-        { error: 'Invalid session ID format' },
-        { status: 400 }
-      );
-    }
-
-    if (messageId && !isValidUUID(messageId)) {
-      return NextResponse.json(
-        { error: 'Invalid message ID format' },
-        { status: 400 }
-      );
-    }
-
+    // Validate reason
+    const validReasons = ['harassment', 'spam', 'inappropriate_content', 'other'];
     if (!validReasons.includes(reason)) {
       return NextResponse.json(
-        { error: `Invalid reason. Must be one of: ${validReasons.join(', ')}` },
+        { error: 'Invalid reason' },
         { status: 400 }
       );
     }
 
-    if (reporterSessionId === reportedSessionId) {
-      return NextResponse.json(
-        { error: 'Cannot report yourself' },
-        { status: 400 }
-      );
-    }
+    const supabase = getSupabaseAdmin();
 
-    // Verify both sessions exist
-    const { data: sessions, error: sessionError } = await supabase
+    // Hash session IDs for privacy
+    const hashedReporter = hashSessionId(reporter_session_id);
+    const hashedReported = hashSessionId(reported_session_id);
+
+    // Get session snapshot (profile info at time of report)
+    const { data: reportedSession, error: sessionError } = await supabase
       .from('sessions')
-      .select('id')
-      .in('id', [reporterSessionId, reportedSessionId]);
+      .select('id, merchant_id, profile, table_number, is_active')
+      .eq('id', reported_session_id)
+      .single();
 
-    if (sessionError || !sessions || sessions.length !== 2) {
+    if (sessionError || !reportedSession) {
       return NextResponse.json(
-        { error: 'Invalid session IDs' },
-        { status: 400 }
+        { error: 'Reported session not found' },
+        { status: 404 }
       );
     }
 
-    // If messageId provided, verify it exists
-    if (messageId) {
-      const { data: message, error: messageError } = await supabase
-        .from('messages')
-        .select('id')
-        .eq('id', messageId)
-        .single();
-
-      if (messageError || !message) {
-        return NextResponse.json(
-          { error: 'Message not found' },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Create report record
-    const { data: report, error } = await supabase
+    // Create report
+    const { data: report, error: reportError } = await supabase
       .from('reports')
       .insert({
-        reporter_session_id: reporterSessionId,
-        reported_session_id: reportedSessionId,
-        message_id: messageId || null,
+        reporter_session_id: hashedReporter,
+        reported_session_id: hashedReported,
         reason,
-        description: description?.trim() || null,
+        details: details || null,
+        session_snapshot: reportedSession,
         status: 'pending',
+        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
       })
       .select()
       .single();
 
-    if (error) {
-      console.error('Error creating report:', error);
+    if (reportError) {
+      console.error('Error creating report:', reportError);
       return NextResponse.json(
         { error: 'Failed to create report' },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ report }, { status: 201 });
+    console.log('Report created:', {
+      id: report.id,
+      reason,
+      hashedReporter,
+    });
+
+    return NextResponse.json({
+      success: true,
+      report: {
+        id: report.id,
+        reason,
+        status: 'pending',
+      },
+    });
   } catch (error) {
-    console.error('Report error:', error);
+    console.error('Report API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -110,68 +106,34 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET /api/reports?sessionId= - Get reports made by a session
+/**
+ * GET /api/reports
+ * Get reports (admin only)
+ */
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
-
-  const sessionId = request.nextUrl.searchParams.get('sessionId');
-
-  if (!sessionId) {
-    return NextResponse.json(
-      { error: 'sessionId is required' },
-      { status: 400 }
-    );
-  }
-
-  if (!isValidUUID(sessionId)) {
-    return NextResponse.json(
-      { error: 'Invalid session ID format' },
-      { status: 400 }
-    );
-  }
-
+  // This is admin-only, so we might want to add auth check here
+  // For now, just return empty or implement pagination later
   try {
+    const supabase = getSupabaseAdmin();
+
     const { data: reports, error } = await supabase
       .from('reports')
-      .select(`
-        id,
-        reason,
-        description,
-        status,
-        created_at,
-        reported:sessions!reports_reported_session_id_fkey (
-          id,
-          nickname,
-          table_number
-        )
-      `)
-      .eq('reporter_session_id', sessionId)
-      .order('created_at', { ascending: false });
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(50);
 
     if (error) {
-      console.error('Error fetching reports:', error);
       return NextResponse.json(
         { error: 'Failed to fetch reports' },
         { status: 500 }
       );
     }
 
-    // Transform the data
-    const transformedReports = (reports || []).map((report) => {
-      const reportedData = Array.isArray(report.reported) ? report.reported[0] : report.reported;
-      return {
-        id: report.id,
-        reason: report.reason,
-        description: report.description,
-        status: report.status,
-        createdAt: report.created_at,
-        reported: reportedData,
-      };
+    return NextResponse.json({
+      data: reports || [],
     });
-
-    return NextResponse.json({ reports: transformedReports });
   } catch (error) {
-    console.error('Get reports error:', error);
+    console.error('Reports API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -1,130 +1,72 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
-import { isValidUUID, isValidMessage } from '@/lib/utils/validators';
-import { moderateContent, getModerationErrorMessage } from '@/lib/moderation';
+import { moderateContent, getModerationErrorMessage } from '@/lib/moderation/openai';
+import { recordWarning, getSessionWarnings, blockSession } from '@/lib/moderation/warnings';
 
 /**
  * POST /api/messages
- * Send a new message
+ * Send a new message to a partner session
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { senderSessionId, receiverSessionId, content } = body;
+    const { senderSessionId, receiverSessionId, content, messageType = 'text' } = body;
 
-    // Validate input
-    if (!senderSessionId || !isValidUUID(senderSessionId)) {
+    // Validate required fields
+    if (!senderSessionId || !receiverSessionId || !content) {
       return NextResponse.json(
-        { error: 'Invalid sender session ID' },
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    if (!receiverSessionId || !isValidUUID(receiverSessionId)) {
+    // Validate message length
+    if (content.length > 200) {
       return NextResponse.json(
-        { error: 'Invalid receiver session ID' },
+        { error: 'Message too long (max 200 characters)' },
         { status: 400 }
       );
     }
 
-    if (!content || typeof content !== 'string') {
+    if (content.length === 0) {
       return NextResponse.json(
-        { error: 'Message content is required' },
-        { status: 400 }
-      );
-    }
-
-    const trimmedContent = content.trim();
-
-    if (!isValidMessage(trimmedContent)) {
-      return NextResponse.json(
-        { error: 'Invalid message content' },
-        { status: 400 }
-      );
-    }
-
-    // Cannot send message to self
-    if (senderSessionId === receiverSessionId) {
-      return NextResponse.json(
-        { error: 'Cannot send message to yourself' },
+        { error: 'Message content cannot be empty' },
         { status: 400 }
       );
     }
 
     const supabase = getSupabaseAdmin();
 
-    // Verify both sessions exist and are active
-    const { data: sessions, error: sessionsError } = await supabase
-      .from('sessions')
-      .select('id, merchant_id, is_active, expires_at')
-      .in('id', [senderSessionId, receiverSessionId]);
-
-    if (sessionsError || !sessions || sessions.length !== 2) {
-      return NextResponse.json(
-        { error: 'One or both sessions not found' },
-        { status: 404 }
-      );
-    }
-
-    const senderSession = sessions.find((s) => s.id === senderSessionId);
-    const receiverSession = sessions.find((s) => s.id === receiverSessionId);
-
-    if (!senderSession || !receiverSession) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 404 }
-      );
-    }
-
-    // Check sessions are from same merchant
-    if (senderSession.merchant_id !== receiverSession.merchant_id) {
-      return NextResponse.json(
-        { error: 'Sessions must be from the same merchant' },
-        { status: 400 }
-      );
-    }
-
-    // Check both sessions are active and not expired
-    const now = new Date();
-    const senderExpired = !senderSession.is_active || new Date(senderSession.expires_at) < now;
-    const receiverExpired = !receiverSession.is_active || new Date(receiverSession.expires_at) < now;
-
-    if (senderExpired) {
-      return NextResponse.json(
-        { error: 'Your session has expired' },
-        { status: 410 }
-      );
-    }
-
-    if (receiverExpired) {
-      return NextResponse.json(
-        { error: 'Recipient session has expired' },
-        { status: 410 }
-      );
-    }
-
-    // Check if sender is blocked by receiver
-    const { data: block } = await supabase
-      .from('blocks')
-      .select('id')
-      .eq('blocker_session_id', receiverSessionId)
-      .eq('blocked_session_id', senderSessionId)
-      .single();
-
-    if (block) {
-      return NextResponse.json(
-        { error: 'You cannot send messages to this user' },
-        { status: 403 }
-      );
-    }
-
-    // Content moderation using OpenAI
-    const moderationResult = await moderateContent(trimmedContent);
+    // AI Content Moderation
+    const moderationResult = await moderateContent(content);
 
     if (!moderationResult.isAllowed) {
-      const errorMessage = getModerationErrorMessage(moderationResult.categories, 'ja');
+      const errorMessage = getModerationErrorMessage(
+        moderationResult.categories,
+        'ja'
+      );
 
-      // Log moderation action for review
+      // Record warning
+      await recordWarning(
+        supabase,
+        senderSessionId,
+        moderationResult.categories,
+        moderationResult.categoryScores,
+        moderationResult.flagged
+      );
+
+      // Check for session block
+      const warnings = await getSessionWarnings(supabase, senderSessionId);
+      const highSeverityWarnings = warnings.filter((w: any) => w.severity === 'high').length;
+
+      if (highSeverityWarnings >= 3) {
+        await blockSession(supabase, senderSessionId);
+        return NextResponse.json(
+          { error: 'Your session has been temporarily blocked due to repeated inappropriate content.' },
+          { status: 403 }
+        );
+      }
+
       console.log('Content moderation blocked message:', {
         senderSessionId,
         categories: moderationResult.categories,
@@ -140,29 +82,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create message
-    const { data: message, error: createError } = await supabase
+    // Insert message
+    const { data: message, error: insertError } = await supabase
       .from('messages')
       .insert({
         sender_session_id: senderSessionId,
         receiver_session_id: receiverSessionId,
-        content: trimmedContent,
+        content,
+        message_type: messageType, // 'text', 'emoji', or 'quick_reply'
         is_read: false,
       })
       .select()
       .single();
 
-    if (createError) {
-      console.error('Error creating message:', createError);
+    if (insertError) {
+      console.error('Error inserting message:', insertError);
       return NextResponse.json(
         { error: 'Failed to send message' },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ message }, { status: 201 });
+    return NextResponse.json({
+      success: true,
+      message,
+    });
   } catch (error) {
-    console.error('Message creation error:', error);
+    console.error('Send message API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -171,7 +117,7 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * GET /api/messages?sessionId=xxx&partnerId=xxx
+ * GET /api/messages
  * Get messages between two sessions
  */
 export async function GET(request: NextRequest) {
@@ -179,34 +125,24 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const sessionId = searchParams.get('sessionId');
     const partnerId = searchParams.get('partnerId');
-    const limit = parseInt(searchParams.get('limit') || '50', 10);
-    const offset = parseInt(searchParams.get('offset') || '0', 10);
 
-    if (!sessionId || !isValidUUID(sessionId)) {
+    if (!sessionId || !partnerId) {
       return NextResponse.json(
-        { error: 'Invalid session ID' },
-        { status: 400 }
-      );
-    }
-
-    if (!partnerId || !isValidUUID(partnerId)) {
-      return NextResponse.json(
-        { error: 'Invalid partner ID' },
+        { error: 'Session ID and Partner ID are required' },
         { status: 400 }
       );
     }
 
     const supabase = getSupabaseAdmin();
 
-    // Get messages between the two sessions (both directions)
     const { data: messages, error } = await supabase
       .from('messages')
       .select('*')
       .or(
-        `and(sender_session_id.eq.${sessionId},receiver_session_id.eq.${partnerId}),and(sender_session_id.eq.${partnerId},receiver_session_id.eq.${sessionId})`
+        `and(sender_session_id.eq.${sessionId},receiver_session_id.eq.${partnerId})`,
+        `and(sender_session_id.eq.${partnerId},receiver_session_id.eq.${sessionId})`
       )
-      .order('created_at', { ascending: true })
-      .range(offset, offset + limit - 1);
+      .order('created_at', { ascending: true });
 
     if (error) {
       console.error('Error fetching messages:', error);
@@ -216,17 +152,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Mark received messages as read
-    await supabase
-      .from('messages')
-      .update({ is_read: true })
-      .eq('sender_session_id', partnerId)
-      .eq('receiver_session_id', sessionId)
-      .eq('is_read', false);
-
-    return NextResponse.json({ messages: messages || [] });
+    return NextResponse.json({
+      data: messages || [],
+    });
   } catch (error) {
-    console.error('Messages fetch error:', error);
+    console.error('Get messages API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

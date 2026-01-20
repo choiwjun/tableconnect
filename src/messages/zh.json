@@ -29,10 +29,21 @@
     "nicknamePlaceholder": "例如：小明",
     "nicknameRequired": "请输入昵称",
     "nicknameTooLong": "昵称不能超过20个字符",
+    "nicknameHint": "在店内显示的名称",
     "joinSession": "加入",
     "sessionExpired": "会话已过期",
     "sessionExpiringSoon": "会话即将过期",
-    "table": "桌号"
+    "sessionEndingSoon": "会话即将结束",
+    "sessionEndingSoonDesc": "会话结束后请扫描新的二维码",
+    "sessionEnded": "会话已结束",
+    "sessionEndedDesc": "若要继续使用，请再次扫描二维码。",
+    "table": "桌号",
+    "errorOccurred": "发生错误，请重试。",
+    "leaveConfirmation": "确定要离开吗？",
+    "leaveWarning": "离开后将无法发送或阅读消息。",
+    "leaveWarningDetail": "消息记录将被删除，无法恢复。",
+    "leaveStore": "离开店铺",
+    "leaveButton": "离开"
   },
   "chat": {
     "sendMessage": "发送消息",
@@ -41,7 +52,14 @@
     "startConversation": "开始对话吧",
     "sendFirstMessage": "发送第一条消息",
     "messageTooLong": "消息不能超过500个字符",
-    "read": "已读"
+    "read": "已读",
+    "justNow": "刚刚",
+    "minutesAgo": " 分钟前",
+    "hoursAgo": " 小时前",
+    "daysAgo": " 天前",
+    "translate": "翻译",
+    "translating": "翻译中...",
+    "showOriginal": "显示原文"
   },
   "gift": {
     "sendGift": "送礼物",

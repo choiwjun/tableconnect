@@ -3,11 +3,15 @@
  */
 
 // Message constraints
-export const MAX_MESSAGE_LENGTH = 500;
+export const MAX_MESSAGE_LENGTH = 200; // Changed from 500 to 200 (PRD requirement)
 
 // Nickname constraints
 export const MAX_NICKNAME_LENGTH = 20;
 export const MIN_NICKNAME_LENGTH = 1;
+
+// Profile constraints
+export const MIN_PARTY_SIZE = 1;
+export const MAX_PARTY_SIZE = 10;
 
 // Session settings
 export const SESSION_TTL_HOURS = 2;
@@ -64,3 +68,14 @@ export const DEFAULT_FEE_RATE = 0.15;
 // Table number constraints
 export const MIN_TABLE_NUMBER = 1;
 export const MAX_TABLE_NUMBER = 999;
+
+// Gift amounts (in yen)
+export const GIFT_AMOUNTS = [500, 1000, 2000, 5000] as const;
+
+// Quick reply templates
+export const QUICK_REPLIES = {
+  GREETING: 'greeting',
+  CHEERS: 'cheers',
+  ENJOY: 'enjoy',
+  THANKS: 'thanks',
+} as const;

@@ -103,7 +103,7 @@ export default function ChatPage() {
               isDemo={isDemo}
             />
           ) : (
-            <Container className="py-6 flex-1">
+            <Container className="py-6 flex-1 stagger-children">
               {/* Current User Card */}
               <div className="mb-6">
                 <div className="glass-panel rounded-xl p-4 mb-4 border border-steel/30">

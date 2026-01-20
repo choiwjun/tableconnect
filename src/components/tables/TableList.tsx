@@ -4,121 +4,50 @@ import { useState, useEffect, useCallback } from 'react';
 import { Spinner } from '@/components/ui';
 import { TableCard } from './TableCard';
 import { useTranslation } from '@/lib/i18n/context';
-import type { ActiveTable } from '@/app/api/tables/route';
+import type { Session } from '@/types/database';
 
 interface TableListProps {
-  merchantId: string;
-  currentSessionId: string;
-  onSelectTable: (table: ActiveTable) => void;
+  sessions: Session[];
+  currentSessionId: string | null;
+  onSelectTable: (session: Session) => void;
   unreadSessions?: Set<string>;
-  demoTables?: ActiveTable[];
+  searchQuery?: string;
 }
 
 export function TableList({
-  merchantId,
+  sessions,
   currentSessionId,
   onSelectTable,
   unreadSessions = new Set(),
-  demoTables,
+  searchQuery = '',
 }: TableListProps) {
   const { t } = useTranslation();
-  const [tables, setTables] = useState<ActiveTable[]>([]);
-  const [isLoading, setIsLoading] = useState(!demoTables);
-  const [error, setError] = useState<string | null>(null);
+  const [filteredSessions, setFilteredSessions] = useState<Session[]>(sessions);
 
-  const fetchTables = useCallback(async () => {
-    // Skip API call in demo mode
-    if (demoTables) {
-      setTables(demoTables);
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      setError(null);
-
-      const response = await fetch(
-        `/api/tables?merchantId=${merchantId}&excludeSessionId=${currentSessionId}`
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch tables');
-      }
-
-      const { tables: fetchedTables } = await response.json();
-      setTables(fetchedTables);
-    } catch (err) {
-      console.error('Error fetching tables:', err);
-      setError(t('tables.fetchFailed'));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [merchantId, currentSessionId, demoTables, t]);
-
+  // Filter sessions based on search query
   useEffect(() => {
-    // In demo mode, just set the demo tables
-    if (demoTables) {
-      setTables(demoTables);
-      setIsLoading(false);
+    if (!searchQuery) {
+      setFilteredSessions(sessions);
       return;
     }
 
-    fetchTables();
+    const query = searchQuery.toLowerCase();
+    const filtered = sessions.filter(session => {
+      const nicknameMatch = session.nickname?.toLowerCase().includes(query);
+      const tableNumberMatch = session.table_number.toString().includes(query);
+      return nicknameMatch || tableNumberMatch;
+    });
 
-    // Refresh every 30 seconds (only for real API mode)
-    const interval = setInterval(fetchTables, 30000);
-    return () => clearInterval(interval);
-  }, [fetchTables, demoTables]);
+    setFilteredSessions(filtered);
+  }, [sessions, searchQuery]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Spinner size="md" />
-      </div>
-    );
-  }
+  const handleTableSelect = useCallback((sessionId: string) => {
+    const selectedSession = sessions.find(s => s.id === sessionId);
+    if (!selectedSession) return;
 
-  if (error) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-muted mb-4">{error}</p>
-        <button
-          onClick={fetchTables}
-          className="text-neon-cyan hover:underline"
-        >
-          {t('common.retry')}
-        </button>
-      </div>
-    );
-  }
-
-  if (tables.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-steel/50 flex items-center justify-center">
-          <svg
-            className="w-8 h-8 text-muted"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-            />
-          </svg>
-        </div>
-        <p className="text-muted">
-          {t('tables.noParticipants')}
-        </p>
-        <p className="text-muted text-sm mt-2">
-          {t('tables.newParticipantsNotice')}
-        </p>
-      </div>
-    );
-  }
+    // Call parent handler
+    onSelectTable(selectedSession);
+  }, [sessions, onSelectTable]);
 
   return (
     <div className="space-y-3">
@@ -127,20 +56,46 @@ export function TableList({
           {t('tables.participatingTables')}
         </h2>
         <span className="text-sm text-muted">
-          {t('tables.tableCount', { count: tables.length })}
+          {t('tables.tableCount', { count: filteredSessions.length })}
         </span>
       </div>
 
-      {tables.map((table) => (
-        <TableCard
-          key={table.sessionId}
-          tableNumber={table.tableNumber}
-          nickname={table.nickname || t('tables.tableLabel', { number: table.tableNumber })}
-          createdAt={table.createdAt}
-          onClick={() => onSelectTable(table)}
-          hasUnread={unreadSessions.has(table.sessionId)}
-        />
-      ))}
+      {/* Empty State */}
+      {filteredSessions.length === 0 ? (
+        <div className="text-center py-16 glass-panel rounded-2xl border border-steel/30">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-steel/20 flex items-center justify-center">
+            <svg className="w-8 h-8 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h2 className="font-display text-2xl text-soft-white mb-3">
+            {t('tables.noParticipants')}
+          </h2>
+          <p className="text-muted mb-6">
+            {searchQuery ? t('tables.noSearchResults') : t('tables.newParticipantsNotice')}
+          </p>
+          <p className="text-sm text-muted">
+            {t('tables.waitForParticipants')}
+          </p>
+        </div>
+      ) : (
+        /* Table Cards */
+        filteredSessions.map((session) => (
+          <TableCard
+            key={session.id}
+            sessionId={session.id}
+            tableNumber={session.table_number}
+            nickname={session.nickname}
+            gender={session.gender}
+            ageRange={session.age_range}
+            partySize={session.party_size}
+            createdAt={session.created_at}
+            onClick={() => handleTableSelect(session.id)}
+            hasUnread={unreadSessions.has(session.id)}
+            isCurrentSession={session.id === currentSessionId}
+          />
+        ))
+      )}
     </div>
   );
 }
