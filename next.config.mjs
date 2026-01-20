@@ -30,10 +30,6 @@ const nextConfig = {
   experimental: {
     // Enable optimized package imports
     optimizePackageImports: ['zustand', '@supabase/supabase-js'],
-    // Enable SWC minification
-    swcMinify: true,
-    // Enable CSS Modules
-    cssChunking: true,
   },
 
   // Compression for better performance
