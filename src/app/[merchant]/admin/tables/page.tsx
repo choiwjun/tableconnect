@@ -15,7 +15,7 @@ interface TableConfig {
 
 export default function MerchantTablesPage() {
   const params = useParams<{ merchant: string }>();
-  const router = useRouter();
+  useRouter(); // For navigation
   const [tables, setTables] = useState<TableConfig[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -225,7 +225,7 @@ export default function MerchantTablesPage() {
                   </label>
                   <select
                     value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                    onChange={(e) => setFormData({ ...formData, type: e.target.value as TableConfig['type'] })}
                     className="w-full px-4 py-3 rounded-xl bg-steel/50 border border-steel/30 text-soft-white focus:outline-none focus:border-neon-cyan focus:ring-2 focus:ring-neon-cyan/20 transition-all"
                   >
                     <option value="standard">일반 테이블</option>

@@ -22,7 +22,7 @@ interface Settlement {
 
 export default function MerchantSettlementsPage() {
   const params = useParams<{ merchant: string }>();
-  const router = useRouter();
+  useRouter(); // For navigation
   const [settlements, setSettlements] = useState<Settlement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

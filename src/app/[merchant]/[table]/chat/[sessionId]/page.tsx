@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Container, Spinner } from '@/components/ui';
+import { Container, Spinner, Button } from '@/components/ui';
 import { ChatRoom } from '@/components/chat';
 import { createClient } from '@/lib/supabase/client';
 import { useSessionStore } from '@/lib/stores/sessionStore';
@@ -12,7 +12,7 @@ import { useTranslation } from '@/lib/i18n/context';
 export default function ChatPage() {
   const params = useParams<{ merchant: string; table: string; sessionId: string }>();
   const router = useRouter();
-  const { t } = useTranslation();
+  useTranslation(); // For translation support
   const [partnerSession, setPartnerSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -7,7 +7,7 @@ export function MerchantAdminSidebar() {
   const params = useParams<{ merchant: string }>();
   const router = useRouter();
   const pathname = usePathname();
-  const { merchantId, clearSession } = useSessionStore();
+  const { clearSession } = useSessionStore();
 
   const merchantSlug = params.merchant;
 

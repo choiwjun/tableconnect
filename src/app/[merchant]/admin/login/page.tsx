@@ -12,8 +12,8 @@ export default function MerchantAdminLoginPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [merchantId, setMerchantId] = useState<string>('');
-  const { merchantId: currentMerchantId } = useSessionStore();
+  const [, setMerchantId] = useState<string>('');
+  useSessionStore(); // Session store for potential future use
 
   const merchantSlug = params.merchant;
 

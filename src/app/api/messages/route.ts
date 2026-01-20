@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
       // Check for session block
       const warnings = await getSessionWarnings(supabase, senderSessionId);
-      const highSeverityWarnings = warnings.filter((w: any) => w.severity === 'high').length;
+      const highSeverityWarnings = warnings.filter((w: { severity: string }) => w.severity === 'high').length;
 
       if (highSeverityWarnings >= 3) {
         await blockSession(supabase, senderSessionId);

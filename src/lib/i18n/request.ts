@@ -1,11 +1,17 @@
-import { headers } from 'next/headers';
+/* eslint-disable @typescript-eslint/no-require-imports */
+import jaMessages from '@/messages/ja.json';
+import koMessages from '@/messages/ko.json';
+import enMessages from '@/messages/en.json';
+import zhMessages from '@/messages/zh.json';
 
 const MESSAGES = {
-  ja: require('@/messages/ja.json'),
-  ko: require('@/messages/ko.json'),
-  en: require('@/messages/en.json'),
-  zh: require('@/messages/zh.json'),
+  ja: jaMessages,
+  ko: koMessages,
+  en: enMessages,
+  zh: zhMessages,
 } as const;
+
+type MessageKeys = keyof typeof jaMessages;
 
 /**
  * Get translation for a specific locale
@@ -14,18 +20,21 @@ const MESSAGES = {
 export function getTranslation(locale: string = 'ja') {
   const messages = MESSAGES[locale as keyof typeof MESSAGES] || MESSAGES.ja;
 
-  return (key: string, params?: Record<string, string | number>) => {
-    const message = messages[key as string;
+  return (key: MessageKeys, params?: Record<string, string | number>): string => {
+    const message = messages[key];
 
     if (!message) {
       return key;
     }
 
     // Simple parameter replacement
-    let translatedMessage = message;
+    let translatedMessage = message as string;
     if (params) {
       Object.entries(params).forEach(([param, value]) => {
-        translatedMessage = translatedMessage.replace(new RegExp(`{${param}}`, 'g'), String(value));
+        translatedMessage = translatedMessage.replace(
+          new RegExp(`{${param}}`, 'g'),
+          String(value)
+        );
       });
     }
 

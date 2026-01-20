@@ -4,7 +4,6 @@ import { formatRelativeTime } from '@/lib/utils/format';
 import type { Gender, AgeRange } from '@/types/database';
 
 interface TableCardProps {
-  sessionId: string;
   tableNumber: number;
   nickname: string | null;
   gender: Gender | null;
@@ -47,7 +46,6 @@ const getPartySizeIcon = (size: number | null) => {
 };
 
 export function TableCard({
-  sessionId,
   tableNumber,
   nickname,
   gender,

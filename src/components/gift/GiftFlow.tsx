@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { MenuSelector } from './MenuSelector';
 import { PaymentForm } from './PaymentForm';

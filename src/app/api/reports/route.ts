@@ -110,7 +110,8 @@ export async function POST(request: NextRequest) {
  * GET /api/reports
  * Get reports (admin only)
  */
-export async function GET(request: NextRequest) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(_request: NextRequest) {
   // This is admin-only, so we might want to add auth check here
   // For now, just return empty or implement pagination later
   try {

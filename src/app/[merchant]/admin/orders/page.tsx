@@ -16,7 +16,7 @@ interface OrderItem extends Gift {
 
 export default function MerchantOrdersPage() {
   const params = useParams<{ merchant: string }>();
-  const router = useRouter();
+  useRouter(); // For navigation
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCompleting, setIsCompleting] = useState<string | null>(null);
@@ -44,7 +44,7 @@ export default function MerchantOrdersPage() {
         
         const ordersWithMenu: OrderItem[] = gifts.map((gift: Gift) => ({
           ...gift,
-          menu_name: menuItems?.find((item: any) => item.id === gift.menu_item_id)?.name,
+          menu_name: menuItems?.find((item: { id: string; name: string }) => item.id === gift.menu_item_id)?.name,
           status_display: gift.status,
         }));
 

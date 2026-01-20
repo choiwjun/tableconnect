@@ -11,24 +11,13 @@ export function sanitizeHTML(html: string): string {
   // For now, basic HTML sanitization
   // In production, replace with: return DOMPurify.sanitize(html);
   return html
-    .replace(/</script>/gi, '<\\/script>')
-    .replace(/<script>/gi, '<\\/script>')
+    .replace(/<\/script>/gi, '&lt;/script&gt;')
+    .replace(/<script>/gi, '&lt;script&gt;')
+    .replace(/<script/gi, '&lt;script')
     .replace(/javascript:/gi, '')
-    .replace(/on\w+="[^>]*>/gi, '')
-    .replace(/onerror\s*=/gi, '')
-    .replace(/onload\s*=/gi, '')
-    .replace(/onfocus\s*=/gi, '');
-    .replace(/onclick\s*=/gi, '');
-    .replace(/onmouseover\s*=/gi, '');
-    .replace(/onsubmit\s*=/gi, '');
-    .replace(/onkeydown\s*=/gi, '')
-    .replace(/onkeyup\s*=/gi, '');
-    .replace(/onmouseenter\s*=/gi, '')
-    .replace(/onmouseleave\s*=/gi, '');
-    .replace(/onmousedown\s*=/gi, '')
-    .replace(/onmouseup\s*=/gi, '');
-    .replace(/eval\s*\(/gi, 'eval-blocked');
-    .replace(/vbscript:/gi, 'vbscript-blocked');
+    .replace(/on\w+\s*=/gi, '')
+    .replace(/eval\s*\(/gi, 'eval-blocked(')
+    .replace(/vbscript:/gi, '');
 }
 
 /**
@@ -44,12 +33,15 @@ export function sanitizeURL(url: string): string {
 }
 
 /**
- * 이스케이프 방지
+ * HTML 이스케이프 (서버/클라이언트 모두 작동)
  */
 export function escapeHTML(unsafe: string): string {
-  const div = document.createElement('div');
-  div.textContent = unsafe;
-  return div.innerHTML;
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 /**

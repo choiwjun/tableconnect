@@ -57,47 +57,8 @@ export function getSecurityHeaders(token?: string) {
   };
 }
 
-// DOMPurify sanitization helper (in production, integrate DOMPurify)
-export function sanitizeHTML(html: string): string {
-  // For now, basic HTML sanitization
-  // In production, use: return DOMPurify.sanitize(html);
-  return html
-    .replace(/</script/gi, '<\\/script>')
-    .replace(/<script>/gi, '<\\/script>')
-    .replace(/on\w+="[^>]*>/gi, '');
-    .replace(/javascript:/gi, '');
-    .replace(/onerror\s*=/gi, '');
-    .replace(/onload\s*=/gi, '');
-}
-
-// Rate limiting helper (store attempts in memory or Redis in production)
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
-
-export function checkRateLimit(identifier: string, maxAttempts: number = 5, windowMs: number = 15 * 60 * 1000): boolean {
-  const now = Date.now();
-  const record = rateLimitStore.get(identifier);
-
-  if (!record) {
-    rateLimitStore.set(identifier, { count: 1, resetTime: now });
-    return true;
-  }
-
-  // Reset if window has passed
-  if (now > record.resetTime) {
-    record.count = 1;
-    record.resetTime = now;
-  }
-
-  // Check if under limit
-  if (record.count >= maxAttempts) {
-    return false;
-  }
-
-  // Increment counter
-  record.count++;
-  
-  return true;
-}
+// Note: HTML sanitization moved to sanitize.ts
+// Note: Rate limiting moved to rate-limit.ts
 
 // Sanitize user input (basic version - use Zod in production)
 export function sanitizeInput(input: string): string {

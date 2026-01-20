@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Button } from '@/components/ui';
-import { isValidNickname, isValidTableNumber } from '@/lib/utils/validators';
+import { isValidNickname } from '@/lib/utils/validators';
 import { MAX_NICKNAME_LENGTH, MIN_PARTY_SIZE, MAX_PARTY_SIZE } from '@/lib/utils/constants';
 import { useTranslation } from '@/lib/i18n/context';
 
@@ -47,7 +46,7 @@ export function ProfileForm({ onSubmit, isLoading = false }: ProfileFormProps) {
   const [nickname, setNickname] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const canProceed = () => {
+  const _checkCanProceed = () => { // eslint-disable-line @typescript-eslint/no-unused-vars
     if (step === 'gender') return gender !== null;
     if (step === 'age') return ageRange !== null;
     if (step === 'party') return partySize !== null;

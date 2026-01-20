@@ -96,14 +96,14 @@ export async function GET(
     lastMonth.setDate(1);
     lastMonth.setHours(0, 0, 0, 0);
 
-    const { data: thisMonthGifts, error: thisMonthError } = await supabase
+    const { data: thisMonthGifts } = await supabase
       .from('gifts')
       .select('amount, status')
       .eq('merchant_id', merchant.id)
       .gte('created_at', thisMonth.toISOString())
       .eq('status', 'completed');
 
-    const { data: lastMonthGifts, error: lastMonthError } = await supabase
+    const { data: lastMonthGifts } = await supabase
       .from('gifts')
       .select('amount, status')
       .eq('merchant_id', merchant.id)

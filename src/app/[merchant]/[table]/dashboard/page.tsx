@@ -26,7 +26,7 @@ export default function DashboardPage() {
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'tables' | 'messages' | 'gifts'>('tables');
 
-  const { currentSession, merchantId, tableNumber } = useSessionStore();
+  const { currentSession } = useSessionStore();
   const merchantSlug = params.merchant;
   const currentTableNumber = parseInt(params.table, 10);
 

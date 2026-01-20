@@ -25,7 +25,7 @@ interface MenuFormData {
 
 export default function MerchantMenusPage() {
   const params = useParams<{ merchant: string }>();
-  const router = useRouter();
+  useRouter(); // For navigation
   const [menus, setMenus] = useState<MenuItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);

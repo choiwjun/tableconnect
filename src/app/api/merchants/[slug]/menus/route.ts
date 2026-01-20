@@ -2,24 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { isValidUUID } from '@/lib/utils/validators';
 
-interface RouteParams {
-  params: Promise<{ merchantId: string }>;
-}
-
 /**
- * GET /api/merchants/[merchantId]/menus
- * Get menu list for a merchant
+ * GET /api/merchants/[slug]/menus
+ * Get menu list for a merchant (public endpoint)
+ * Supports both slug and merchantId for backwards compatibility
  */
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
   try {
-    const { merchantId } = await params;
-
-    if (!isValidUUID(merchantId)) {
-      return NextResponse.json(
-        { error: 'Invalid merchant ID' },
-        { status: 400 }
-      );
-    }
+    const { slug } = await params;
 
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
@@ -27,12 +20,29 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     const supabase = getSupabaseAdmin();
 
-    // Verify merchant exists
-    const { data: merchant, error: merchantError } = await supabase
-      .from('merchants')
-      .select('id, is_active')
-      .eq('id', merchantId)
-      .single();
+    // Try to find merchant by slug or id
+    let merchant;
+    let merchantError;
+
+    if (isValidUUID(slug)) {
+      // If slug is a valid UUID, search by id
+      const result = await supabase
+        .from('merchants')
+        .select('id, is_active')
+        .eq('id', slug)
+        .single();
+      merchant = result.data;
+      merchantError = result.error;
+    } else {
+      // Otherwise, search by slug
+      const result = await supabase
+        .from('merchants')
+        .select('id, is_active')
+        .eq('slug', slug)
+        .single();
+      merchant = result.data;
+      merchantError = result.error;
+    }
 
     if (merchantError || !merchant) {
       return NextResponse.json(
@@ -52,7 +62,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     let query = supabase
       .from('menus')
       .select('*')
-      .eq('merchant_id', merchantId)
+      .eq('merchant_id', merchant.id)
       .order('sort_order', { ascending: true })
       .order('name', { ascending: true });
 
@@ -75,7 +85,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // Get unique categories
-    const categories = Array.from(new Set((menus || []).map((m) => m.category).filter(Boolean)));
+    const categories = Array.from(
+      new Set((menus || []).map((m) => m.category).filter(Boolean))
+    );
 
     return NextResponse.json({
       menus: menus || [],

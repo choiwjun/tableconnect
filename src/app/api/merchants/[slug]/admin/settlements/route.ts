@@ -91,7 +91,7 @@ export async function POST(
     }
 
     // Check if settlement already exists for this month
-    const { data: existingSettlement, error: existingError } = await supabase
+    const { data: existingSettlement } = await supabase
       .from('settlements')
       .select('id')
       .eq('merchant_id', merchant.id)

@@ -25,7 +25,7 @@ export function MessageInput({
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const inputPlaceholder = placeholder || t('chat.messagePlaceholder');
-  const quickReplies = (t as any)('chat.quickReplies') as string[];
+  const quickReplies = (t as (key: string) => string[])('chat.quickReplies');
 
   const adjustTextareaHeight = useCallback(() => {
     const textarea = textareaRef.current;

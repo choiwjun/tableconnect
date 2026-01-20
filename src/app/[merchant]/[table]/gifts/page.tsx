@@ -6,7 +6,7 @@ import { Container, Button, Spinner, Header } from '@/components/ui';
 import { useSessionStore } from '@/lib/stores/sessionStore';
 import { createClient } from '@/lib/supabase/client';
 import { useTranslation } from '@/lib/i18n/context';
-import type { Gift, Menu, Merchant } from '@/types/database';
+import type { Gift, Menu } from '@/types/database';
 
 export default function GiftsPage() {
   const params = useParams<{ merchant: string; table: string }>();
@@ -56,7 +56,7 @@ export default function GiftsPage() {
       if (giftsError) throw giftsError;
 
       // Format gifts data
-      const formattedGifts = (gifts || []).map((gift: any) => ({
+      const formattedGifts = (gifts || []).map((gift: Gift & { menu?: Menu; sender?: { nickname?: string; table_number?: number } }) => ({
         gift,
         menu: gift.menu,
         senderNickname: gift.sender?.nickname || `${t('session.table')} ${gift.sender?.table_number || ''}`,
@@ -205,7 +205,7 @@ export default function GiftsPage() {
                       {item.gift.message && (
                         <div className="p-3 rounded-xl bg-midnight/50 border border-steel/20">
                           <p className="text-sm text-soft-white italic">
-                            "{item.gift.message}"
+                            &quot;{item.gift.message}&quot;
                           </p>
                         </div>
                       )}

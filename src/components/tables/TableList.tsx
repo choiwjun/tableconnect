@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Spinner } from '@/components/ui';
 import { TableCard } from './TableCard';
 import { useTranslation } from '@/lib/i18n/context';
 import type { Session } from '@/types/database';
