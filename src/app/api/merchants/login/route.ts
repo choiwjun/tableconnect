@@ -110,12 +110,25 @@ export async function POST(request: NextRequest) {
 
     // Demo mode: if no password hash is set
     if (!merchant.admin_password_hash) {
+      // Check if demo mode is enabled via environment variable
+      const demoPassword = process.env.DEMO_ADMIN_PASSWORD;
+
+      if (!demoPassword) {
+        console.error(
+          `[SECURITY] No admin_password_hash found for merchant ${merchantSlug} and DEMO_ADMIN_PASSWORD not set`
+        );
+        return NextResponse.json(
+          { error: 'Admin account not configured. Please contact support.' },
+          { status: 403 }
+        );
+      }
+
       console.warn(
         `[SECURITY] No admin_password_hash found for merchant ${merchantSlug} - using demo mode`
       );
 
-      // Demo mode: accept password "demo1234" only
-      if (password !== 'demo1234') {
+      // Demo mode: verify against environment variable password
+      if (password !== demoPassword) {
         await recordLoginAttempt(email, 'email', false, ipAddress, userAgent);
         return NextResponse.json(
           { error: 'Invalid credentials' },

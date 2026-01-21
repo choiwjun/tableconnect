@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // OpenAI API Configuration
-const OPENAI_API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+// IMPORTANT: Use server-side only environment variable (no NEXT_PUBLIC_ prefix)
+// This ensures the API key is never exposed to the client
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 // Supported language codes map
