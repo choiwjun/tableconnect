@@ -14,20 +14,43 @@ export function generateCSRFToken(): string {
   return `${timestamp}-${randomString}`;
 }
 
-// Verify a CSRF token
-export function verifyCSRFToken(token: string): boolean {
-  // Tokens should be valid for 15 minutes
-  const [timestamp] = token.split('-');
-  
-  if (!timestamp || timestamp.length < 2) {
+// Verify a CSRF token with timing-safe comparison
+export function verifyCSRFToken(token: string, expectedToken?: string): boolean {
+  // Basic format validation
+  const [timestamp, randomPart] = token.split('-');
+
+  if (!timestamp || !randomPart || timestamp.length < 2 || randomPart.length !== 32) {
     return false;
   }
-  
-  const tokenTime = parseInt(timestamp, 10);
+
+  // Parse base36 timestamp (matches generateCSRFToken format)
+  const tokenTime = parseInt(timestamp, 36);
+  if (isNaN(tokenTime)) {
+    return false;
+  }
+
   const currentTime = Date.now();
   const maxAge = 15 * 60 * 1000; // 15 minutes in milliseconds
-  
-  return currentTime - tokenTime < maxAge;
+
+  // Check token expiration
+  if (currentTime - tokenTime >= maxAge) {
+    return false;
+  }
+
+  // If expectedToken is provided, use timing-safe comparison
+  if (expectedToken) {
+    if (token.length !== expectedToken.length) {
+      return false;
+    }
+    // Timing-safe string comparison to prevent timing attacks
+    let result = 0;
+    for (let i = 0; i < token.length; i++) {
+      result |= token.charCodeAt(i) ^ expectedToken.charCodeAt(i);
+    }
+    return result === 0;
+  }
+
+  return true;
 }
 
 // Generate a cryptographically secure nonce for inline scripts

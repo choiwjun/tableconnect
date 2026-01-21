@@ -1,10 +1,90 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+// ============================================
+// Rate Limiting (in-memory for single instance)
+// For production with multiple instances, use Redis
+// ============================================
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(
+  ip: string,
+  maxRequests: number = 100,
+  windowMs: number = 60000
+): { allowed: boolean; remaining: number } {
+  const now = Date.now();
+  const key = `api:${ip}`;
+  const record = rateLimitStore.get(key);
+
+  // Cleanup old entries when store gets large
+  if (rateLimitStore.size > 10000) {
+    const cutoff = now - windowMs;
+    const keysToDelete: string[] = [];
+    rateLimitStore.forEach((v, k) => {
+      if (v.resetAt < cutoff) keysToDelete.push(k);
+    });
+    keysToDelete.forEach((k) => rateLimitStore.delete(k));
+  }
+
+  if (!record || now > record.resetAt) {
+    rateLimitStore.set(key, { count: 1, resetAt: now + windowMs });
+    return { allowed: true, remaining: maxRequests - 1 };
+  }
+
+  if (record.count >= maxRequests) {
+    return { allowed: false, remaining: 0 };
+  }
+
+  record.count++;
+  return { allowed: true, remaining: maxRequests - record.count };
+}
+
 export async function middleware(request: NextRequest) {
+  // Get client IP for rate limiting
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown';
+
+  // ============================================
+  // Rate Limiting for API Routes
+  // ============================================
+  const isApiRoute = request.nextUrl.pathname.startsWith('/api');
+  let rateLimitRemaining = 100;
+
+  if (isApiRoute) {
+    // Stricter limits for authentication endpoints
+    const isAuthEndpoint =
+      request.nextUrl.pathname.includes('/login') ||
+      request.nextUrl.pathname.includes('/sessions');
+
+    const maxRequests = isAuthEndpoint ? 20 : 100; // 20/min for auth, 100/min for others
+    const { allowed, remaining } = checkRateLimit(ip, maxRequests);
+    rateLimitRemaining = remaining;
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': '60',
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Limit': maxRequests.toString(),
+          },
+        }
+      );
+    }
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
+
+  // Add rate limit header to response
+  if (isApiRoute) {
+    supabaseResponse.headers.set('X-RateLimit-Remaining', rateLimitRemaining.toString());
+  }
 
   // Check if Supabase environment variables are configured
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
