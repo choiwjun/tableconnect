@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { moderateContent, getModerationErrorMessage } from '@/lib/moderation/openai';
 import { recordWarning, getSessionWarnings, blockSession } from '@/lib/moderation/warnings';
-import { isMutuallyBlocked, getAllBlockedSessionIds } from '@/lib/security/block-check';
+import { isMutuallyBlocked } from '@/lib/security/block-check';
 import { detectContactInfo, getContactWarningMessage } from '@/lib/security/contact-filter';
 import { checkMessageRateLimit, getMessageRateLimitError } from '@/lib/security/message-rate-limit';
 import { containsForbiddenWords } from '@/lib/utils/validators';
