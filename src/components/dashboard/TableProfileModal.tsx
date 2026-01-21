@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils/cn';
 import { useTranslation } from '@/lib/i18n/context';
 
@@ -111,10 +112,13 @@ export function TableProfileModal({
         <div className="relative h-48 overflow-hidden">
           {/* Background */}
           {table.imageUrl ? (
-            <img
+            <Image
               src={table.imageUrl}
               alt={`Table ${table.tableNumber}`}
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, 512px"
+              className="object-cover"
+              unoptimized
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-primary/30 via-midnight to-neon-purple/30" />
@@ -185,12 +189,15 @@ export function TableProfileModal({
                     key={member.id}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10"
                   >
-                    <div className="size-8 rounded-full bg-gradient-to-br from-primary/30 to-neon-purple/30 flex items-center justify-center overflow-hidden">
+                    <div className="relative size-8 rounded-full bg-gradient-to-br from-primary/30 to-neon-purple/30 flex items-center justify-center overflow-hidden">
                       {member.avatarUrl ? (
-                        <img
+                        <Image
                           src={member.avatarUrl}
                           alt={member.nickname}
-                          className="size-full object-cover"
+                          fill
+                          sizes="32px"
+                          className="object-cover"
+                          unoptimized
                         />
                       ) : (
                         <span className="text-xs text-white font-bold">

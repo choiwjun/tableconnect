@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { cn } from '@/lib/utils/cn';
 import { useTranslation } from '@/lib/i18n/context';
 
@@ -73,10 +74,13 @@ export function PopularTablesHorizontal({
             {/* Thumbnail */}
             <div className="relative w-full h-16 rounded-lg overflow-hidden mb-2 border border-white/10 group-hover:border-primary/50 transition-colors bg-midnight">
               {table.imageUrl ? (
-                <img
+                <Image
                   src={table.imageUrl}
                   alt={`Table ${table.tableNumber}`}
-                  className="size-full object-cover"
+                  fill
+                  sizes="144px"
+                  className="object-cover"
+                  unoptimized
                 />
               ) : (
                 <div className="size-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-neon-purple/20">

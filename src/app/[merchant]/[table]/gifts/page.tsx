@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Container, Button, Spinner, Header } from '@/components/ui';
 import { useSessionStore } from '@/lib/stores/sessionStore';
@@ -25,16 +25,7 @@ export default function GiftsPage() {
   const merchantSlug = params.merchant;
   const currentTableNumber = parseInt(params.table, 10);
 
-  useEffect(() => {
-    if (!currentSession || merchantId !== currentSession.merchant_id || tableNumber !== currentSession.table_number) {
-      setError('sessionExpired');
-      setIsLoading(false);
-      return;
-    }
-    loadReceivedGifts();
-  }, [currentSession, merchantId, tableNumber]);
-
-  const loadReceivedGifts = async () => {
+  const loadReceivedGifts = useCallback(async () => {
     if (!currentSession?.id) return;
 
     try {
@@ -70,7 +61,16 @@ export default function GiftsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentSession?.id, t]);
+
+  useEffect(() => {
+    if (!currentSession || merchantId !== currentSession.merchant_id || tableNumber !== currentSession.table_number) {
+      setError('sessionExpired');
+      setIsLoading(false);
+      return;
+    }
+    loadReceivedGifts();
+  }, [currentSession, merchantId, tableNumber, loadReceivedGifts]);
 
   const handleBack = () => {
     router.push(`/${merchantSlug}/${currentTableNumber}/dashboard`);

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { cn } from '@/lib/utils/cn';
 import { useTranslation } from '@/lib/i18n/context';
 
@@ -137,10 +138,13 @@ function TableCard({ table, onViewProfile, onSendGift, t }: TableCardProps) {
         <div className="relative h-48 overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
           <div className="absolute inset-0 bg-black/60 z-10 backdrop-blur-[2px]" />
           {table.imageUrl ? (
-            <img
+            <Image
               src={table.imageUrl}
               alt={`Table ${table.tableNumber}`}
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-cover"
+              unoptimized
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-midnight to-void" />
@@ -173,10 +177,13 @@ function TableCard({ table, onViewProfile, onSendGift, t }: TableCardProps) {
       <div className="relative h-48 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-card-bg to-transparent z-10" />
         {table.imageUrl ? (
-          <img
+          <Image
             src={table.imageUrl}
             alt={`Table ${table.tableNumber}`}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover group-hover:scale-110 transition-transform duration-700"
+            unoptimized
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary/20 via-midnight to-neon-purple/20 group-hover:scale-110 transition-transform duration-700" />
@@ -220,13 +227,16 @@ function TableCard({ table, onViewProfile, onSendGift, t }: TableCardProps) {
             {table.members.slice(0, 5).map((member) => (
               <div
                 key={member.id}
-                className="inline-block size-6 rounded-full ring-2 ring-card-bg bg-gradient-to-br from-primary/30 to-neon-purple/30 flex items-center justify-center overflow-hidden"
+                className="relative inline-block size-6 rounded-full ring-2 ring-card-bg bg-gradient-to-br from-primary/30 to-neon-purple/30 flex items-center justify-center overflow-hidden"
               >
                 {member.avatarUrl ? (
-                  <img
+                  <Image
                     src={member.avatarUrl}
                     alt={member.nickname}
-                    className="size-full object-cover"
+                    fill
+                    sizes="24px"
+                    className="object-cover"
+                    unoptimized
                   />
                 ) : (
                   <span className="text-[10px] text-white font-bold">

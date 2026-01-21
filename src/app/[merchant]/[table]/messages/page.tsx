@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Container, Button, Spinner, Header } from '@/components/ui';
 import { useSessionStore } from '@/lib/stores/sessionStore';
@@ -28,15 +28,7 @@ export default function MessagesPage() {
   const merchantSlug = params.merchant;
   const currentTableNumber = parseInt(params.table, 10);
 
-  useEffect(() => {
-    if (!currentSession || merchantId !== currentSession.merchant_id || tableNumber !== currentSession.table_number) {
-      router.replace(`/${merchantSlug}/${currentTableNumber}/profile`);
-      return;
-    }
-    loadConversations();
-  }, [currentSession, merchantId, tableNumber, merchantSlug, currentTableNumber, router]);
-
-  const loadConversations = async () => {
+  const loadConversations = useCallback(async () => {
     if (!currentSession?.id) return;
 
     try {
@@ -115,7 +107,15 @@ export default function MessagesPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentSession?.id, t]);
+
+  useEffect(() => {
+    if (!currentSession || merchantId !== currentSession.merchant_id || tableNumber !== currentSession.table_number) {
+      router.replace(`/${merchantSlug}/${currentTableNumber}/profile`);
+      return;
+    }
+    loadConversations();
+  }, [currentSession, merchantId, tableNumber, merchantSlug, currentTableNumber, router, loadConversations]);
 
   const handleConversationClick = (conversation: typeof conversations[0]) => {
     router.push(`/${merchantSlug}/${currentTableNumber}/chat/${conversation.sessionId}`);

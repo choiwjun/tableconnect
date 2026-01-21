@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { cn } from '@/lib/utils/cn';
 import { useTranslation } from '@/lib/i18n/context';
 
@@ -73,10 +74,13 @@ export function PopularTablesSidebar({
             {/* Thumbnail */}
             <div className="relative size-12 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover:border-primary/50 transition-colors bg-midnight">
               {table.imageUrl ? (
-                <img
+                <Image
                   src={table.imageUrl}
                   alt={`Table ${table.tableNumber}`}
-                  className="size-full object-cover"
+                  fill
+                  sizes="48px"
+                  className="object-cover"
+                  unoptimized
                 />
               ) : (
                 <div className="size-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-neon-purple/20">
