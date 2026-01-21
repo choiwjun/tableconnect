@@ -1,6 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { formatRelativeTime } from '@/lib/utils/format';
+import { JoinRequestButton } from '@/components/join';
 import type { Gender, AgeRange } from '@/types/database';
 
 interface TableCardProps {
@@ -13,6 +15,9 @@ interface TableCardProps {
   onClick: () => void;
   hasUnread?: boolean;
   isCurrentSession?: boolean;
+  sessionId?: string;
+  currentSessionId?: string;
+  onJoinRequestSent?: () => void;
 }
 
 // Gender icons
@@ -55,10 +60,19 @@ export function TableCard({
   onClick,
   hasUnread = false,
   isCurrentSession = false,
+  sessionId,
+  currentSessionId,
+  onJoinRequestSent,
 }: TableCardProps) {
+  const [joinRequestSent, setJoinRequestSent] = useState(false);
   const genderIcon = getGenderIcon(gender);
   const ageLabel = getAgeRangeLabel(ageRange);
   const partyIcon = getPartySizeIcon(partySize);
+
+  const handleJoinRequestSuccess = () => {
+    setJoinRequestSent(true);
+    onJoinRequestSent?.();
+  };
 
   return (
     <button
@@ -149,12 +163,34 @@ export function TableCard({
 
       {/* Bottom border for visual separation */}
       <div className="mt-3 pt-3 border-t border-white/10">
-        <div className="flex items-center gap-2 text-xs text-muted">
-          <span>クリックしてチャットを開始</span>
-          {hasUnread && (
-            <span className="text-neon-pink font-medium">
-              新着メッセージ
-            </span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-muted">
+            <span>クリックしてチャットを開始</span>
+            {hasUnread && (
+              <span className="text-neon-pink font-medium">
+                新着メッセージ
+              </span>
+            )}
+          </div>
+
+          {/* Join Request Button */}
+          {sessionId && currentSessionId && !isCurrentSession && (
+            <div onClick={(e) => e.stopPropagation()}>
+              {joinRequestSent ? (
+                <span className="text-xs text-neon-cyan px-3 py-1.5 rounded-lg bg-neon-cyan/10 border border-neon-cyan/30">
+                  リクエスト送信済み
+                </span>
+              ) : (
+                <JoinRequestButton
+                  fromSessionId={currentSessionId}
+                  toSessionId={sessionId}
+                  toTableNumber={tableNumber}
+                  toNickname={nickname || `テーブル ${tableNumber}`}
+                  onSuccess={handleJoinRequestSuccess}
+                  className="text-xs px-3 py-1.5"
+                />
+              )}
+            </div>
           )}
         </div>
       </div>

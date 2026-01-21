@@ -20,7 +20,9 @@
       "Bash(pkill:*)",
       "Bash(Get-Content \"C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-User-Downloads-tableconnect\\\\tasks\\\\ba20e97.output\" -Tail 30)",
       "Bash(curl:*)",
-      "Bash(powershell -Command \"Get-Process -Name node -ErrorAction SilentlyContinue | Stop-Process -Force; Write-Host ''Node processes terminated''\")"
+      "Bash(powershell -Command \"Get-Process -Name node -ErrorAction SilentlyContinue | Stop-Process -Force; Write-Host ''Node processes terminated''\")",
+      "Bash(npx supabase:*)",
+      "Bash(git reset:*)"
     ]
   }
 }

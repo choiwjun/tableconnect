@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { MerchantAdminSidebar, StatCard } from '@/components/admin';
+import { MerchantAdminSidebar, StatCard, JoinEventsPanel } from '@/components/admin';
 import { Spinner, Card } from '@/components/ui';
 import { formatPrice } from '@/lib/utils';
 import { useSessionStore } from '@/lib/stores/sessionStore';
@@ -228,6 +228,13 @@ export default function MerchantAdminDashboardPage() {
                   </div>
                 </Card>
               </div>
+
+              {/* Join Events Panel */}
+              {merchantId && (
+                <div className="mb-8">
+                  <JoinEventsPanel merchantId={merchantId} />
+                </div>
+              )}
             </>
           )}
         </div>

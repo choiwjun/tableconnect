@@ -235,6 +235,8 @@ export function TableList({
             onClick={() => handleTableSelect(session.id)}
             hasUnread={unreadSessions.has(session.id)}
             isCurrentSession={session.id === currentSessionId}
+            sessionId={session.id}
+            currentSessionId={currentSessionId || undefined}
           />
         ))
       )}
