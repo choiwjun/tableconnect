@@ -212,6 +212,59 @@
     "status": "No Connection",
     "retry": "Retry"
   },
+  "join": {
+    "title": "Join Request",
+    "requestButton": "Request to Join",
+    "sendRequest": "Send Request",
+    "selectTemplate": "Select a Message",
+    "templates": {
+      "available_now": "We can join tables now! 🍻",
+      "available_soon": "We can join tables in 10 minutes!",
+      "drink_together": "Want to have a drink together? 🥂"
+    },
+    "requestReceived": "Join request received",
+    "fromTable": "From Table {number}",
+    "accept": "Accept",
+    "decline": "Decline",
+    "cancel": "Cancel",
+    "requestSent": "Request Sent",
+    "requestAccepted": "Join request accepted",
+    "requestDeclined": "Request was declined",
+    "requestExpired": "Request has expired",
+    "confirmation": {
+      "title": "Join Confirmation",
+      "showToStaff": "Please show this screen to staff",
+      "code": "Confirmation Code",
+      "expiresIn": "Expires in",
+      "tables": "Joining Tables",
+      "tableA": "Table A",
+      "tableB": "Table B",
+      "waiting": "Waiting for staff confirmation",
+      "confirmed": "Join confirmed!",
+      "close": "Close"
+    },
+    "cooldown": {
+      "requestCooldown": "You can send another request in 5 minutes",
+      "rejectionCooldown": "You can request this table again in 30 minutes",
+      "lockout": "Multiple rejections received. Please try again in 1 hour"
+    },
+    "errors": {
+      "blocked": "Cannot send request as you have blocked this user",
+      "alreadyPending": "A request has already been sent",
+      "expired": "The request has expired",
+      "failed": "Failed to send request"
+    },
+    "admin": {
+      "title": "Join Events",
+      "pending": "Pending",
+      "active": "Active",
+      "todayRequests": "Today's Requests",
+      "todayAccepted": "Today's Accepted",
+      "confirm": "Confirm",
+      "end": "End",
+      "noEvents": "No events"
+    }
+  },
   "profile": {
     "title": "Profile",
     "members": "Members",

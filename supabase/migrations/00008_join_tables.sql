@@ -36,8 +36,10 @@ CREATE TABLE IF NOT EXISTS join_sessions (
   started_at TIMESTAMPTZ DEFAULT NOW(),
   ends_at TIMESTAMPTZ DEFAULT NOW() + INTERVAL '30 minutes',
   confirmed_at TIMESTAMPTZ, -- 직원 확인 시점
+  confirmed_by VARCHAR(100), -- 확인한 스태프 ID (감사 로그용)
   ended_at TIMESTAMPTZ,
-  end_reason VARCHAR(50), -- 'timeout', 'manual', 'staff_ended'
+  ended_by VARCHAR(100), -- 종료 처리한 스태프 ID (감사 로그용)
+  end_reason VARCHAR(50), -- 'timeout', 'manual', 'staff_ended', 'expired'
   CONSTRAINT different_join_tables CHECK (table_a_number != table_b_number)
 );
 

@@ -219,6 +219,59 @@
       "busy": "忙碌"
     }
   },
+  "join": {
+    "title": "拼桌请求",
+    "requestButton": "请求拼桌",
+    "sendRequest": "发送请求",
+    "selectTemplate": "选择消息",
+    "templates": {
+      "available_now": "现在可以拼桌！🍻",
+      "available_soon": "10分钟后可以拼桌！",
+      "drink_together": "一起喝一杯？🥂"
+    },
+    "requestReceived": "收到拼桌请求",
+    "fromTable": "来自桌位 {number}",
+    "accept": "接受",
+    "decline": "拒绝",
+    "cancel": "取消",
+    "requestSent": "请求已发送",
+    "requestAccepted": "拼桌请求已接受",
+    "requestDeclined": "请求被拒绝",
+    "requestExpired": "请求已过期",
+    "confirmation": {
+      "title": "拼桌确认",
+      "showToStaff": "请向工作人员展示此屏幕",
+      "code": "确认码",
+      "expiresIn": "有效期",
+      "tables": "拼桌桌位",
+      "tableA": "桌位 A",
+      "tableB": "桌位 B",
+      "waiting": "等待工作人员确认",
+      "confirmed": "拼桌已确认！",
+      "close": "关闭"
+    },
+    "cooldown": {
+      "requestCooldown": "5分钟后可以再次发送请求",
+      "rejectionCooldown": "30分钟后可以再次向此桌位发送请求",
+      "lockout": "多次被拒绝，请1小时后再试"
+    },
+    "errors": {
+      "blocked": "由于您已屏蔽此用户，无法发送请求",
+      "alreadyPending": "请求已发送",
+      "expired": "请求已过期",
+      "failed": "发送请求失败"
+    },
+    "admin": {
+      "title": "拼桌事件",
+      "pending": "待处理",
+      "active": "进行中",
+      "todayRequests": "今日请求",
+      "todayAccepted": "今日接受",
+      "confirm": "确认",
+      "end": "结束",
+      "noEvents": "暂无事件"
+    }
+  },
   "mockTables": {
     "popular": {
       "table05": {

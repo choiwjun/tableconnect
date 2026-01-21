@@ -165,3 +165,151 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+/**
+ * DELETE /api/admin/join
+ * 관리자용 합석 요청/세션 삭제 또는 취소
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type'); // 'request' or 'session'
+    const id = searchParams.get('id');
+    const merchantId = searchParams.get('merchantId');
+    const staffId = searchParams.get('staffId');
+
+    if (!type || !id || !merchantId) {
+      return NextResponse.json(
+        { error: 'Type, ID, and merchant ID are required' },
+        { status: 400 }
+      );
+    }
+
+    if (!['request', 'session'].includes(type)) {
+      return NextResponse.json(
+        { error: 'Invalid type. Must be request or session' },
+        { status: 400 }
+      );
+    }
+
+    const supabase = getSupabaseAdmin();
+    const now = new Date().toISOString();
+
+    if (type === 'request') {
+      // Cancel join request
+      const { data: existingRequest, error: fetchError } = await supabase
+        .from('join_requests')
+        .select('id, merchant_id, status')
+        .eq('id', id)
+        .single();
+
+      if (fetchError || !existingRequest) {
+        return NextResponse.json(
+          { error: 'Join request not found' },
+          { status: 404 }
+        );
+      }
+
+      if (existingRequest.merchant_id !== merchantId) {
+        return NextResponse.json(
+          { error: 'Request does not belong to this merchant' },
+          { status: 403 }
+        );
+      }
+
+      // Only allow cancellation of pending requests
+      if (existingRequest.status !== 'pending') {
+        return NextResponse.json(
+          { error: 'Only pending requests can be cancelled' },
+          { status: 400 }
+        );
+      }
+
+      const { error: updateError } = await supabase
+        .from('join_requests')
+        .update({
+          status: 'cancelled',
+          responded_at: now,
+        })
+        .eq('id', id);
+
+      if (updateError) {
+        console.error('Error cancelling join request:', updateError);
+        return NextResponse.json(
+          { error: 'Failed to cancel join request' },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: '合席リクエストがキャンセルされました',
+        cancelled_by: staffId || 'admin',
+      });
+    } else {
+      // End join session
+      const { data: existingSession, error: fetchError } = await supabase
+        .from('join_sessions')
+        .select('id, merchant_id, status')
+        .eq('id', id)
+        .single();
+
+      if (fetchError || !existingSession) {
+        return NextResponse.json(
+          { error: 'Join session not found' },
+          { status: 404 }
+        );
+      }
+
+      if (existingSession.merchant_id !== merchantId) {
+        return NextResponse.json(
+          { error: 'Session does not belong to this merchant' },
+          { status: 403 }
+        );
+      }
+
+      // Only allow ending of active sessions
+      if (!['pending_confirmation', 'confirmed'].includes(existingSession.status)) {
+        return NextResponse.json(
+          { error: 'Only active sessions can be ended' },
+          { status: 400 }
+        );
+      }
+
+      const updateData: Record<string, unknown> = {
+        status: 'cancelled',
+        ended_at: now,
+        end_reason: 'admin_cancelled',
+      };
+
+      if (staffId) {
+        updateData.ended_by = staffId;
+      }
+
+      const { error: updateError } = await supabase
+        .from('join_sessions')
+        .update(updateData)
+        .eq('id', id);
+
+      if (updateError) {
+        console.error('Error ending join session:', updateError);
+        return NextResponse.json(
+          { error: 'Failed to end join session' },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: '合席セッションが終了しました',
+        ended_by: staffId || 'admin',
+      });
+    }
+  } catch (error) {
+    console.error('Admin join DELETE API error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}

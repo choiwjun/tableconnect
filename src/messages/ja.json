@@ -235,6 +235,59 @@
     "status": "接続なし",
     "retry": "再読み込み"
   },
+  "join": {
+    "title": "合席リクエスト",
+    "requestButton": "合席リクエスト",
+    "sendRequest": "リクエストを送信",
+    "selectTemplate": "メッセージを選択",
+    "templates": {
+      "available_now": "今すぐ合席できます！🍻",
+      "available_soon": "10分後に合席できます！",
+      "drink_together": "一緒に飲みませんか？🥂"
+    },
+    "requestReceived": "合席リクエストが届きました",
+    "fromTable": "テーブル {number}から",
+    "accept": "受け入れる",
+    "decline": "断る",
+    "cancel": "キャンセル",
+    "requestSent": "リクエスト送信済み",
+    "requestAccepted": "合席が承認されました",
+    "requestDeclined": "リクエストが断られました",
+    "requestExpired": "リクエストが期限切れになりました",
+    "confirmation": {
+      "title": "合席確認",
+      "showToStaff": "この画面をスタッフにお見せください",
+      "code": "確認コード",
+      "expiresIn": "有効期限",
+      "tables": "合席テーブル",
+      "tableA": "テーブル A",
+      "tableB": "テーブル B",
+      "waiting": "スタッフの確認をお待ちください",
+      "confirmed": "合席が確認されました！",
+      "close": "閉じる"
+    },
+    "cooldown": {
+      "requestCooldown": "リクエストは5分後に再送信できます",
+      "rejectionCooldown": "このテーブルには30分後に再度リクエストできます",
+      "lockout": "複数回断られたため、1時間後に再度お試しください"
+    },
+    "errors": {
+      "blocked": "このユーザーをブロックしているため、リクエストを送信できません",
+      "alreadyPending": "すでにリクエストが送信済みです",
+      "expired": "リクエストの有効期限が切れています",
+      "failed": "リクエストの送信に失敗しました"
+    },
+    "admin": {
+      "title": "合席イベント",
+      "pending": "承認待ち",
+      "active": "進行中",
+      "todayRequests": "今日のリクエスト",
+      "todayAccepted": "今日の承認",
+      "confirm": "確認",
+      "end": "終了",
+      "noEvents": "イベントがありません"
+    }
+  },
   "mockTables": {
     "popular": {
       "table05": {

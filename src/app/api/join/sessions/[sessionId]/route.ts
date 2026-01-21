@@ -105,12 +105,18 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         );
       }
 
+      // Build update object with optional staffId for audit trail
+      const updateData: Record<string, unknown> = {
+        status: 'confirmed',
+        confirmed_at: now,
+      };
+      if (staffId) {
+        updateData.confirmed_by = staffId;
+      }
+
       const { error: updateError } = await supabase
         .from('join_sessions')
-        .update({
-          status: 'confirmed',
-          confirmed_at: now,
-        })
+        .update(updateData)
         .eq('id', sessionId);
 
       if (updateError) {
@@ -125,6 +131,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         success: true,
         action: 'confirmed',
         message: '合席が確認されました',
+        confirmed_by: staffId || null,
       });
     } else {
       // End session
@@ -135,13 +142,19 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         );
       }
 
+      // Build update object with optional staffId for audit trail
+      const updateData: Record<string, unknown> = {
+        status: 'ended',
+        ended_at: now,
+        end_reason: staffId ? 'staff_ended' : 'manual',
+      };
+      if (staffId) {
+        updateData.ended_by = staffId;
+      }
+
       const { error: updateError } = await supabase
         .from('join_sessions')
-        .update({
-          status: 'ended',
-          ended_at: now,
-          end_reason: staffId ? 'staff_ended' : 'manual',
-        })
+        .update(updateData)
         .eq('id', sessionId);
 
       if (updateError) {
@@ -156,6 +169,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         success: true,
         action: 'ended',
         message: '合席セッションが終了しました',
+        ended_by: staffId || null,
       });
     }
   } catch (error) {
