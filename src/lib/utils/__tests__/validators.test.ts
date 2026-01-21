@@ -56,7 +56,8 @@ describe('isValidMessage', () => {
   });
 
   it('should accept messages at max length', () => {
-    const maxMessage = 'a'.repeat(500);
+    // MAX_MESSAGE_LENGTH is 200 (PRD requirement)
+    const maxMessage = 'a'.repeat(200);
     expect(isValidMessage(maxMessage).valid).toBe(true);
   });
 });
