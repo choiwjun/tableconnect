@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { Container, Spinner, Header } from '@/components/ui';
 import { TableList } from '@/components/tables';
 import { ChatRoom } from '@/components/chat';
+import { JoinRequestListener } from '@/components/join';
 import { useSessionStore } from '@/lib/stores/sessionStore';
 import { useTranslation } from '@/lib/i18n/context';
 import type { ActiveTable } from '@/app/api/tables/route';
@@ -92,6 +93,14 @@ export default function ChatPage() {
       <div className="fixed inset-0 bg-gradient-radial from-[#1a2530] via-background-dark to-black z-0" />
       <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-neon-cyan/5 rounded-full blur-3xl" />
       <div className="fixed bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/5 rounded-full blur-3xl" />
+
+      {/* Join Request Listener - Real-time join request receiving */}
+      {!isDemo && currentSession && (
+        <JoinRequestListener
+          sessionId={currentSession.id}
+          tableNumber={currentSession.table_number}
+        />
+      )}
 
       <div className="relative z-10 flex flex-col min-h-screen">
         <Header
