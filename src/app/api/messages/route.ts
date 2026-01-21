@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { moderateContent, getModerationErrorMessage } from '@/lib/moderation/openai';
 import { recordWarning, getSessionWarnings, blockSession } from '@/lib/moderation/warnings';
+import { isMutuallyBlocked, getAllBlockedSessionIds } from '@/lib/security/block-check';
+import { detectContactInfo, getContactWarningMessage } from '@/lib/security/contact-filter';
+import { checkMessageRateLimit, getMessageRateLimitError } from '@/lib/security/message-rate-limit';
+import { containsForbiddenWords } from '@/lib/utils/validators';
 
 /**
  * POST /api/messages
@@ -35,7 +39,71 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check message rate limit first (before any DB operations)
+    const rateLimitResult = checkMessageRateLimit(senderSessionId, receiverSessionId);
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        {
+          error: getMessageRateLimitError(
+            rateLimitResult.reason || 'cooldown',
+            rateLimitResult.retryAfterMs || 3000,
+            'ja'
+          ),
+          retryAfterMs: rateLimitResult.retryAfterMs,
+        },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(Math.ceil((rateLimitResult.retryAfterMs || 3000) / 1000)),
+          },
+        }
+      );
+    }
+
     const supabase = getSupabaseAdmin();
+
+    // Check if either user has blocked the other
+    const blocked = await isMutuallyBlocked(supabase, senderSessionId, receiverSessionId);
+    if (blocked) {
+      return NextResponse.json(
+        { error: 'Cannot send message to this user' },
+        { status: 403 }
+      );
+    }
+
+    // Quick forbidden words check (faster than AI moderation)
+    const forbiddenCheck = containsForbiddenWords(content);
+    if (forbiddenCheck.hasForbidden) {
+      await recordWarning(senderSessionId, 'forbidden_words', 'medium');
+
+      return NextResponse.json(
+        {
+          error: '不適切な表現が含まれています',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Contact information detection (LINE, Instagram, phone, email, etc.)
+    const contactCheck = detectContactInfo(content);
+    if (contactCheck.hasContact) {
+      // Record warning for contact info sharing attempt
+      await recordWarning(senderSessionId, `contact_info:${contactCheck.detectedTypes.join(',')}`, 'medium');
+
+      console.log('Contact info detected in message:', {
+        senderSessionId,
+        detectedTypes: contactCheck.detectedTypes,
+        matches: contactCheck.matches,
+      });
+
+      return NextResponse.json(
+        {
+          error: getContactWarningMessage(contactCheck.detectedTypes, 'ja'),
+          detectedTypes: contactCheck.detectedTypes,
+        },
+        { status: 400 }
+      );
+    }
 
     // AI Content Moderation
     const moderationResult = await moderateContent(content);
@@ -133,6 +201,15 @@ export async function GET(request: NextRequest) {
     }
 
     const supabase = getSupabaseAdmin();
+
+    // Check if either user has blocked the other
+    const blocked = await isMutuallyBlocked(supabase, sessionId, partnerId);
+    if (blocked) {
+      // Return empty messages for blocked users (don't reveal block status)
+      return NextResponse.json({
+        data: [],
+      });
+    }
 
     const { data: messages, error } = await supabase
       .from('messages')

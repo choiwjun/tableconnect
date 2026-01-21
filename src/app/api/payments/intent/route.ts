@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { createPaymentIntent } from '@/lib/stripe/server';
 import { isValidUUID } from '@/lib/utils/validators';
+import { isMutuallyBlocked } from '@/lib/security/block-check';
 
 /**
  * POST /api/payments/intent
@@ -42,6 +43,15 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = getSupabaseAdmin();
+
+    // Check if either user has blocked the other
+    const blocked = await isMutuallyBlocked(supabase, senderSessionId, receiverSessionId);
+    if (blocked) {
+      return NextResponse.json(
+        { error: 'Cannot send gift to this user' },
+        { status: 403 }
+      );
+    }
 
     // Verify menu exists and is available
     const { data: menu, error: menuError } = await supabase

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { isValidUUID } from '@/lib/utils/validators';
 
 // OpenAI API Configuration
 // IMPORTANT: Use server-side only environment variable (no NEXT_PUBLIC_ prefix)
@@ -66,7 +68,7 @@ async function translateText(text: string, targetLanguage: string): Promise<stri
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { text, targetLanguage } = body;
+    const { text, targetLanguage, messageId, saveToDb = false } = body;
 
     // Validate input
     if (!text || typeof text !== 'string') {
@@ -103,10 +105,26 @@ export async function POST(request: NextRequest) {
     // Translate text
     const translatedText = await translateText(text, targetLanguage);
 
+    // Optionally save translation to database for audit trail
+    if (saveToDb && messageId && isValidUUID(messageId)) {
+      const supabase = getSupabaseAdmin();
+
+      await supabase
+        .from('messages')
+        .update({
+          original_content: text,
+          translated_content: translatedText,
+          translation_language: targetLanguage,
+          translated_at: new Date().toISOString(),
+        })
+        .eq('id', messageId);
+    }
+
     return NextResponse.json({
       original: text,
       translated: translatedText,
       targetLanguage,
+      savedToDb: saveToDb && messageId ? true : false,
     });
   } catch (error) {
     console.error('Translation API error:', error);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { isValidUUID } from '@/lib/utils/validators';
+import { getAllBlockedSessionIds } from '@/lib/security/block-check';
 
 // GET /api/gifts - Get gifts for a session (sent and received)
 export async function GET(request: NextRequest) {
@@ -72,8 +73,23 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Filter out gifts from/to blocked users
+    const blockedIds = await getAllBlockedSessionIds(supabase, sessionId);
+    const blockedSet = new Set(blockedIds);
+    const filteredGifts = (gifts || []).filter((gift) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const senderArr = gift.sender as any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const receiverArr = gift.receiver as any;
+      const senderId = Array.isArray(senderArr) ? senderArr[0]?.id : senderArr?.id;
+      const receiverId = Array.isArray(receiverArr) ? receiverArr[0]?.id : receiverArr?.id;
+      // Exclude gifts where the other party is blocked
+      const otherPartyId = senderId === sessionId ? receiverId : senderId;
+      return !blockedSet.has(otherPartyId);
+    });
+
     // Transform the data
-    const transformedGifts = gifts.map((gift) => {
+    const transformedGifts = filteredGifts.map((gift) => {
       // Supabase returns relations as arrays, get the first item
       const senderData = Array.isArray(gift.sender) ? gift.sender[0] : gift.sender;
       const receiverData = Array.isArray(gift.receiver) ? gift.receiver[0] : gift.receiver;

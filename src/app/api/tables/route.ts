@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { isValidUUID } from '@/lib/utils/validators';
+import { getAllBlockedSessionIds } from '@/lib/security/block-check';
 
 export interface ActiveTable {
   sessionId: string;
@@ -60,8 +61,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Filter out blocked users if excludeSessionId is provided
+    let filteredSessions = sessions || [];
+    if (excludeSessionId) {
+      const blockedIds = await getAllBlockedSessionIds(supabase, excludeSessionId);
+      const blockedSet = new Set(blockedIds);
+      filteredSessions = filteredSessions.filter(
+        (session) => !blockedSet.has(session.id)
+      );
+    }
+
     // Transform to ActiveTable format
-    const tables: ActiveTable[] = (sessions || []).map((session) => ({
+    const tables: ActiveTable[] = filteredSessions.map((session) => ({
       sessionId: session.id,
       tableNumber: session.table_number,
       nickname: session.nickname,

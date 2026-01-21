@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { getAllBlockedSessionIds } from '@/lib/security/block-check';
 
 /**
  * GET /api/messages/conversations
@@ -33,7 +34,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const receiverIds = Array.from(new Set((sentMessages || []).map(m => m.receiver_session_id)));
+    const allReceiverIds = Array.from(new Set((sentMessages || []).map(m => m.receiver_session_id)));
+
+    // Filter out blocked users
+    const blockedIds = await getAllBlockedSessionIds(supabase, sessionId);
+    const blockedSet = new Set(blockedIds);
+    const receiverIds = allReceiverIds.filter(id => !blockedSet.has(id));
 
     // Fetch session info for each receiver
     const conversations = [];

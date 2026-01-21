@@ -70,19 +70,45 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
 
   const supabase = getSupabaseAdmin();
 
-  // Update gift status to completed
-  const { error } = await supabase
+  // Idempotency check: First verify the gift exists and hasn't been processed
+  const { data: existingGift, error: fetchError } = await supabase
+    .from('gifts')
+    .select('id, status, paid_at')
+    .eq('id', giftId)
+    .eq('stripe_payment_intent_id', paymentIntent.id)
+    .single();
+
+  if (fetchError || !existingGift) {
+    console.error(`Gift ${giftId} not found or payment intent mismatch`);
+    return;
+  }
+
+  // Idempotency: Skip if already processed
+  if (existingGift.status === 'completed' && existingGift.paid_at) {
+    console.log(`Gift ${giftId} already processed (idempotency check)`);
+    return;
+  }
+
+  // Update gift status to completed (only if pending and not yet paid)
+  const { error, count } = await supabase
     .from('gifts')
     .update({
       status: 'completed',
       paid_at: new Date().toISOString(),
     })
     .eq('id', giftId)
-    .eq('stripe_payment_intent_id', paymentIntent.id);
+    .eq('stripe_payment_intent_id', paymentIntent.id)
+    .eq('status', 'pending') // Only update if still pending
+    .is('paid_at', null);    // Only update if not yet paid
 
   if (error) {
     console.error('Error updating gift status:', error);
     throw error;
+  }
+
+  if (count === 0) {
+    console.log(`Gift ${giftId} was not updated (already processed or status changed)`);
+    return;
   }
 
   console.log(`Gift ${giftId} payment completed successfully`);
@@ -98,18 +124,43 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
 
   const supabase = getSupabaseAdmin();
 
-  // Update gift status to failed
-  const { error } = await supabase
+  // Idempotency check: First verify the gift exists
+  const { data: existingGift, error: fetchError } = await supabase
+    .from('gifts')
+    .select('id, status')
+    .eq('id', giftId)
+    .eq('stripe_payment_intent_id', paymentIntent.id)
+    .single();
+
+  if (fetchError || !existingGift) {
+    console.error(`Gift ${giftId} not found or payment intent mismatch`);
+    return;
+  }
+
+  // Idempotency: Skip if already completed or failed
+  if (existingGift.status === 'completed' || existingGift.status === 'failed') {
+    console.log(`Gift ${giftId} already in terminal state: ${existingGift.status} (idempotency check)`);
+    return;
+  }
+
+  // Update gift status to failed (only if still pending)
+  const { error, count } = await supabase
     .from('gifts')
     .update({
       status: 'failed',
     })
     .eq('id', giftId)
-    .eq('stripe_payment_intent_id', paymentIntent.id);
+    .eq('stripe_payment_intent_id', paymentIntent.id)
+    .eq('status', 'pending'); // Only update if still pending
 
   if (error) {
     console.error('Error updating gift status to failed:', error);
     throw error;
+  }
+
+  if (count === 0) {
+    console.log(`Gift ${giftId} was not updated (already processed)`);
+    return;
   }
 
   console.log(`Gift ${giftId} payment failed`);

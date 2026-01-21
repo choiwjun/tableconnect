@@ -10,8 +10,8 @@ import {
   MAX_TABLE_NUMBER,
 } from './constants';
 
-// Forbidden words for nickname validation (Japanese + English)
-const FORBIDDEN_WORDS: string[] = [
+// Forbidden words for content validation (Japanese + English + Korean)
+const FORBIDDEN_WORDS_CONTENT: string[] = [
   // Japanese inappropriate words
   'バカ', 'ばか', '馬鹿',
   'アホ', 'あほ', '阿呆',
@@ -29,12 +29,26 @@ const FORBIDDEN_WORDS: string[] = [
   'fuck', 'shit', 'bitch', 'asshole', 'bastard',
   'dick', 'pussy', 'cunt', 'whore', 'slut',
   'nigger', 'faggot', 'retard',
-  // Admin/Staff impersonation prevention
+  // Korean inappropriate words
+  '씨발', '시발', '개새끼', '병신', '지랄',
+  '미친', '꺼져', '죽어',
+  // Chinese inappropriate words
+  '傻逼', '他妈', '操你', '去死',
+];
+
+// Additional words forbidden only for nicknames (admin/staff impersonation)
+const FORBIDDEN_WORDS_NICKNAME_ONLY: string[] = [
   'admin', 'administrator', '管理者', '管理人',
   'staff', 'スタッフ', '店員', '店長',
   'owner', 'オーナー', '運営',
   'system', 'システム',
   'official', '公式',
+];
+
+// Combined list for nickname validation
+const FORBIDDEN_WORDS: string[] = [
+  ...FORBIDDEN_WORDS_CONTENT,
+  ...FORBIDDEN_WORDS_NICKNAME_ONLY,
 ];
 
 /**
@@ -96,7 +110,37 @@ export function isValidMessage(content: string): {
     };
   }
 
+  // Check for forbidden words (content only, not admin impersonation words)
+  const lowerContent = trimmed.toLowerCase();
+  for (const word of FORBIDDEN_WORDS_CONTENT) {
+    if (lowerContent.includes(word.toLowerCase())) {
+      return { valid: false, error: '不適切な表現が含まれています' };
+    }
+  }
+
   return { valid: true };
+}
+
+/**
+ * Check if content contains forbidden words (exportable for API use)
+ */
+export function containsForbiddenWords(content: string): {
+  hasForbidden: boolean;
+  matchedWords: string[];
+} {
+  const lowerContent = content.toLowerCase();
+  const matchedWords: string[] = [];
+
+  for (const word of FORBIDDEN_WORDS_CONTENT) {
+    if (lowerContent.includes(word.toLowerCase())) {
+      matchedWords.push(word);
+    }
+  }
+
+  return {
+    hasForbidden: matchedWords.length > 0,
+    matchedWords,
+  };
 }
 
 /**
